@@ -3,9 +3,7 @@
  <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1" name="viewport"/>
-  <title>
-   Student Dashboard • Hybrid Attendance
-  </title>
+  <title>Student Dashboard • Hybrid Attendance</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet"/>
@@ -16,571 +14,245 @@
   <nav class="navbar navbar-expand-md navbar-dark sticky-top" style="background:#f08e1b;">
    <div class="container-fluid">
     <button aria-controls="studentSidebar" aria-label="Toggle sidebar" class="btn btn-outline-light d-md-none me-2" data-bs-target="#studentSidebar" data-bs-toggle="collapse" type="button">
-     <i class="fa-solid fa-bars">
-     </i>
+     <i class="fa-solid fa-bars"></i>
     </button>
-    <a class="navbar-brand fw-bold" href="./student_dashboard.html">
-     Student
-    </a>
-    <form class="d-none d-md-flex ms-3" role="search" style="max-width:420px;flex:1;">
-     <input aria-label="Search" class="form-control" id="courseSearchHeader" placeholder="Search courses" type="search"/>
-    </form>
+    <a class="navbar-brand fw-bold" href="./student_dashboard.html">Student Dashboard</a>
     <div class="d-flex align-items-center ms-auto">
      <a class="btn btn-light me-2" href="./scan_page.html">
-      <i class="fa-solid fa-qrcode me-1">
-      </i>
-      Scan Now
+      <i class="fa-solid fa-qrcode me-1"></i> Scan Now
      </a>
-     <button aria-label="Notifications" class="btn btn-link text-white me-2 position-relative" id="notifBellBtn">
-      <i class="fa-solid fa-bell">
-      </i>
-      <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="notifCount" style="display:none;">
-       0
-      </span>
-     </button>
      <div class="dropdown">
       <button aria-expanded="false" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
-       <i class="fa-solid fa-user me-1">
-       </i>
-       Me
+       <i class="fa-solid fa-user me-1"></i> <span id="headerUserName">Me</span>
       </button>
       <ul class="dropdown-menu dropdown-menu-end">
-       <li>
-        <a class="dropdown-item" href="./user_profile.html" id="profileLink">
-         My Profile
-        </a>
-       </li>
-       <li>
-        <hr class="dropdown-divider"/>
-       </li>
-       <li>
-        <a class="dropdown-item text-danger" href="#" id="logoutBtn">
-         Logout
-        </a>
-       </li>
+       <li><a class="dropdown-item" href="./user_profile.html">My Profile</a></li>
+       <li><hr class="dropdown-divider"/></li>
+       <li><a class="dropdown-item text-danger" href="#" id="logoutBtn">Logout</a></li>
       </ul>
      </div>
     </div>
    </div>
   </nav>
+
   <div class="app-shell d-flex">
    <aside class="d-flex flex-column flex-shrink-0 bg-light border-end" style="min-height:100vh;width:260px;">
     <div class="p-3 border-bottom d-flex align-items-center justify-content-between" style="background:#f08e1b;">
-     <a class="text-white fw-bold text-decoration-none" href="./student_dashboard.html">
-      Hybrid Attendance
-     </a>
-     <button aria-controls="studentSidebar" aria-label="Toggle sidebar" class="btn btn-sm btn-outline-light d-md-none" data-bs-target="#studentSidebar" data-bs-toggle="collapse" type="button">
-      <i class="fa-solid fa-bars">
-      </i>
+     <a class="text-white fw-bold text-decoration-none" href="./student_dashboard.html">Hybrid Attendance</a>
+     <button class="btn btn-sm btn-outline-light d-md-none" data-bs-target="#studentSidebar" data-bs-toggle="collapse" type="button">
+      <i class="fa-solid fa-bars"></i>
      </button>
     </div>
     <div class="collapse show" id="studentSidebar">
      <div class="p-3">
       <div class="d-flex align-items-center mb-4">
-       <img alt="Avatar" class="rounded-circle me-2" onerror="this.onerror=null;this.src='https://picsum.photos/seed/student/80/80';" src="./assets/avatar-student.png" style="width:40px;height:40px;"/>
+       <img alt="Avatar" class="rounded-circle me-2" onerror="this.src='https://picsum.photos/seed/student/80/80';" src="./assets/avatar-student.png" style="width:40px;height:40px;"/>
        <div>
-        <div class="fw-semibold" id="sidebarStudentName">
-         Loading...
-        </div>
-        <small class="text-muted">
-         My Workspace
-        </small>
+        <div class="fw-semibold" id="sidebarStudentName">Loading...</div>
+        <small class="text-muted" id="sidebarStudentId">ID: Loading...</small>
        </div>
       </div>
       <ul class="nav nav-pills flex-column">
-       <li class="nav-item mb-1">
-        <a class="nav-link text-dark active" href="./student_dashboard.html">
-         <i class="fa-solid fa-house me-2">
-         </i>
-         Dashboard
-        </a>
-       </li>
-       <li class="nav-item mb-1">
-        <a class="nav-link text-dark" href="./scan_page.html">
-         <i class="fa-solid fa-qrcode me-2">
-         </i>
-         Mark Attendance (Scan)
-        </a>
-       </li>
-       <li class="nav-item mb-1">
-        <a class="nav-link text-dark" href="./attendance_history.html">
-         <i class="fa-solid fa-list-check me-2">
-         </i>
-         Attendance History
-        </a>
-       </li>
-       <li class="nav-item mt-3">
-        <a class="nav-link text-dark" href="./user_profile.html">
-         <i class="fa-solid fa-user me-2">
-         </i>
-         My Profile
-        </a>
-       </li>
+       <li class="nav-item mb-1"><a class="nav-link text-white active" style="background:#f08e1b;" href="./student_dashboard.html"><i class="fa-solid fa-house me-2"></i> Dashboard</a></li>
+       <li class="nav-item mb-1"><a class="nav-link text-dark" href="./scan_page.html"><i class="fa-solid fa-qrcode me-2"></i> Mark Attendance</a></li>
+       <li class="nav-item mt-3"><a class="nav-link text-dark" href="./user_profile.html"><i class="fa-solid fa-user me-2"></i> My Profile</a></li>
       </ul>
      </div>
     </div>
-    <style>
-     .nav-link:hover{background:rgba(240,142,27,.1);border-radius:.5rem}
-     .nav-link.active{background:#f08e1b;color:#fff;border-radius:.5rem}
-    </style>
    </aside>
+
    <main class="flex-grow-1">
     <div class="container-fluid py-3 py-lg-4">
      <div class="page-header">
       <div class="d-flex align-items-center gap-3">
-       <div class="avatar">
-        <img alt="Student Avatar" class="w-100 h-100" onerror="this.onerror=null;this.src='https://picsum.photos/seed/ava/80/80';" src="./assets/avatar-student.png"/>
-       </div>
        <div>
-        <div class="page-title">
-         Welcome back,
-         <span id="studentName">
-          ...
-         </span>
-        </div>
-        <div class="text-muted">
-         Your attendance at a glance
-        </div>
+        <div class="page-title">Welcome back, <span id="studentNameGreeting">Student</span></div>
+        <div class="text-muted">Your live attendance overview</div>
        </div>
-      </div>
-      <div class="d-flex align-items-center gap-2">
-       <a class="btn btn-light" href="./attendance_history.html">
-        <i class="fa-regular fa-calendar-check me-1">
-        </i>
-        View History
-       </a>
-       <a class="btn btn-primary" href="./scan_page.html">
-        <i class="fa-solid fa-qrcode me-1">
-        </i>
-        Scan Attendance
-       </a>
       </div>
      </div>
-     <div class="row g-3 mb-4" id="attendanceOverview">
+
+     <div class="row g-3 mb-4">
       <div class="col-12 col-lg-4">
        <div class="card h-100">
-        <div class="card-header">
-         <span class="widget-title">
-          Overall Attendance
-         </span>
-        </div>
+        <div class="card-header"><span class="widget-title">Overall Attendance</span></div>
         <div class="card-body d-flex align-items-center justify-content-center" style="min-height:260px; position:relative;">
-         <div class="skeleton w-100 h-100 position-absolute top-0 start-0 rounded" id="donutSkeleton">
-         </div>
-         <canvas aria-label="Overall attendance donut chart" height="280" id="overallDonut" width="280">
-         </canvas>
-         <div class="donut-center-text" id="donutCenterText">
-          0%
-         </div>
-        </div>
-        <div class="card-footer d-flex justify-content-between small text-muted">
-         <span>
-          Green ≥ 85%
-         </span>
-         <span>
-          Orange 75–84%
-         </span>
-         <span>
-          Red &lt; 75%
-         </span>
+         <div class="spinner-border text-primary position-absolute" id="donutLoading" role="status"></div>
+         <canvas height="280" id="overallDonut" width="280" style="display:none;"></canvas>
+         <div class="donut-center-text" id="donutCenterText" style="display:none;">0%</div>
         </div>
        </div>
       </div>
+      
       <div class="col-12 col-lg-8">
        <div class="row g-3">
         <div class="col-12 col-md-4">
          <div class="metric-card h-100">
-          <div class="metric-title">
-           Total Classes
-          </div>
-          <div class="metric-value" id="statTotal">
-           -
-          </div>
-          <div class="text-muted">
-           Till date
-          </div>
+          <div class="metric-title">Total Sessions</div>
+          <div class="metric-value" id="statTotal">0</div>
          </div>
         </div>
         <div class="col-12 col-md-4">
          <div class="metric-card h-100">
-          <div class="metric-title">
-           Attended
-          </div>
-          <div class="metric-value text-success" id="statAttended">
-           -
-          </div>
-          <div class="text-muted">
-           Present
-          </div>
+          <div class="metric-title">Attended</div>
+          <div class="metric-value text-success" id="statAttended">0</div>
          </div>
         </div>
         <div class="col-12 col-md-4">
          <div class="metric-card h-100">
-          <div class="metric-title">
-           Missed
-          </div>
-          <div class="metric-value text-danger" id="statMissed">
-           -
-          </div>
-          <div class="text-muted">
-           Absent
-          </div>
+          <div class="metric-title">Missed</div>
+          <div class="metric-value text-danger" id="statMissed">0</div>
          </div>
         </div>
        </div>
       </div>
      </div>
-     
-     <div class="mb-4" id="lowAttendanceAlerts">
-         </div>
 
      <div class="card mb-3">
-      <div class="card-body d-flex flex-wrap gap-2 align-items-center">
-       <div class="me-auto fw-semibold">
-        My Courses
-       </div>
-       <div class="input-group" style="max-width:280px;">
-        <span class="input-group-text">
-         <i class="fa-solid fa-magnifying-glass">
-         </i>
-        </span>
-        <input class="form-control" id="courseFilter" placeholder="Filter by course name" type="text"/>
-       </div>
-       <div class="input-group" style="max-width:280px;">
-        <label class="input-group-text" for="sortSelect">
-         <i class="fa-solid fa-arrow-up-wide-short">
-         </i>
-        </label>
-        <select class="form-select" id="sortSelect">
-         <option selected="" value="name-asc">
-          Sort: Name (A–Z)
-         </option>
-         <option value="name-desc">
-          Sort: Name (Z–A)
-         </option>
-         <option value="perc-desc">
-          Sort: Attendance (High→Low)
-         </option>
-         <option value="perc-asc">
-          Sort: Attendance (Low→High)
-         </option>
-        </select>
-       </div>
-       <a class="btn btn-light" href="./attendance_history.html">
-        <i class="fa-regular fa-file-lines me-1">
-        </i>
-        Full History
-       </a>
+      <div class="card-body d-flex align-items-center">
+       <div class="fw-semibold">My Enrolled Courses</div>
       </div>
+     </div>
+     
+     <div id="courseLoading" class="text-center py-4">
+        <div class="spinner-border text-warning" role="status"></div>
+        <p class="mt-2 text-muted">Loading your courses...</p>
      </div>
      
      <div class="accordion accordion-flush" id="courseAccordion">
-        <div class="text-center py-4 text-muted" id="loadingCourses">
-            <div class="spinner-border text-primary mb-2" role="status"></div>
-            <div>Loading your courses...</div>
         </div>
-     </div>
 
     </div>
    </main>
   </div>
-  <a class="fab-scan btn btn-primary btn-lg rounded-circle" data-bs-title="Scan Attendance" data-bs-toggle="tooltip" href="./scan_page.html">
-   <i class="fa-solid fa-qrcode">
-   </i>
-  </a>
-  <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1080;">
-   <div aria-atomic="true" aria-live="assertive" class="toast" id="syncToast" role="alert">
-    <div class="toast-header">
-     <i class="fa-solid fa-rotate me-2 text-primary">
-     </i>
-     <strong class="me-auto">
-      Sync Status
-     </strong>
-     <small>
-      Just now
-     </small>
-     <button aria-label="Close" class="btn-close ms-2 mb-1" data-bs-dismiss="toast" type="button">
-     </button>
-    </div>
-    <div class="toast-body">
-     Attendance data synced successfully.
-    </div>
-   </div>
-  </div>
+
   <footer class="py-3 border-top bg-white mt-4">
-   <div class="container d-flex flex-wrap justify-content-between align-items-center">
-    <span class="text-muted">
-     ©
-     <span id="year-stu">
-      2025
-     </span>
-     Hybrid Attendance
-    </span>
-    <ul class="nav">
-     <li class="nav-item">
-      <a class="nav-link px-2 text-muted" href="./reports_page.html">
-       Reports
-      </a>
-     </li>
-     <li class="nav-item">
-      <a class="nav-link px-2 text-muted" href="./settings_page.html">
-       Settings
-      </a>
-     </li>
-    </ul>
+   <div class="container text-center">
+    <span class="text-muted">© <span id="year-stu">2025</span> Hybrid Attendance</span>
    </div>
   </footer>
 
-  <script>
-   document.getElementById('year-stu').textContent = new Date().getFullYear();
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.12.4/dist/sweetalert2.all.min.js">
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js">
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
-  </script>
-
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  
   <script src="api.js"></script>
 
   <script>
-document.addEventListener('DOMContentLoaded', async () => {
-    // Initialize tooltips
-    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    tooltipTriggerList.map(el => new bootstrap.Tooltip(el));
+    document.addEventListener('DOMContentLoaded', async () => {
+        document.getElementById('year-stu').textContent = new Date().getFullYear();
 
-    // Show initial sync toast
-    const syncToastEl = document.getElementById('syncToast');
-    const syncToast = new bootstrap.Toast(syncToastEl, { delay: 3000 });
-    setTimeout(() => syncToast.show(), 800);
+        // 1. Guard the route: Ensure only students can access this page
+        const user = API.auth.guard(['student']);
+        if (!user) return; // Halt script if redirecting to login
 
-    // 1. Guard the route: Ensure only students can access this
-    const user = API.auth.guard(['student']);
-    if (!user) return; // Halt if not logged in or wrong role
+        // 2. Populate User Info
+        document.getElementById('headerUserName').textContent = user.full_name;
+        document.getElementById('sidebarStudentName').textContent = user.full_name;
+        document.getElementById('sidebarStudentId').textContent = `ID: ${user.inst_id}`;
+        document.getElementById('studentNameGreeting').textContent = user.full_name;
 
-    // 2. Set user details in UI
-    document.getElementById('studentName').textContent = user.full_name;
-    document.getElementById('sidebarStudentName').textContent = user.full_name;
-
-    // SweetAlert: Logout confirm
-    document.getElementById('logoutBtn').addEventListener('click', (e) => {
-        e.preventDefault();
-        Swal.fire({
-            title: 'Logout?',
-            text: 'You will be returned to the login page.',
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#f08e1b',
-            confirmButtonText: 'Logout',
-        }).then((res) => {
-            if (res.isConfirmed) {
-                API.auth.logout();
-            }
-        });
-    });
-
-    // Color helpers for charts and progress bars
-    function getCSSVar(name) {
-        return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-    }
-    function colorForPercentage(p) {
-        if (p >= 85) return getCSSVar('--color-success') || '#00774E';
-        if (p >= 75) return getCSSVar('--color-warning') || '#FFA500';
-        return getCSSVar('--color-error') || '#CD2026';
-    }
-    function getBootstrapColorClass(p) {
-        if (p >= 85) return 'success';
-        if (p >= 75) return 'warning';
-        return 'danger';
-    }
-
-    try {
-        // 3. Fetch real attendance data from backend
-        const summaryData = await API.reports.byStudent(user.id);
-        const courses = summaryData.courses || [];
-        
-        let totalClasses = 0, totalPresent = 0, totalMissed = 0;
-        
-        // Calculate totals across all courses
-        courses.forEach(c => {
-            totalClasses += c.total_sessions;
-            // "Attended" counts as present or late
-            totalPresent += (c.present + c.late);
-            totalMissed += c.absent; 
-        });
-
-        // 4. Update KPI Cards
-        document.getElementById('statTotal').textContent = totalClasses;
-        document.getElementById('statAttended').textContent = totalPresent;
-        document.getElementById('statMissed').textContent = totalMissed;
-
-        // 5. Update Donut Chart
-        const percent = totalClasses === 0 ? 0 : Math.round((totalPresent / totalClasses) * 100);
-        document.getElementById('donutCenterText').textContent = percent + '%';
-        
-        const donutCanvas = document.getElementById('overallDonut');
-        new Chart(donutCanvas, {
-            type: 'doughnut',
-            data: {
-                labels: ['Attended', 'Missed'],
-                datasets: [{
-                    data: [percent, 100 - percent],
-                    backgroundColor: [colorForPercentage(percent), getCSSVar('--neutral-soft') || '#f0f1f2'],
-                    borderWidth: 0,
-                    hoverOffset: 3,
-                    cutout: '70%'
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: { callbacks: { label: (ctx) => `${ctx.label}: ${ctx.raw}%` } }
-                }
-            }
-        });
-        document.getElementById('donutSkeleton').style.display = 'none';
-
-        // 6. Render Dynamic Alerts for Low Attendance
-        const alertsContainer = document.getElementById('lowAttendanceAlerts');
-        let lowAttendanceCount = 0;
-        courses.forEach(c => {
-            if (c.total_sessions > 0 && c.percentage < 75) {
-                lowAttendanceCount++;
-                const alertHtml = `
-                <div class="alert alert-warning d-flex align-items-start justify-content-between" role="alert">
-                 <div>
-                  <i class="fa-solid fa-triangle-exclamation me-2"></i>
-                  <strong>Warning:</strong> Your attendance for <strong>${c.course_code}</strong> is <strong>${c.percentage}%</strong>, which is below the required <strong>75%</strong>.
-                 </div>
-                 <button class="btn btn-sm btn-outline-dark" onclick="this.closest('.alert').remove()" type="button">
-                  <i class="fa-solid fa-xmark"></i>
-                 </button>
-                </div>`;
-                alertsContainer.insertAdjacentHTML('beforeend', alertHtml);
-            }
-        });
-        
-        if(lowAttendanceCount > 0) {
-            document.getElementById('notifCount').textContent = lowAttendanceCount;
-            document.getElementById('notifCount').style.display = 'block';
-        }
-
-        // 7. Render Courses Accordion
-        const accordion = document.getElementById('courseAccordion');
-        accordion.innerHTML = ''; // Clear loading state
-        
-        if (courses.length === 0) {
-            accordion.innerHTML = '<div class="text-center py-4 text-muted">You are not enrolled in any active courses yet.</div>';
-        }
-
-        courses.forEach((c, index) => {
-            const courseIdClean = `course_${c.course_id}`;
-            const colorClass = getBootstrapColorClass(c.percentage);
-            
-            const itemHtml = `
-            <div class="accordion-item course-item" data-course-name="${c.course_code} - ${c.course_name}" data-course-perc="${c.percentage}">
-             <h2 class="accordion-header" id="heading_${courseIdClean}">
-              <button aria-controls="collapse_${courseIdClean}" aria-expanded="false" class="accordion-button collapsed d-flex align-items-center" data-bs-target="#collapse_${courseIdClean}" data-bs-toggle="collapse" type="button">
-               <div class="flex-grow-1 d-flex align-items-center justify-content-between w-100">
-                <div class="me-3">
-                 <div class="fw-semibold">${c.course_code} - ${c.course_name}</div>
-                 <small class="text-muted">Total Sessions: ${c.total_sessions}</small>
-                </div>
-                <div class="course-progress d-flex align-items-center gap-3">
-                 <div class="text-muted small text-end">
-                  <div>Attendance</div>
-                  <div class="fw-semibold text-${colorClass}">${c.percentage}%</div>
-                 </div>
-                 <div class="progress" style="width:180px; height:10px;">
-                  <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="${c.percentage}" class="progress-bar bg-${colorClass}" role="progressbar" style="width: ${c.percentage}%;">
-                  </div>
-                 </div>
-                </div>
-               </div>
-              </button>
-             </h2>
-             <div aria-labelledby="heading_${courseIdClean}" class="accordion-collapse collapse" data-bs-parent="#courseAccordion" id="collapse_${courseIdClean}">
-              <div class="accordion-body">
-               <div class="row text-center mb-3">
-                   <div class="col"><div class="text-muted small">Present</div><div class="fw-bold text-success">${c.present}</div></div>
-                   <div class="col"><div class="text-muted small">Late</div><div class="fw-bold text-warning">${c.late}</div></div>
-                   <div class="col"><div class="text-muted small">Absent</div><div class="fw-bold text-danger">${c.absent}</div></div>
-               </div>
-               <div class="text-center">
-                   <a href="./attendance_history.html?course=${c.course_id}" class="btn btn-sm btn-outline-primary">View Detailed History</a>
-               </div>
-              </div>
-             </div>
-            </div>`;
-            accordion.insertAdjacentHTML('beforeend', itemHtml);
-        });
-
-        // 8. Re-initialize Course filtering & sorting logic
-        const filterInput = document.getElementById('courseFilter');
-        const headerSearch = document.getElementById('courseSearchHeader');
-        const sortSelect = document.getElementById('sortSelect');
-
-        function getItems() {
-            return Array.from(accordion.querySelectorAll('.course-item'));
-        }
-
-        function applyFilter() {
-            const term = (filterInput.value || '').toLowerCase();
-            getItems().forEach(item => {
-                const name = (item.getAttribute('data-course-name') || '').toLowerCase();
-                item.style.display = name.includes(term) ? '' : 'none';
+        // 3. Handle Logout
+        document.getElementById('logoutBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            Swal.fire({
+                title: 'Logout?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#f08e1b',
+                confirmButtonText: 'Logout',
+            }).then((res) => {
+                if (res.isConfirmed) API.auth.logout();
             });
-        }
+        });
 
-        function applySort() {
-            const val = sortSelect.value;
-            const items = getItems();
-            let sorter;
-            switch (val) {
-                case 'name-asc':
-                    sorter = (a, b) => a.dataset.courseName.localeCompare(b.dataset.courseName);
-                    break;
-                case 'name-desc':
-                    sorter = (a, b) => b.dataset.courseName.localeCompare(a.dataset.courseName);
-                    break;
-                case 'perc-desc':
-                    sorter = (a, b) => Number(b.dataset.coursePerc) - Number(a.dataset.coursePerc);
-                    break;
-                case 'perc-asc':
-                    sorter = (a, b) => Number(a.dataset.coursePerc) - Number(b.dataset.coursePerc);
-                    break;
+        // 4. Fetch Live Data
+        try {
+            const summary = await API.reports.byStudent(user.id);
+            
+            let totalSessions = 0, totalPresent = 0, totalAbsent = 0;
+            const accordion = document.getElementById('courseAccordion');
+            accordion.innerHTML = ''; // Clear loading
+
+            if(summary.courses.length === 0) {
+                accordion.innerHTML = '<div class="alert alert-info">You are not enrolled in any active courses yet.</div>';
             }
-            items.sort(sorter).forEach(el => accordion.appendChild(el));
+
+            // Populate courses dynamically
+            summary.courses.forEach((course, index) => {
+                totalSessions += course.total_sessions;
+                totalPresent += course.present;
+                totalAbsent += (course.absent + course.late); // Combine absent & late for "missed"
+
+                const safeId = `course_${course.course_id}`;
+                const barColor = course.percentage >= 75 ? 'bg-success' : 'bg-danger';
+                const textColor = course.percentage >= 75 ? 'text-success' : 'text-danger';
+
+                accordion.innerHTML += `
+                <div class="accordion-item course-item">
+                    <h2 class="accordion-header" id="head_${safeId}">
+                        <button class="accordion-button collapsed d-flex align-items-center" data-bs-target="#col_${safeId}" data-bs-toggle="collapse" type="button">
+                            <div class="flex-grow-1 d-flex align-items-center justify-content-between w-100 pe-3">
+                                <div>
+                                    <div class="fw-semibold">${course.course_code} - ${course.course_name}</div>
+                                    <small class="text-muted">Present: ${course.present} / Total: ${course.total_sessions}</small>
+                                </div>
+                                <div class="course-progress d-flex align-items-center gap-3">
+                                    <div class="text-muted small text-end">
+                                        <div class="fw-semibold ${textColor}">${course.percentage}%</div>
+                                    </div>
+                                    <div class="progress" style="width:120px; height:8px;">
+                                        <div class="progress-bar ${barColor}" style="width: ${course.percentage}%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </button>
+                    </h2>
+                    <div id="col_${safeId}" class="accordion-collapse collapse" data-bs-parent="#courseAccordion">
+                        <div class="accordion-body">
+                            <p class="small text-muted">Detailed session history is available via the API in production.</p>
+                        </div>
+                    </div>
+                </div>`;
+            });
+
+            document.getElementById('courseLoading').style.display = 'none';
+
+            // 5. Update KPI Stats
+            document.getElementById('statTotal').textContent = totalSessions;
+            document.getElementById('statAttended').textContent = totalPresent;
+            document.getElementById('statMissed').textContent = totalAbsent;
+
+            // 6. Draw Live Chart
+            const overallPercent = totalSessions === 0 ? 0 : Math.round((totalPresent / totalSessions) * 100);
+            
+            document.getElementById('donutLoading').style.display = 'none';
+            document.getElementById('overallDonut').style.display = 'block';
+            document.getElementById('donutCenterText').style.display = 'block';
+            document.getElementById('donutCenterText').textContent = `${overallPercent}%`;
+
+            const ctx = document.getElementById('overallDonut');
+            const donutColor = overallPercent >= 75 ? '#00774E' : '#CD2026';
+            
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Attended', 'Missed'],
+                    datasets: [{
+                        data: [overallPercent, 100 - overallPercent],
+                        backgroundColor: [donutColor, '#f0f1f2'],
+                        borderWidth: 0,
+                        cutout: '70%'
+                    }]
+                },
+                options: { responsive: true, plugins: { legend: { display: false } } }
+            });
+
+        } catch (error) {
+            console.error("Dashboard error:", error);
+            document.getElementById('courseLoading').innerHTML = '<div class="text-danger">Failed to load attendance data.</div>';
         }
-
-        filterInput.addEventListener('input', applyFilter);
-        sortSelect.addEventListener('change', applySort);
-        headerSearch.addEventListener('input', (e) => {
-            filterInput.value = e.target.value;
-            applyFilter();
-        });
-
-        // Apply initial sort
-        applySort();
-
-    } catch (err) {
-        console.error("Dashboard Load Error:", err);
-        Swal.fire('Connection Error', 'Could not load your attendance data from the server. Make sure the backend is running.', 'error');
-        document.getElementById('donutSkeleton').style.display = 'none';
-        document.getElementById('loadingCourses').innerHTML = '<div class="text-danger">Failed to load courses.</div>';
-    }
-
-    // Fake notifications click (Optional - modify to load real notifications later)
-    document.getElementById('notifBellBtn').addEventListener('click', () => {
-        const count = document.getElementById('notifCount').textContent;
-        Swal.fire({
-            title: 'Notifications',
-            html: count > 0 ? `<div class="text-start">You have ${count} courses with low attendance. Please check your Dashboard warnings.</div>` : 'No new notifications.',
-            confirmButtonColor: '#f08e1b'
-        });
     });
-});
   </script>
  </body>
 </html>
