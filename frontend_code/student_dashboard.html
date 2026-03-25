@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>
+   Student Dashboard • Hybrid Attendance
+  </title>
+  <!-- Google Fonts: Poppins -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <!-- Font Awesome 6 -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet"/>
+  <!-- Global Theme CSS -->
+  <link href="style.css" rel="stylesheet"/>
+  <!-- Page-specific CSS -->
+  <link href="student_dashboard.css" rel="stylesheet"/>
+ </head>
+ <body class="view-grid">
+  <!-- Header (fixed at top) -->
+  <nav class="navbar navbar-expand-md navbar-dark sticky-top" style="background:#f08e1b;">
+   <div class="container-fluid">
+    <button aria-controls="studentSidebar" aria-label="Toggle sidebar" class="btn btn-outline-light d-md-none me-2" data-bs-target="#studentSidebar" data-bs-toggle="collapse" type="button">
+     <i class="fa-solid fa-bars">
+     </i>
+    </button>
+    <a class="navbar-brand fw-bold" href="./student_dashboard.html">
+     Student
+    </a>
+    <form class="d-none d-md-flex ms-3" role="search" style="max-width:420px;flex:1;">
+     <input aria-label="Search" class="form-control" id="courseSearchHeader" placeholder="Search courses" type="search"/>
+    </form>
+    <div class="d-flex align-items-center ms-auto">
+     <a class="btn btn-light me-2" href="./scan_page.html">
+      <i class="fa-solid fa-qrcode me-1">
+      </i>
+      Scan Now
+     </a>
+     <button aria-label="Notifications" class="btn btn-link text-white me-2 position-relative" id="notifBellBtn">
+      <i class="fa-solid fa-bell">
+      </i>
+      <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+       3
+      </span>
+     </button>
+     <div class="dropdown">
+      <button aria-expanded="false" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
+       <i class="fa-solid fa-user me-1">
+       </i>
+       Me
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end">
+       <li>
+        <a class="dropdown-item" href="./user_profile.html" id="profileLink">
+         My Profile
+        </a>
+       </li>
+       <li>
+        <hr class="dropdown-divider"/>
+       </li>
+       <li>
+        <a class="dropdown-item text-danger" href="#" id="logoutBtn">
+         Logout
+        </a>
+       </li>
+      </ul>
+     </div>
+    </div>
+   </div>
+  </nav>
+  <div class="app-shell d-flex">
+   <!-- Sidebar (Left) -->
+   <!-- Student App Sidebar (links adapted to local pages) -->
+   <aside class="d-flex flex-column flex-shrink-0 bg-light border-end" style="min-height:100vh;width:260px;">
+    <div class="p-3 border-bottom d-flex align-items-center justify-content-between" style="background:#f08e1b;">
+     <a class="text-white fw-bold text-decoration-none" href="./student_dashboard.html">
+      Hybrid Attendance
+     </a>
+     <button aria-controls="studentSidebar" aria-label="Toggle sidebar" class="btn btn-sm btn-outline-light d-md-none" data-bs-target="#studentSidebar" data-bs-toggle="collapse" type="button">
+      <i class="fa-solid fa-bars">
+      </i>
+     </button>
+    </div>
+    <div class="collapse show" id="studentSidebar">
+     <div class="p-3">
+      <div class="d-flex align-items-center mb-4">
+       <img alt="Avatar" class="rounded-circle me-2" onerror="this.onerror=null;this.src='https://picsum.photos/seed/student/80/80';" src="./assets/avatar-student.png" style="width:40px;height:40px;"/>
+       <div>
+        <div class="fw-semibold" id="sidebarStudentName">
+         Student
+        </div>
+        <small class="text-muted">
+         My Workspace
+        </small>
+       </div>
+      </div>
+      <ul class="nav nav-pills flex-column">
+       <li class="nav-item mb-1">
+        <a class="nav-link text-dark active" href="./student_dashboard.html">
+         <i class="fa-solid fa-house me-2">
+         </i>
+         Dashboard
+        </a>
+       </li>
+       <li class="nav-item mb-1">
+        <a class="nav-link text-dark" href="./scan_page.html">
+         <i class="fa-solid fa-qrcode me-2">
+         </i>
+         Mark Attendance (Scan)
+        </a>
+       </li>
+       <li class="nav-item mb-1">
+        <a class="nav-link text-dark" href="./attendance_history.html">
+         <i class="fa-solid fa-list-check me-2">
+         </i>
+         Attendance History
+        </a>
+       </li>
+       <li class="nav-item mt-3">
+        <a class="nav-link text-dark" href="./user_profile.html">
+         <i class="fa-solid fa-user me-2">
+         </i>
+         My Profile
+        </a>
+       </li>
+      </ul>
+     </div>
+    </div>
+    <style>
+     .nav-link:hover{background:rgba(240,142,27,.1);border-radius:.5rem}
+        .nav-link.active{background:#f08e1b;color:#fff;border-radius:.5rem}
+    </style>
+   </aside>
+   <!-- Main Content -->
+   <main class="flex-grow-1">
+    <div class="container-fluid py-3 py-lg-4">
+     <!-- Page Header -->
+     <div class="page-header">
+      <div class="d-flex align-items-center gap-3">
+       <div class="avatar">
+        <img alt="Student Avatar" class="w-100 h-100" onerror="this.onerror=null;this.src='https://picsum.photos/seed/ava/80/80';" src="./assets/avatar-student.png"/>
+       </div>
+       <div>
+        <div class="page-title">
+         Welcome back,
+         <span id="studentName">
+          Alex Johnson
+         </span>
+        </div>
+        <div class="text-muted">
+         Your attendance at a glance
+        </div>
+       </div>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+       <a class="btn btn-light" href="./attendance_history.html">
+        <i class="fa-regular fa-calendar-check me-1">
+        </i>
+        View History
+       </a>
+       <a class="btn btn-primary" href="./scan_page.html">
+        <i class="fa-solid fa-qrcode me-1">
+        </i>
+        Scan Attendance
+       </a>
+      </div>
+     </div>
+     <!-- Attendance Overview -->
+     <div class="row g-3 mb-4" id="attendanceOverview">
+      <!-- Donut Chart Card -->
+      <div class="col-12 col-lg-4">
+       <div class="card h-100">
+        <div class="card-header">
+         <span class="widget-title">
+          Overall Attendance
+         </span>
+        </div>
+        <div class="card-body d-flex align-items-center justify-content-center" style="min-height:260px; position:relative;">
+         <div class="skeleton w-100 h-100 position-absolute top-0 start-0 rounded" id="donutSkeleton">
+         </div>
+         <canvas aria-label="Overall attendance donut chart" height="280" id="overallDonut" width="280">
+         </canvas>
+         <div class="donut-center-text" id="donutCenterText">
+          82%
+         </div>
+        </div>
+        <div class="card-footer d-flex justify-content-between small text-muted">
+         <span>
+          Green ≥ 85%
+         </span>
+         <span>
+          Orange 75–84%
+         </span>
+         <span>
+          Red &lt; 75%
+         </span>
+        </div>
+       </div>
+      </div>
+      <!-- Stats Cards -->
+      <div class="col-12 col-lg-8">
+       <div class="row g-3">
+        <div class="col-12 col-md-4">
+         <div class="metric-card h-100">
+          <div class="metric-title">
+           Total Classes
+          </div>
+          <div class="metric-value" id="statTotal">
+           120
+          </div>
+          <div class="text-muted">
+           Till date
+          </div>
+         </div>
+        </div>
+        <div class="col-12 col-md-4">
+         <div class="metric-card h-100">
+          <div class="metric-title">
+           Attended
+          </div>
+          <div class="metric-value text-success" id="statAttended">
+           98
+          </div>
+          <div class="text-muted">
+           Present
+          </div>
+         </div>
+        </div>
+        <div class="col-12 col-md-4">
+         <div class="metric-card h-100">
+          <div class="metric-title">
+           Missed
+          </div>
+          <div class="metric-value text-danger" id="statMissed">
+           22
+          </div>
+          <div class="text-muted">
+           Absent
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+     <!-- Low Attendance Alerts -->
+     <div class="mb-4" id="lowAttendanceAlerts">
+      <div class="alert alert-warning d-flex align-items-start justify-content-between" role="alert">
+       <div>
+        <i class="fa-solid fa-triangle-exclamation me-2">
+        </i>
+        <strong>
+         Warning:
+        </strong>
+        Your attendance for
+        <strong>
+         MATH 101
+        </strong>
+        is
+        <strong>
+         68%
+        </strong>
+        , which is below the required
+        <strong>
+         75%
+        </strong>
+        .
+       </div>
+       <button class="btn btn-sm btn-outline-dark" data-dismiss-alert="" type="button">
+        <i class="fa-solid fa-xmark">
+        </i>
+       </button>
+      </div>
+      <div class="alert alert-warning d-flex align-items-start justify-content-between" role="alert">
+       <div>
+        <i class="fa-solid fa-triangle-exclamation me-2">
+        </i>
+        <strong>
+         Warning:
+        </strong>
+        Your attendance for
+        <strong>
+         PHY 202
+        </strong>
+        is
+        <strong>
+         72%
+        </strong>
+        , which is below the required
+        <strong>
+         75%
+        </strong>
+        .
+       </div>
+       <button class="btn btn-sm btn-outline-dark" data-dismiss-alert="" type="button">
+        <i class="fa-solid fa-xmark">
+        </i>
+       </button>
+      </div>
+     </div>
+     <!-- Course Attendance Controls -->
+     <div class="card mb-3">
+      <div class="card-body d-flex flex-wrap gap-2 align-items-center">
+       <div class="me-auto fw-semibold">
+        My Courses
+       </div>
+       <div class="input-group" style="max-width:280px;">
+        <span class="input-group-text">
+         <i class="fa-solid fa-magnifying-glass">
+         </i>
+        </span>
+        <input class="form-control" id="courseFilter" placeholder="Filter by course name" type="text"/>
+       </div>
+       <div class="input-group" style="max-width:280px;">
+        <label class="input-group-text" for="sortSelect">
+         <i class="fa-solid fa-arrow-up-wide-short">
+         </i>
+        </label>
+        <select class="form-select" id="sortSelect">
+         <option selected="" value="name-asc">
+          Sort: Name (A–Z)
+         </option>
+         <option value="name-desc">
+          Sort: Name (Z–A)
+         </option>
+         <option value="perc-desc">
+          Sort: Attendance (High→Low)
+         </option>
+         <option value="perc-asc">
+          Sort: Attendance (Low→High)
+         </option>
+        </select>
+       </div>
+       <a class="btn btn-light" href="./attendance_history.html">
+        <i class="fa-regular fa-file-lines me-1">
+        </i>
+        Full History
+       </a>
+      </div>
+     </div>
+     <!-- Course Attendance List (Accordion) -->
+     <div class="accordion accordion-flush" id="courseAccordion">
+      <!-- Course Item Template (repeated) -->
+      <!-- CSE 201 -->
+      <div class="accordion-item course-item" data-course-name="CSE 201 - Data Structures" data-course-perc="89">
+       <h2 class="accordion-header" id="headingCSE201">
+        <button aria-controls="collapseCSE201" aria-expanded="false" class="accordion-button collapsed d-flex align-items-center" data-bs-target="#collapseCSE201" data-bs-toggle="collapse" type="button">
+         <div class="flex-grow-1 d-flex align-items-center justify-content-between w-100">
+          <div class="me-3">
+           <div class="fw-semibold">
+            CSE 201 - Data Structures
+           </div>
+           <small class="text-muted">
+            Code: CSE201
+           </small>
+          </div>
+          <div class="course-progress d-flex align-items-center gap-3">
+           <div class="text-muted small text-end">
+            <div>
+             Attendance
+            </div>
+            <div class="fw-semibold text-success">
+             89%
+            </div>
+           </div>
+           <div class="progress" style="width:180px; height:10px;">
+            <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="89" class="progress-bar bg-success" role="progressbar" style="width: 89%;">
+            </div>
+           </div>
+          </div>
+         </div>
+        </button>
+       </h2>
+       <div aria-labelledby="headingCSE201" class="accordion-collapse collapse" data-bs-parent="#courseAccordion" id="collapseCSE201">
+        <div class="accordion-body">
+         <div class="d-flex flex-wrap align-items-center justify-content-between mb-2 small text-muted">
+          <div>
+           Recent Sessions
+          </div>
+          <div>
+           Showing 1–6 of 18
+          </div>
+         </div>
+         <div class="table-responsive">
+          <table class="table table-theme align-middle mb-2">
+           <thead>
+            <tr>
+             <th>
+              Date
+              <button class="btn btn-sm btn-light" data-sort-col="date">
+               <i class="fa-solid fa-sort">
+               </i>
+              </button>
+             </th>
+             <th>
+              Status
+             </th>
+             <th>
+              Notes
+             </th>
+            </tr>
+           </thead>
+           <tbody>
+            <tr>
+             <td>
+              2025-03-10
+             </td>
+             <td>
+              <span class="badge bg-success-subtle text-success fw-semibold">
+               Present
+              </span>
+             </td>
+             <td>
+              On time
+             </td>
+            </tr>
+            <tr>
+             <td>
+              2025-03-07
+             </td>
+             <td>
+              <span class="badge bg-danger-subtle text-danger fw-semibold">
+               Absent
+              </span>
+             </td>
+             <td>
+              Sick leave
+             </td>
+            </tr>
+            <tr>
+             <td>
+              2025-03-05
+             </td>
+             <td>
+              <span class="badge bg-success-subtle text-success fw-semibold">
+               Present
+              </span>
+             </td>
+             <td>
+              —
+             </td>
+            </tr>
+            <tr>
+             <td>
+              2025-03-03
+             </td>
+             <td>
+              <span class="badge bg-primary-subtle text-primary fw-semibold">
+               Manual Override
+              </span>
+             </td>
+             <td>
+              Faculty approved
+             </td>
+            </tr>
+            <tr>
+             <td>
+              2025-02-28
+             </td>
+             <td>
+              <span class="badge bg-success-subtle text-success fw-semibold">
+               Present
+              </span>
+             </td>
+             <td>
+              —
+             </td>
+            </tr>
+            <tr>
+             <td>
+              2025-02-26
+             </td>
+             <td>
+              <span class="badge bg-success-subtle text-success fw-semibold">
+               Present
+              </span>
+             </td>
+             <td>
+              —
+             </td>
+            </tr>
+           </tbody>
+          </table>
+         </div>
+         <div class="d-flex align-items-center justify-content-between">
+          <div class="text-muted small">
+           Page 1 of 3
+          </div>
+          <div class="btn-group">
+           <button class="btn btn-sm btn-light" disabled="">
+            Prev
+           </button>
+           <button class="btn btn-sm btn-light">
+            Next
+           </button>
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+      <!-- MATH 101 -->
+      <div class="accordion-item course-item" data-course-name="MATH 101 - Calculus I" data-course-perc="68">
+       <h2 class="accordion-header" id="headingMATH101">
+        <button aria-controls="collapseMATH101" aria-expanded="false" class="accordion-button collapsed" data-bs-target="#collapseMATH101" data-bs-toggle="collapse" type="button">
+         <div class="flex-grow-1 d-flex align-items-center justify-content-between w-100">
+          <div class="me-3">
+           <div class="fw-semibold">
+            MATH 101 - Calculus I
+           </div>
+           <small class="text-muted">
+            Code: MATH101
+           </small>
+          </div>
+          <div class="course-progress d-flex align-items-center gap-3">
+           <div class="text-muted small text-end">
+            <div>
+             Attendance
+            </div>
+            <div class="fw-semibold text-danger">
+             68%
+            </div>
+           </div>
+           <div class="progress" style="width:180px; height:10px;">
+            <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="68" class="progress-bar bg-danger" role="progressbar" style="width: 68%;">
+            </div>
+           </div>
+          </div>
+         </div>
+        </button>
+       </h2>
+       <div aria-labelledby="headingMATH101" class="accordion-collapse collapse" data-bs-parent="#courseAccordion" id="collapseMATH101">
+        <div class="accordion-body">
+         <div class="d-flex flex-wrap align-items-center justify-content-between mb-2 small text-muted">
+          <div>
+           Recent Sessions
+          </div>
+          <div>
+           Showing 1–6 of 12
+          </div>
+         </div>
+         <div class="table-responsive">
+          <table class="table table-theme align-middle mb-2">
+           <thead>
+            <tr>
+             <th>
+              Date
+             </th>
+             <th>
+              Status
+             </th>
+             <th>
+              Notes
+             </th>
+            </tr>
+           </thead>
+           <tbody>
+            <tr>
+             <td>
+              2025-03-11
+             </td>
+             <td>
+              <span class="badge bg-danger-subtle text-danger fw-semibold">
+               Absent
+              </span>
+             </td>
+             <td>
+              —
+             </td>
+            </tr>
+            <tr>
+             <td>
+              2025-03-08
+             </td>
+             <td>
+              <span class="badge bg-success-subtle text-success fw-semibold">
+               Present
+              </span>
+             </td>
+             <td>
+              —
+             </td>
+            </tr>
+            <tr>
+             <td>
+              2025-03-05
+             </td>
+             <td>
+              <span class="badge bg-danger-subtle text-danger fw-semibold">
+               Absent
+              </span>
+             </td>
+             <td>
+              Missed bus
+             </td>
+            </tr>
+            <tr>
+             <td>
+              2025-03-02
+             </td>
+             <td>
+              <span class="badge bg-success-subtle text-success fw-semibold">
+               Present
+              </span>
+             </td>
+             <td>
+              —
+             </td>
+            </tr>
+            <tr>
+             <td>
+              2025-02-27
+             </td>
+             <td>
+              <span class="badge bg-primary-subtle text-primary fw-semibold">
+               Manual Override
+              </span>
+             </td>
+             <td>
+              Verified by TA
+             </td>
+            </tr>
+            <tr>
+             <td>
+              2025-02-24
+             </td>
+             <td>
+              <span class="badge bg-success-subtle text-success fw-semibold">
+               Present
+              </span>
+             </td>
+             <td>
+              —
+             </td>
+            </tr>
+           </tbody>
+          </table>
+         </div>
+         <div class="d-flex align-items-center justify-content-between">
+          <div class="text-muted small">
+           Page 1 of 2
+          </div>
+          <div class="btn-group">
+           <button class="btn btn-sm btn-light" disabled="">
+            Prev
+           </button>
+           <button class="btn btn-sm btn-light">
+            Next
+           </button>
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+      <!-- PHY 202 -->
+      <div class="accordion-item course-item" data-course-name="PHY 202 - Electromagnetics" data-course-perc="72">
+       <h2 class="accordion-header" id="headingPHY202">
+        <button aria-controls="collapsePHY202" aria-expanded="false" class="accordion-button collapsed" data-bs-target="#collapsePHY202" data-bs-toggle="collapse" type="button">
+         <div class="flex-grow-1 d-flex align-items-center justify-content-between w-100">
+          <div class="me-3">
+           <div class="fw-semibold">
+            PHY 202 - Electromagnetics
+           </div>
+           <small class="text-muted">
+            Code: PHY202
+           </small>
+          </div>
+          <div class="course-progress d-flex align-items-center gap-3">
+           <div class="text-muted small text-end">
+            <div>
+             Attendance
+            </div>
+            <div class="fw-semibold text-danger">
+             72%
+            </div>
+           </div>
+           <div class="progress" style="width:180px; height:10px;">
+            <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="72" class="progress-bar bg-danger" role="progressbar" style="width: 72%;">
+            </div>
+           </div>
+          </div>
+         </div>
+        </button>
+       </h2>
+       <div aria-labelledby="headingPHY202" class="accordion-collapse collapse" data-bs-parent="#courseAccordion" id="collapsePHY202">
+        <div class="accordion-body">
+         <div class="d-flex flex-wrap align-items-center justify-content-between mb-2 small text-muted">
+          <div>
+           Recent Sessions
+          </div>
+          <div>
+           Showing 1–6 of 10
+          </div>
+         </div>
+         <div class="table-responsive">
+          <table class="table table-theme align-middle mb-2">
+           <thead>
+            <tr>
+             <th>
+              Date
+             </th>
+             <th>
+              Status
+             </th>
+             <th>
+              Notes
+             </th>
+            </tr>
+           </thead>
+           <tbody>
+            <tr>
+             <td>
+              2025-03-12
+             </td>
+             <td>
+              <span class="badge bg-success-subtle text-success fw-semibold">
+               Present
+              </span>
+             </td>
+             <td>
+              —
+             </td>
+            </tr>
+            <tr>
+             <td>
+              2025-03-09
+             </td>
+             <td>
+              <span class="badge bg-danger-subtle text-danger fw-semibold">
+               Absent
+              </span>
+             </td>
+             <td>
+              —
+             </td>
+            </tr>
+            <tr>
+             <td>
+              2025-03-06
+             </td>
+             <td>
+              <span class="badge bg-success-subtle text-success fw-semibold">
+               Present
+              </span>
+             </td>
+             <td>
+              —
+             </td>
+            </tr>
+            <tr>
+             <td>
+              2025-03-03
+             </td>
+             <td>
+              <span class="badge bg-primary-subtle text-primary fw-semibold">
+               Manual Override
+              </span>
+             </td>
+             <td>
+              QR Scan issue
+             </td>
+            </tr>
+            <tr>
+             <td>
+              2025-02-28
+             </td>
+             <td>
+              <span class="badge bg-success-subtle text-success fw-semibold">
+               Present
+              </span>
+             </td>
+             <td>
+              —
+             </td>
+            </tr>
+            <tr>
+             <td>
+              2025-02-25
+             </td>
+             <td>
+              <span class="badge bg-success-subtle text-success fw-semibold">
+               Present
+              </span>
+             </td>
+             <td>
+              —
+             </td>
+            </tr>
+           </tbody>
+          </table>
+         </div>
+         <div class="d-flex align-items-center justify-content-between">
+          <div class="text-muted small">
+           Page 1 of 2
+          </div>
+          <div class="btn-group">
+           <button class="btn btn-sm btn-light" disabled="">
+            Prev
+           </button>
+           <button class="btn btn-sm btn-light">
+            Next
+           </button>
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+      <!-- ENG 150 -->
+      <div class="accordion-item course-item" data-course-name="ENG 150 - Technical Writing" data-course-perc="84">
+       <h2 class="accordion-header" id="headingENG150">
+        <button aria-controls="collapseENG150" aria-expanded="false" class="accordion-button collapsed" data-bs-target="#collapseENG150" data-bs-toggle="collapse" type="button">
+         <div class="flex-grow-1 d-flex align-items-center justify-content-between w-100">
+          <div class="me-3">
+           <div class="fw-semibold">
+            ENG 150 - Technical Writing
+           </div>
+           <small class="text-muted">
+            Code: ENG150
+           </small>
+          </div>
+          <div class="course-progress d-flex align-items-center gap-3">
+           <div class="text-muted small text-end">
+            <div>
+             Attendance
+            </div>
+            <div class="fw-semibold text-warning">
+             84%
+            </div>
+           </div>
+           <div class="progress" style="width:180px; height:10px;">
+            <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="84" class="progress-bar bg-warning" role="progressbar" style="width: 84%;">
+            </div>
+           </div>
+          </div>
+         </div>
+        </button>
+       </h2>
+       <div aria-labelledby="headingENG150" class="accordion-collapse collapse" data-bs-parent="#courseAccordion" id="collapseENG150">
+        <div class="accordion-body">
+         <div class="d-flex flex-wrap align-items-center justify-content-between mb-2 small text-muted">
+          <div>
+           Recent Sessions
+          </div>
+          <div>
+           Showing 1–6 of 14
+          </div>
+         </div>
+         <div class="table-responsive">
+          <table class="table table-theme align-middle mb-2">
+           <thead>
+            <tr>
+             <th>
+              Date
+             </th>
+             <th>
+              Status
+             </th>
+             <th>
+              Notes
+             </th>
+            </tr>
+           </thead>
+           <tbody>
+            <tr>
+             <td>
+              2025-03-10
+             </td>
+             <td>
+              <span class="badge bg-success-subtle text-success fw-semibold">
+               Present
+              </span>
+             </td>
+             <td>
+              —
+             </td>
+            </tr>
+            <tr>
+             <td>
+              2025-03-07
+             </td>
+             <td>
+              <span class="badge bg-success-subtle text-success fw-semibold">
+               Present
+              </span>
+             </td>
+             <td>
+              —
+             </td>
+            </tr>
+            <tr>
+             <td>
+              2025-03-05
+             </td>
+             <td>
+              <span class="badge bg-danger-subtle text-danger fw-semibold">
+               Absent
+              </span>
+             </td>
+             <td>
+              —
+             </td>
+            </tr>
+            <tr>
+             <td>
+              2025-03-03
+             </td>
+             <td>
+              <span class="badge bg-success-subtle text-success fw-semibold">
+               Present
+              </span>
+             </td>
+             <td>
+              —
+             </td>
+            </tr>
+            <tr>
+             <td>
+              2025-02-28
+             </td>
+             <td>
+              <span class="badge bg-success-subtle text-success fw-semibold">
+               Present
+              </span>
+             </td>
+             <td>
+              —
+             </td>
+            </tr>
+            <tr>
+             <td>
+              2025-02-26
+             </td>
+             <td>
+              <span class="badge bg-primary-subtle text-primary fw-semibold">
+               Manual Override
+              </span>
+             </td>
+             <td>
+              Network issue
+             </td>
+            </tr>
+           </tbody>
+          </table>
+         </div>
+         <div class="d-flex align-items-center justify-content-between">
+          <div class="text-muted small">
+           Page 1 of 3
+          </div>
+          <div class="btn-group">
+           <button class="btn btn-sm btn-light" disabled="">
+            Prev
+           </button>
+           <button class="btn btn-sm btn-light">
+            Next
+           </button>
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+      <!-- HIS 210 -->
+      <div class="accordion-item course-item" data-course-name="HIS 210 - World History" data-course-perc="91">
+       <h2 class="accordion-header" id="headingHIS210">
+        <button aria-controls="collapseHIS210" aria-expanded="false" class="accordion-button collapsed" data-bs-target="#collapseHIS210" data-bs-toggle="collapse" type="button">
+         <div class="flex-grow-1 d-flex align-items-center justify-content-between w-100">
+          <div class="me-3">
+           <div class="fw-semibold">
+            HIS 210 - World History
+           </div>
+           <small class="text-muted">
+            Code: HIS210
+           </small>
+          </div>
+          <div class="course-progress d-flex align-items-center gap-3">
+           <div class="text-muted small text-end">
+            <div>
+             Attendance
+            </div>
+            <div class="fw-semibold text-success">
+             91%
+            </div>
+           </div>
+           <div class="progress" style="width:180px; height:10px;">
+            <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="91" class="progress-bar bg-success" role="progressbar" style="width: 91%;">
+            </div>
+           </div>
+          </div>
+         </div>
+        </button>
+       </h2>
+       <div aria-labelledby="headingHIS210" class="accordion-collapse collapse" data-bs-parent="#courseAccordion" id="collapseHIS210">
+        <div class="accordion-body">
+         <div class="d-flex flex-wrap align-items-center justify-content-between mb-2 small text-muted">
+          <div>
+           Recent Sessions
+          </div>
+          <div>
+           Showing 1–6 of 20
+          </div>
+         </div>
+         <div class="table-responsive">
+          <table class="table table-theme align-middle mb-2">
+           <thead>
+            <tr>
+             <th>
+              Date
+             </th>
+             <th>
+              Status
+             </th>
+             <th>
+              Notes
+             </th>
+            </tr>
+           </thead>
+           <tbody>
+            <tr>
+             <td>
+              2025-03-12
+             </td>
+             <td>
+              <span class="badge bg-success-subtle text-success fw-semibold">
+               Present
+              </span>
+             </td>
+             <td>
+              —
+             </td>
+            </tr>
+            <tr>
+             <td>
+              2025-03-10
+             </td>
+             <td>
+              <span class="badge bg-success-subtle text-success fw-semibold">
+               Present
+              </span>
+             </td>
+             <td>
+              —
+             </td>
+            </tr>
+            <tr>
+             <td>
+              2025-03-07
+             </td>
+             <td>
+              <span class="badge bg-success-subtle text-success fw-semibold">
+               Present
+              </span>
+             </td>
+             <td>
+              —
+             </td>
+            </tr>
+            <tr>
+             <td>
+              2025-03-05
+             </td>
+             <td>
+              <span class="badge bg-success-subtle text-success fw-semibold">
+               Present
+              </span>
+             </td>
+             <td>
+              —
+             </td>
+            </tr>
+            <tr>
+             <td>
+              2025-03-03
+             </td>
+             <td>
+              <span class="badge bg-success-subtle text-success fw-semibold">
+               Present
+              </span>
+             </td>
+             <td>
+              —
+             </td>
+            </tr>
+            <tr>
+             <td>
+              2025-02-28
+             </td>
+             <td>
+              <span class="badge bg-success-subtle text-success fw-semibold">
+               Present
+              </span>
+             </td>
+             <td>
+              —
+             </td>
+            </tr>
+           </tbody>
+          </table>
+         </div>
+         <div class="d-flex align-items-center justify-content-between">
+          <div class="text-muted small">
+           Page 1 of 4
+          </div>
+          <div class="btn-group">
+           <button class="btn btn-sm btn-light" disabled="">
+            Prev
+           </button>
+           <button class="btn btn-sm btn-light">
+            Next
+           </button>
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </main>
+  </div>
+  <!-- Floating Action Button: Scan Attendance -->
+  <a class="fab-scan btn btn-primary btn-lg rounded-circle" data-bs-title="Scan Attendance" data-bs-toggle="tooltip" href="./scan_page.html">
+   <i class="fa-solid fa-qrcode">
+   </i>
+  </a>
+  <!-- Toast: System Status -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1080;">
+   <div aria-atomic="true" aria-live="assertive" class="toast" id="syncToast" role="alert">
+    <div class="toast-header">
+     <i class="fa-solid fa-rotate me-2 text-primary">
+     </i>
+     <strong class="me-auto">
+      Sync Status
+     </strong>
+     <small>
+      Just now
+     </small>
+     <button aria-label="Close" class="btn-close ms-2 mb-1" data-bs-dismiss="toast" type="button">
+     </button>
+    </div>
+    <div class="toast-body">
+     Attendance data synced successfully.
+    </div>
+   </div>
+  </div>
+  <!-- Footer -->
+  <footer class="py-3 border-top bg-white mt-4">
+   <div class="container d-flex flex-wrap justify-content-between align-items-center">
+    <span class="text-muted">
+     ©
+     <span id="year-stu">
+      2025
+     </span>
+     Hybrid Attendance
+    </span>
+    <ul class="nav">
+     <li class="nav-item">
+      <a class="nav-link px-2 text-muted" href="./reports_page.html">
+       Reports
+      </a>
+     </li>
+     <li class="nav-item">
+      <a class="nav-link px-2 text-muted" href="./settings_page.html">
+       Settings
+      </a>
+     </li>
+    </ul>
+   </div>
+  </footer>
+  <script>
+   document.getElementById('year-stu').textContent = new Date().getFullYear();
+  </script>
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.12.4/dist/sweetalert2.all.min.js">
+  </script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js">
+  </script>
+  <!-- Bootstrap 5 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+  </script>
+  <!-- Page Scripts -->
+  <script>
+   // Initialize tooltips
+const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+tooltipTriggerList.map(el => new bootstrap.Tooltip(el));
+
+// Toast on load
+const syncToastEl = document.getElementById('syncToast');
+const syncToast = new bootstrap.Toast(syncToastEl, {
+    delay: 3000
+});
+setTimeout(() => syncToast.show(), 800);
+
+// Low attendance alert dismiss
+document.querySelectorAll('[data-dismiss-alert]').forEach(btn => {
+    btn.addEventListener('click', () => btn.closest('.alert').remove());
+});
+
+// SweetAlert: Logout confirm
+document.getElementById('logoutBtn').addEventListener('click', (e) => {
+    e.preventDefault();
+    Swal.fire({
+        title: 'Logout?',
+        text: 'You will be returned to the login page.',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#f08e1b',
+        confirmButtonText: 'Logout',
+    }).then((res) => {
+        if (res.isConfirmed) {
+            // Simulate JWT invalidation
+            sessionStorage.clear();
+            window.location.href = './login_page.html';
+        }
+    });
+});
+
+// Donut Chart for Overall Attendance
+const donutCanvas = document.getElementById('overallDonut');
+const donutSkeleton = document.getElementById('donutSkeleton');
+const centerText = document.getElementById('donutCenterText');
+const percent = 82; // mock from API
+
+function getCSSVar(name) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
+
+function colorForPercentage(p) {
+    if (p >= 85) return getCSSVar('--color-success') || '#00774E';
+    if (p >= 75) return getCSSVar('--color-warning') || '#FFA500';
+    return getCSSVar('--color-error') || '#CD2026';
+}
+
+try {
+    const donut = new Chart(donutCanvas, {
+        type: 'doughnut',
+        data: {
+            labels: ['Attended', 'Remaining'],
+            datasets: [{
+                data: [percent, 100 - percent],
+                backgroundColor: [colorForPercentage(percent), getCSSVar('--neutral-soft') || '#f0f1f2'],
+                borderWidth: 0,
+                hoverOffset: 3,
+                cutout: '70%'
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: (ctx) => `${ctx.label}: ${ctx.raw}%`
+                    }
+                }
+            }
+        }
+    });
+    centerText.textContent = percent + '%';
+} catch (err) {
+    console.error('Chart init failed', err);
+    Swal.fire({
+        icon: 'error',
+        title: 'Chart Error',
+        text: 'Unable to load attendance chart.'
+    });
+} finally {
+    setTimeout(() => donutSkeleton.style.display = 'none', 600);
+}
+
+// Course filter and sort
+const filterInput = document.getElementById('courseFilter');
+const headerSearch = document.getElementById('courseSearchHeader');
+const sortSelect = document.getElementById('sortSelect');
+const list = document.getElementById('courseAccordion');
+
+function getItems() {
+    return Array.from(list.querySelectorAll('.course-item'));
+}
+
+function applyFilter() {
+    const term = (filterInput.value || '').toLowerCase();
+    getItems().forEach(item => {
+        const name = (item.getAttribute('data-course-name') || '').toLowerCase();
+        item.style.display = name.includes(term) ? '' : 'none';
+    });
+}
+
+function applySort() {
+    const val = sortSelect.value;
+    const items = getItems();
+    let sorter;
+    switch (val) {
+        case 'name-asc':
+            sorter = (a, b) => a.dataset.courseName.localeCompare(b.dataset.courseName);
+            break;
+        case 'name-desc':
+            sorter = (a, b) => b.dataset.courseName.localeCompare(a.dataset.courseName);
+            break;
+        case 'perc-desc':
+            sorter = (a, b) => Number(b.dataset.coursePerc) - Number(a.dataset.coursePerc);
+            break;
+        case 'perc-asc':
+            sorter = (a, b) => Number(a.dataset.coursePerc) - Number(b.dataset.coursePerc);
+            break;
+    }
+    items.sort(sorter).forEach(el => list.appendChild(el));
+}
+
+filterInput.addEventListener('input', applyFilter);
+sortSelect.addEventListener('change', applySort);
+// Bridge header search to same filter
+headerSearch.addEventListener('input', (e) => {
+    filterInput.value = e.target.value;
+    applyFilter();
+});
+
+// Initial sort and filter
+applySort();
+applyFilter();
+
+// Fake notifications click
+document.getElementById('notifBellBtn').addEventListener('click', () => {
+    Swal.fire({
+        title: 'Notifications',
+        html: '<div class="text-start">\
+          <div class="mb-2"><i class="fa-solid fa-triangle-exclamation text-warning me-2"></i>Low attendance in MATH 101.</div>\
+          <div class="mb-2"><i class="fa-solid fa-qrcode text-info me-2"></i>New QR session opens at 2:00 PM.</div>\
+          <div class="mb-2"><i class="fa-regular fa-calendar-check text-success me-2"></i>HIS 210 attendance updated.</div>\
+        </div>',
+        confirmButtonColor: '#f08e1b'
+    });
+});
+  </script>
+ </body>
+</html>

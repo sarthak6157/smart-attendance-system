@@ -1,0 +1,74 @@
+/* student_dashboard.css — page-specific styles (avoid duplicating global styles) */
+/* Typography override to Poppins for this page */
+body {
+    font-family: "Poppins", var(--font-sans)
+    }
+/* Layout helpers */
+.app-shell {
+    min-height: calc(100vh - 56px - 64px);
+    /* header ~56px, footer ~64px */
+    }
+main {
+    background: transparent
+    }
+/* Donut center text */
+.donut-center-text {
+    position: absolute;
+    font-weight: 800;
+    font-size: 2rem;
+    color: var(--text-strong)
+    }
+/* Badge subtle backgrounds using theme soft colors (for status) */
+.badge.bg-success-subtle {
+    background: var(--success-soft)
+    }
+.badge.bg-danger-subtle {
+    background: var(--error-soft)
+    }
+.badge.bg-primary-subtle {
+    background: var(--info-soft);
+    color: #005b7a
+    }
+/* Course list visuals */
+.accordion-button {
+    gap: 12px
+    }
+.accordion-button .course-progress .progress {
+    background: var(--neutral-soft)
+    }
+.accordion-button:not(.collapsed) {
+    background: var(--neutral-soft)
+    }
+/* Floating Action Button (Scan) */
+.fab-scan {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    width: 56px;
+    height: 56px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-2)
+    }
+.fab-scan:active {
+    transform: translatey(1px)
+    }
+/* Tables: make header sticky inside accordion body when tall */
+.accordion-body .table-responsive thead th {
+    position: sticky;
+    top: 0;
+    background: var(--surface-muted);
+    z-index: 1
+    }
+/* Alerts: tighten spacing of dismiss button */
+#lowAttendanceAlerts .btn {
+    line-height: 1
+    }
+/* Responsive tweaks */
+@media (max-width: 767.98px) {
+    .accordion-button .course-progress {
+        width: 100%;
+        justify-content: space-between
+        }
+    }

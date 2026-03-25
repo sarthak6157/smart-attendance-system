@@ -1,0 +1,57 @@
+/* Admin Dashboard (admin_dashboard.css) - page-specific styles */
+/* Brand typography override */
+body {
+    font-family: "Poppins", var(--font-sans), system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif
+    }
+/* Layout container for sidebar + main */
+.admin-layout {
+    min-height: calc(100vh - 56px);
+    /* account for header height */
+    }
+.admin-main {
+    min-width: 0;
+    /* prevent overflow in flex */
+    }
+/* KPI Cards enhancements */
+.kpi-card {
+    cursor: pointer;
+    border: 1px solid var(--border-color);
+    transition: transform 0.15s ease, box-shadow 0.2s ease
+    }
+.kpi-card:hover {
+    transform: translatey(-2px);
+    box-shadow: var(--shadow-2)
+    }
+.kpi-card .metric-title {
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-size: var(--font-size-sm);
+    color: var(--text-muted)
+    }
+/* Card titles */
+.card-header .title {
+    font-weight: 700;
+    color: var(--text-strong)
+    }
+/* Sortable table headers */
+#defaulterTable thead th.sortable {
+    user-select: none
+    }
+#defaulterTable thead th.sortable:hover {
+    background: var(--neutral-soft)
+    }
+/* Loading overlay */
+.loading-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(11, 18, 32, 0.45);
+    display: grid;
+    place-items: center;
+    z-index: var(--z-toast)
+    }
+/* Responsive adjustments */
+@media (max-width: 991.98px) {
+    .admin-layout {
+        min-height: auto
+        }
+    }

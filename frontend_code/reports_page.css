@@ -1,0 +1,37 @@
+/* reports_page.css - Page specific styles for Reports Page */
+/* Use Poppins font for this page while preserving theme stack */
+body {
+    font-family: "Poppins", var(--font-sans)
+    }
+/* Ensure the main content fills remaining width next to sidebar */
+#appLayout > main {
+    min-width: 0
+    }
+/* Improve clickable header affordance */
+th.sortable {
+    cursor: pointer;
+    user-select: none
+    }
+th.sortable:hover {
+    background-color: var(--neutral-soft)
+    }
+/* Tighten the card header buttons */
+.card-header .btn.btn-light.btn-sm {
+    border: 1px solid var(--border-color)
+    }
+/* Preview meta badge spacing */
+#previewMeta {
+    padding: 4px 8px
+    }
+/* Skeleton spacing */
+#previewLoading .skeleton {
+    border-radius: 6px
+    }
+/* Responsive tweaks */
+@media (max-width: 767.98px) {
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px
+        }
+    }

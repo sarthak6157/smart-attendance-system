@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>
+   Facial Registration | Hybrid Attendance
+  </title>
+  <!-- Google Fonts: Poppins -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <!-- Bootstrap 5 CSS -->
+  <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" rel="stylesheet"/>
+  <!-- Font Awesome 6 -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+   <!-- Global Theme Styles -->
+   <link href="style.css" rel="stylesheet">
+    <!-- Page-specific CSS -->
+    <link href="facial_registration.css" rel="stylesheet"/>
+   </link>
+  </link>
+ </head>
+ <body>
+  <!-- Header (Included: Onboarding page needs header; Sidebar omitted for a focused, distraction-free full-screen experience) -->
+  <nav class="navbar navbar-expand-md navbar-dark" style="background:#9a296a;">
+   <div class="container-fluid">
+    <!-- Note: Sidebar is intentionally NOT present on this page for focus -->
+    <a class="navbar-brand fw-bold" href="./user_profile.html">
+     Account
+    </a>
+    <div class="ms-auto d-flex align-items-center">
+     <a class="btn btn-light me-2" href="./student_dashboard.html">
+      Home
+     </a>
+     <div class="dropdown">
+      <button class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
+       <i class="fa-solid fa-user me-1">
+       </i>
+       Me
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end">
+       <li>
+        <a class="dropdown-item" href="./user_profile.html">
+         My Profile
+        </a>
+       </li>
+       <li>
+        <hr class="dropdown-divider"/>
+       </li>
+       <li>
+        <a class="dropdown-item text-danger" href="./login_page.html">
+         Logout
+        </a>
+       </li>
+      </ul>
+     </div>
+    </div>
+   </div>
+  </nav>
+  <!-- Main Content -->
+  <main class="flex-grow-1" id="main">
+   <div class="container py-4">
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb" class="breadcrumb">
+     <ol class="breadcrumb mb-3">
+      <li class="breadcrumb-item">
+       <a href="./registration_page.html">
+        Onboarding
+       </a>
+      </li>
+      <li aria-current="page" class="breadcrumb-item active">
+       Facial Registration
+      </li>
+     </ol>
+    </nav>
+    <!-- FacialRegistrationManager Container -->
+    <section class="facial-register-wrapper d-flex align-items-center justify-content-center">
+     <div class="row g-4 w-100 align-items-stretch facial-register-grid">
+      <!-- InstructionsPanel -->
+      <div class="col-12 col-lg-4">
+       <div class="card h-100 shadow-sm">
+        <div class="card-header">
+         <h1 class="h4 mb-0 widget-title">
+          <i class="fa-regular fa-face-smile me-2 text-primary">
+          </i>
+          Facial Biometric Setup
+         </h1>
+        </div>
+        <div class="card-body">
+         <p class="text-muted mb-3">
+          Follow these steps to complete your one-time facial registration. This helps us verify your identity during attendance.
+         </p>
+         <ul class="list-unstyled mb-3">
+          <li class="d-flex mb-2">
+           <i class="fa-solid fa-lightbulb text-warning me-2 mt-1">
+           </i>
+           Ensure you are in a well-lit area.
+          </li>
+          <li class="d-flex mb-2">
+           <i class="fa-solid fa-hat-cowboy-side text-muted me-2 mt-1">
+           </i>
+           Remove any hats or sunglasses.
+          </li>
+          <li class="d-flex mb-2">
+           <i class="fa-solid fa-eye text-success me-2 mt-1">
+           </i>
+           Look directly at the camera.
+          </li>
+          <li class="d-flex mb-2">
+           <i class="fa-regular fa-circle-dot text-info me-2 mt-1">
+           </i>
+           Fit your face within the oval guide on the screen.
+          </li>
+         </ul>
+         <div class="alert alert-info" role="alert">
+          <i class="fa-solid fa-shield-halved me-2">
+          </i>
+          Your biometric data is securely encrypted and will be used solely for attendance verification.
+         </div>
+         <div class="small text-muted">
+          Need help?
+          <a class="link-info" href="#" id="openPermissionHelp">
+           Camera permission tips
+          </a>
+         </div>
+        </div>
+       </div>
+      </div>
+      <!-- Camera + ControlAndFeedback -->
+      <div class="col-12 col-lg-8">
+       <div class="card h-100 shadow-sm" id="facialManager">
+        <div class="card-header d-flex align-items-center justify-content-between">
+         <div class="d-flex align-items-center gap-2">
+          <span class="widget-title">
+           Camera
+          </span>
+          <span class="badge-soft info" id="cameraStatusBadge">
+           <i class="fa-solid fa-video me-1">
+           </i>
+           Initializing…
+          </span>
+         </div>
+         <div class="text-muted small" id="userIdDisplay" title="User ID">
+          <i class="fa-regular fa-id-badge me-1">
+          </i>
+          —
+         </div>
+        </div>
+        <div class="card-body">
+         <!-- CameraView -->
+         <div class="camera-shell position-relative rounded overflow-hidden mb-3" id="cameraShell">
+          <video autoplay="" class="w-100 h-100 object-cover" id="cameraFeed" muted="" playsinline="">
+          </video>
+          <!-- FaceOutlineGuide -->
+          <div aria-hidden="true" class="face-guide">
+          </div>
+          <!-- Fallback (permission denied or not supported) -->
+          <div class="d-none position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center flex-column bg-muted" id="cameraFallback">
+           <img alt="Camera preview unavailable" class="rounded mb-3" height="240" src="https://picsum.photos/seed/facial-standin/640/480?grayscale&amp;blur=1" width="320"/>
+           <p class="text-muted mb-2">
+            We couldn't access your camera. Please grant permission and try again.
+           </p>
+           <button class="btn btn-info" id="retryCamera">
+            <i class="fa-solid fa-rotate me-2">
+            </i>
+            Retry Camera
+           </button>
+          </div>
+          <!-- Captured Preview -->
+          <img alt="Captured face preview" class="preview d-none" id="capturedPreview" onerror="this.src='https://picsum.photos/seed/captured/640/480';"/>
+         </div>
+         <!-- ControlAndFeedback -->
+         <div class="d-flex flex-wrap gap-2 align-items-center" id="controlsRow">
+          <button class="btn btn-primary" id="captureBtn">
+           <i class="fa-solid fa-camera me-2">
+           </i>
+           Capture Image
+          </button>
+          <div class="d-none d-flex flex-wrap gap-2" id="postCaptureActions">
+           <button class="btn btn-light" id="retakeBtn">
+            <i class="fa-solid fa-rotate-left me-2">
+            </i>
+            Retake
+           </button>
+           <button class="btn btn-success" id="submitBtn">
+            <i class="fa-solid fa-circle-check me-2">
+            </i>
+            Confirm &amp; Submit
+           </button>
+          </div>
+          <div class="d-none ms-auto d-flex align-items-center gap-2 text-muted" id="processingIndicator">
+           <div class="spinner-border spinner-border-sm text-primary" role="status">
+           </div>
+           <span>
+            Processing…
+           </span>
+          </div>
+         </div>
+         <!-- StatusFeedback -->
+         <div aria-live="polite" class="mt-3" id="statusArea">
+         </div>
+         <!-- Hidden canvas for frame capture -->
+         <canvas class="d-none" id="captureCanvas">
+         </canvas>
+        </div>
+        <div class="card-footer d-flex justify-content-between align-items-center">
+         <small class="text-muted">
+          Complete this step to proceed to your dashboard.
+         </small>
+         <div>
+          <a class="btn btn-outline-secondary btn-sm me-2" href="./registration_page.html">
+           <i class="fa-solid fa-arrow-left me-1">
+           </i>
+           Back
+          </a>
+          <a class="btn btn-outline-primary btn-sm" href="./student_dashboard.html">
+           <i class="fa-solid fa-gauge-high me-1">
+           </i>
+           Skip for now
+          </a>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </section>
+   </div>
+  </main>
+  <!-- Footer -->
+  <footer class="py-3 border-top bg-white">
+   <div class="container d-flex flex-wrap justify-content-between align-items-center">
+    <span class="text-muted">
+     ©
+     <span id="year-prof">
+      2025
+     </span>
+     Hybrid Attendance
+    </span>
+    <ul class="nav">
+     <li class="nav-item">
+      <a class="nav-link px-2 text-muted" href="./terms.html">
+       Terms
+      </a>
+     </li>
+     <li class="nav-item">
+      <a class="nav-link px-2 text-muted" href="./privacy.html">
+       Privacy
+      </a>
+     </li>
+    </ul>
+   </div>
+  </footer>
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.7/dist/sweetalert2.all.min.js">
+  </script>
+  <!-- Bootstrap 5 JS Bundle -->
+  <script crossorigin="anonymous" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+  </script>
+  <!-- Page Script: Facial Registration Flow -->
+  <script>
+   (function() {
+    const videoEl = document.getElementById('cameraFeed');
+    const cameraShell = document.getElementById('cameraShell');
+    const fallbackEl = document.getElementById('cameraFallback');
+    const retryCameraBtn = document.getElementById('retryCamera');
+    const badge = document.getElementById('cameraStatusBadge');
+    const captureBtn = document.getElementById('captureBtn');
+    const postCaptureActions = document.getElementById('postCaptureActions');
+    const retakeBtn = document.getElementById('retakeBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    const processingIndicator = document.getElementById('processingIndicator');
+    const previewImg = document.getElementById('capturedPreview');
+    const canvas = document.getElementById('captureCanvas');
+    const statusArea = document.getElementById('statusArea');
+    const userIdDisplay = document.getElementById('userIdDisplay');
+    const openPermissionHelp = document.getElementById('openPermissionHelp');
+
+    let streamRef = null;
+    let registrationStatus = 'idle';
+    let capturedImageData = null;
+    const query = new URLSearchParams(window.location.search);
+    const userId = query.get('userId') || 'student-1001';
+    userIdDisplay.textContent = userId;
+
+    function setBadge(status, text, iconClass) {
+        badge.className = 'badge-soft ' + (status || 'info');
+        badge.innerHTML = iconClass ? '<i class="' + iconClass + ' me-1"></i>' + text : text;
+    }
+
+    async function initCamera() {
+        // Clean any previous stream
+        stopCamera();
+        setBadge('info', 'Initializing…', 'fa-solid fa-video');
+        fallbackEl.classList.add('d-none');
+        videoEl.classList.remove('d-none');
+        try {
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                throw new Error('getUserMedia not supported');
+            }
+            const constraints = {
+                video: {
+                    facingMode: 'user',
+                    width: {
+                        ideal: 1280
+                    },
+                    height: {
+                        ideal: 720
+                    }
+                },
+                audio: false
+            };
+            streamRef = await navigator.mediaDevices.getUserMedia(constraints);
+            videoEl.srcObject = streamRef;
+            await videoEl.play();
+            setBadge('success', 'Camera Active', 'fa-solid fa-circle-check');
+            statusArea.innerHTML = '';
+        } catch (err) {
+            console.warn('Camera error:', err);
+            setBadge('error', 'Camera Unavailable', 'fa-solid fa-triangle-exclamation');
+            fallbackEl.classList.remove('d-none');
+            videoEl.classList.add('d-none');
+            statusArea.innerHTML = '<div class="alert alert-warning mb-0"><i class="fa-solid fa-lock me-2"></i> Please allow camera access in your browser settings and retry.</div>';
+        }
+    }
+
+    function stopCamera() {
+        if (streamRef) {
+            streamRef.getTracks().forEach(t => t.stop());
+            streamRef = null;
+        }
+    }
+
+    function setRegistrationStatus(next) {
+        registrationStatus = next;
+        if (next === 'processing') {
+            processingIndicator.classList.remove('d-none');
+        } else {
+            processingIndicator.classList.add('d-none');
+        }
+    }
+
+    function captureFrame() {
+        try {
+            const vw = videoEl.videoWidth || 640;
+            const vh = videoEl.videoHeight || 480;
+            canvas.width = vw;
+            canvas.height = vh;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(videoEl, 0, 0, vw, vh);
+            const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+            capturedImageData = dataUrl;
+            // Update UI
+            previewImg.src = dataUrl;
+            previewImg.classList.remove('d-none');
+            videoEl.classList.add('d-none');
+            cameraShell.classList.add('captured');
+            captureBtn.classList.add('d-none');
+            postCaptureActions.classList.remove('d-none');
+            statusArea.innerHTML = '<div class="alert alert-info mb-0"><i class="fa-regular fa-image me-2"></i> Image captured. Review and submit, or retake.</div>';
+        } catch (err) {
+            console.error('Capture error:', err);
+            Swal.fire({
+                icon: 'error',
+                title: 'Capture Failed',
+                text: 'Unable to capture the frame. Please try again.'
+            });
+        }
+    }
+
+    function resetCapture() {
+        capturedImageData = null;
+        previewImg.src = '';
+        previewImg.classList.add('d-none');
+        videoEl.classList.remove('d-none');
+        cameraShell.classList.remove('captured');
+        captureBtn.classList.remove('d-none');
+        postCaptureActions.classList.add('d-none');
+        statusArea.innerHTML = '';
+    }
+
+    async function submitRegistration() {
+        if (!capturedImageData) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'No Image',
+                text: 'Please capture your face image first.'
+            });
+            return;
+        }
+        setRegistrationStatus('processing');
+        statusArea.innerHTML = '';
+
+        try {
+            const payload = {
+                imageData: capturedImageData,
+                timestamp: new Date().toISOString()
+            };
+            const res = await fetch(`/api/users/${encodeURIComponent(userId)}/biometrics`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+
+            // Simulate success locally if API not available
+            if (!res.ok) {
+                // Fallback simulation: 50% chance success
+                const simulated = Math.random() > 0.5;
+                if (!simulated) throw new Error('Server unavailable. Please try again.');
+            }
+
+            setRegistrationStatus('success');
+            Swal.fire({
+                icon: 'success',
+                title: 'Registration Successful!',
+                text: 'Your facial biometric has been securely registered.',
+                confirmButtonText: 'Go to Dashboard',
+                confirmButtonColor: '#00774E'
+            }).then(() => {
+                window.location.href = './student_dashboard.html';
+            });
+        } catch (err) {
+            console.error('Submit error:', err);
+            setRegistrationStatus('error');
+            statusArea.innerHTML = `<div class="alert alert-danger mb-0"><i class="fa-solid fa-circle-exclamation me-2"></i>${err.message || 'Something went wrong.'}</div>`;
+            Swal.fire({
+                icon: 'error',
+                title: 'Registration Failed',
+                text: err.message || 'Please try again.'
+            });
+        } finally {
+            setRegistrationStatus('idle');
+        }
+    }
+
+    // Events
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            stopCamera();
+        } else {
+            initCamera();
+        }
+    });
+
+    window.addEventListener('beforeunload', stopCamera);
+
+    retryCameraBtn.addEventListener('click', initCamera);
+    captureBtn.addEventListener('click', () => {
+        captureFrame();
+    });
+    retakeBtn.addEventListener('click', () => {
+        resetCapture();
+    });
+    submitBtn.addEventListener('click', () => {
+        submitRegistration();
+    });
+    openPermissionHelp.addEventListener('click', (e) => {
+        e.preventDefault();
+        Swal.fire({
+            title: 'Enable Camera Access',
+            html: `
+            <div class="text-start">
+              <ol>
+                <li>Click the lock icon near your browser's address bar.</li>
+                <li>Find Camera permissions and set to "Allow".</li>
+                <li>Reload this page and click "Retry Camera".</li>
+              </ol>
+              <p class="mb-0"><small class="text-muted">If you are on a mobile device, ensure the browser has camera permissions in system settings.</small></p>
+            </div>
+          `,
+            icon: 'info',
+            confirmButtonText: 'Got it'
+        });
+    });
+
+    // Initialize
+    initCamera();
+    document.getElementById('year-prof').textContent = new Date().getFullYear();
+})();
+  </script>
+ </body>
+</html>

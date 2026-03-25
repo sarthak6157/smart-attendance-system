@@ -1,0 +1,74 @@
+/* facial_registration.css - Page-specific styles for Facial Registration */
+/* Use Poppins for this page */
+body {
+    font-family: "Poppins", var(--font-sans)
+    }
+/* Layout wrapper to keep content prominent and centered */
+.facial-register-wrapper {
+    min-height: 70vh
+    }
+/* Grid tweaks on large screens */
+.facial-register-grid {
+    max-width: 1200px;
+    margin: 0 auto
+    }
+/* Camera shell with modern aspect ratio */
+.camera-shell {
+    position: relative;
+    background: var(--surface-muted);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-2);
+    box-shadow: var(--shadow-1);
+    aspect-ratio: 4/3
+    }
+/* Ensure video and preview cover the frame */
+#cameraFeed, #capturedPreview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block
+    }
+/* Visual face guide overlay */
+.face-guide {
+    position: absolute;
+    inset: 0;
+    pointer-events: none
+    }
+.face-guide::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: min(65%, 520px);
+    height: min(70%, 520px);
+    transform: translate(-50%, -50%);
+    border: 3px solid rgba(255, 255, 255, 0.95);
+    border-radius: 50%/58%;
+    /* oval */
+    box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.25) inset;
+    /* dim surroundings */
+    }
+/* When captured, subtly change shell border */
+.camera-shell.captured {
+    border-color: var(--color-info)
+    }
+/* Status badge spacing on header */
+#cameraStatusBadge {
+    padding: 4px 10px
+    }
+/* Processing indicator alignment on small screens */
+@media (max-width: 575.98px) {
+    #processingIndicator {
+        width: 100%;
+        justify-content: flex-start;
+        margin-top: 0.5rem
+        }
+    }
+/* Button micro-interactions */
+#captureBtn, #retakeBtn, #submitBtn {
+    min-width: 160px
+    }
+/* Footer link hover subtlety (page only) */
+footer .nav-link:hover {
+    text-decoration: underline
+    }

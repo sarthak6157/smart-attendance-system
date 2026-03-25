@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>
+   Login - Hybrid Attendance
+  </title>
+  <!-- Brand Typography -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <!-- Font Awesome 6 -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet"/>
+  <!-- Global Theme CSS -->
+  <link href="style.css" rel="stylesheet"/>
+  <!-- Page-specific CSS -->
+  <link href="login_page.css" rel="stylesheet"/>
+ </head>
+ <body class="d-flex flex-column min-vh-100">
+  <!-- Common Auth/Public Header (used on login page) -->
+  <nav class="navbar navbar-expand-md navbar-dark" style="background:#f08e1b;">
+   <div class="container-fluid">
+    <a class="navbar-brand fw-bold" href="./login_page.html">
+     Hybrid Attendance
+    </a>
+    <button aria-controls="authHeaderNav" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-bs-target="#authHeaderNav" data-bs-toggle="collapse" type="button">
+     <span class="navbar-toggler-icon">
+     </span>
+    </button>
+    <div class="collapse navbar-collapse" id="authHeaderNav">
+     <ul class="navbar-nav ms-auto mb-2 mb-md-0">
+      <li class="nav-item">
+       <a aria-current="page" class="nav-link active" href="./login_page.html">
+        <i class="fa-solid fa-right-to-bracket me-1">
+        </i>
+        Login
+       </a>
+      </li>
+      <li class="nav-item">
+       <a class="nav-link" href="./registration_page.html">
+        <i class="fa-solid fa-user-plus me-1">
+        </i>
+        Register
+       </a>
+      </li>
+     </ul>
+    </div>
+   </div>
+  </nav>
+  <main class="flex-grow-1 d-flex align-items-center">
+   <div class="container">
+    <div class="row justify-content-center">
+     <div class="col-12 col-md-8 col-lg-6">
+      <section class="login-form-container">
+       <div class="text-center mb-3">
+        <img alt="Hybrid Attendance Logo" class="auth-logo rounded" height="80" id="brandMark" onerror="this.onerror=null;this.src='https://picsum.photos/seed/hybridattendance/120/120'" src="./assets/logo.png" width="80"/>
+       </div>
+       <header class="text-center mb-2">
+        <h1 class="page-title mb-1">
+         Welcome back
+        </h1>
+        <p class="text-muted mb-0">
+         Sign in to monitor attendance and manage sessions
+        </p>
+       </header>
+       <!-- System feedback / notification area -->
+       <div aria-live="polite" class="alert alert-danger d-none" id="formAlert" role="alert">
+       </div>
+       <!-- Login Form -->
+       <form class="sign-in-form" id="loginForm" novalidate="">
+        <!-- Credential Input -->
+        <div class="mb-3">
+         <label class="form-label" for="credential">
+          Email or Student/Faculty ID
+         </label>
+         <input autocomplete="username" class="form-control" id="credential" name="credential" placeholder="Enter your ID or email" required="" type="text"/>
+         <div class="invalid-feedback">
+          Please enter your ID or email.
+         </div>
+        </div>
+        <!-- Password Input with visibility toggle -->
+        <div class="mb-2">
+         <div class="d-flex justify-content-between align-items-center">
+          <label class="form-label mb-0" for="password">
+           Password
+          </label>
+         </div>
+         <div class="input-group">
+          <input aria-describedby="togglePassword" autocomplete="current-password" class="form-control" id="password" name="password" placeholder="Enter your password" required="" type="password"/>
+          <button aria-label="Toggle password visibility" class="btn btn-light toggle-visibility-icon" data-bs-placement="top" data-bs-toggle="tooltip" id="togglePassword" title="Show/Hide Password" type="button">
+           <i class="fa-regular fa-eye" id="toggleIcon">
+           </i>
+          </button>
+          <div class="invalid-feedback">
+           Password is required.
+          </div>
+         </div>
+        </div>
+        <div class="d-flex justify-content-between align-items-center mt-2 mb-3">
+         <button class="btn btn-link p-0" id="forgotPassword" type="button">
+          Forgot Password?
+         </button>
+        </div>
+        <!-- Submit Button -->
+        <div class="d-grid mb-2">
+         <button class="btn btn-primary" id="loginButton" type="submit">
+          <span aria-hidden="true" class="spinner-border spinner-border-sm me-2 d-none" id="loginSpinner" role="status">
+          </span>
+          <span id="loginBtnText">
+           Login
+          </span>
+         </button>
+        </div>
+        <!-- Secondary links -->
+        <div class="text-center mt-2">
+         <small class="text-muted">
+          Don't have an account?
+          <a href="./registration_page.html">
+           Register
+          </a>
+         </small>
+        </div>
+       </form>
+      </section>
+      <!-- Demo/Test Accounts -->
+      <section class="card mt-4">
+       <div class="card-header">
+        <div class="d-flex align-items-center gap-2">
+         <i class="fa-solid fa-flask text-warning">
+         </i>
+         <span class="widget-title">
+          Test Login Accounts
+         </span>
+        </div>
+       </div>
+       <div class="card-body">
+        <p class="text-muted mb-3">
+         Use the following demo credentials to test role-based redirects.
+        </p>
+        <div class="table-responsive">
+         <table class="table table-theme align-middle mb-0">
+          <thead>
+           <tr>
+            <th>
+             Username
+            </th>
+            <th>
+             Password
+            </th>
+            <th>
+             Role / State
+            </th>
+            <th>
+             Redirects To
+            </th>
+           </tr>
+          </thead>
+          <tbody>
+           <tr>
+            <td>
+             <code>
+              student1
+             </code>
+            </td>
+            <td>
+             <code>
+              Pass@123
+             </code>
+            </td>
+            <td>
+             Student
+            </td>
+            <td>
+             <span class="badge-soft info">
+              student_dashboard.html
+             </span>
+            </td>
+           </tr>
+           <tr>
+            <td>
+             <code>
+              faculty1
+             </code>
+            </td>
+            <td>
+             <code>
+              Pass@123
+             </code>
+            </td>
+            <td>
+             Faculty
+            </td>
+            <td>
+             <span class="badge-soft info">
+              faculty_dashboard.html
+             </span>
+            </td>
+           </tr>
+           <tr>
+            <td>
+             <code>
+              admin1
+             </code>
+            </td>
+            <td>
+             <code>
+              Pass@123
+             </code>
+            </td>
+            <td>
+             Administrator
+            </td>
+            <td>
+             <span class="badge-soft info">
+              admin_dashboard.html
+             </span>
+            </td>
+           </tr>
+           <tr>
+            <td>
+             <code>
+              pending_user
+             </code>
+            </td>
+            <td>
+             <code>
+              Pass@123
+             </code>
+            </td>
+            <td>
+             Student - Pending Approval
+            </td>
+            <td>
+             <span class="badge-soft warning">
+              pending_approval.html
+             </span>
+            </td>
+           </tr>
+           <tr>
+            <td>
+             <code>
+              facial_user
+             </code>
+            </td>
+            <td>
+             <code>
+              Pass@123
+             </code>
+            </td>
+            <td>
+             Student - Facial Registration Required
+            </td>
+            <td>
+             <span class="badge-soft secondary">
+              facial_registration.html
+             </span>
+            </td>
+           </tr>
+           <tr>
+            <td>
+             <code>
+              scanner_user
+             </code>
+            </td>
+            <td>
+             <code>
+              Pass@123
+             </code>
+            </td>
+            <td>
+             Scanner Operator
+            </td>
+            <td>
+             <span class="badge-soft success">
+              scan_page.html
+             </span>
+            </td>
+           </tr>
+          </tbody>
+         </table>
+        </div>
+        <small class="text-muted d-block mt-2">
+         Tip: Emails like
+         <code>
+          student1@univ.edu
+         </code>
+         also work (same username and password).
+        </small>
+       </div>
+      </section>
+     </div>
+    </div>
+   </div>
+  </main>
+  <!-- Common Auth/Public Footer (used on login page) -->
+  <footer class="mt-auto py-3 border-top" style="background:#fff;">
+   <div class="container d-flex flex-wrap justify-content-between align-items-center">
+    <span class="text-muted">
+     ©
+     <span id="year-auth">
+      2025
+     </span>
+     Hybrid Attendance
+    </span>
+    <ul class="nav">
+     <li class="nav-item">
+      <a class="nav-link px-2 text-muted" href="#" id="termsLink">
+       Terms
+      </a>
+     </li>
+     <li class="nav-item">
+      <a class="nav-link px-2 text-muted" href="#" id="privacyLink">
+       Privacy
+      </a>
+     </li>
+    </ul>
+   </div>
+  </footer>
+  <script>
+   document.getElementById('year-auth').textContent = new Date().getFullYear();
+  </script>
+  <!-- Bootstrap 5 Bundle JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+  </script>
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11">
+  </script>
+  <!-- Page Scripts -->
+  <script>
+   // Initialize tooltips
+const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+tooltipTriggerList.map(function(tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl)
+})
+
+// Demo accounts mapping
+const accounts = {
+    'student1': {
+        password: 'Pass@123',
+        redirect: './student_dashboard.html',
+        role: 'Student'
+    },
+    'faculty1': {
+        password: 'Pass@123',
+        redirect: './faculty_dashboard.html',
+        role: 'Faculty'
+    },
+    'admin1': {
+        password: 'Pass@123',
+        redirect: './admin_dashboard.html',
+        role: 'Administrator'
+    },
+    'pending_user': {
+        password: 'Pass@123',
+        redirect: './pending_approval.html',
+        role: 'Student - Pending Approval'
+    },
+    'facial_user': {
+        password: 'Pass@123',
+        redirect: './facial_registration.html',
+        role: 'Student - Facial Registration'
+    },
+    'scanner_user': {
+        password: 'Pass@123',
+        redirect: './scan_page.html',
+        role: 'Scanner Operator'
+    }
+};
+
+const form = document.getElementById('loginForm');
+const credentialEl = document.getElementById('credential');
+const passwordEl = document.getElementById('password');
+const formAlert = document.getElementById('formAlert');
+const loginButton = document.getElementById('loginButton');
+const loginSpinner = document.getElementById('loginSpinner');
+const loginBtnText = document.getElementById('loginBtnText');
+
+// Password toggle
+const togglePasswordBtn = document.getElementById('togglePassword');
+const toggleIcon = document.getElementById('toggleIcon');
+togglePasswordBtn.addEventListener('click', () => {
+    const isText = passwordEl.getAttribute('type') === 'text';
+    passwordEl.setAttribute('type', isText ? 'password' : 'text');
+    toggleIcon.classList.toggle('fa-eye');
+    toggleIcon.classList.toggle('fa-eye-slash');
+});
+
+// Forgot password (SweetAlert2 mock)
+document.getElementById('forgotPassword').addEventListener('click', async () => {
+    const {
+        value: email
+    } = await Swal.fire({
+        title: 'Reset Password',
+        input: 'email',
+        inputLabel: 'Enter your registered email',
+        inputPlaceholder: 'name@university.edu',
+        confirmButtonText: 'Send Reset Link',
+        showCancelButton: true,
+        confirmButtonColor: '#f08e1b'
+    });
+    if (email) {
+        Swal.fire({
+            icon: 'success',
+            title: 'Email Sent',
+            text: 'A password reset link (demo) has been sent to ' + email,
+            timer: 2200,
+            showConfirmButton: false
+        });
+    }
+});
+
+// Footer links (Terms/Privacy) mock
+document.getElementById('termsLink').addEventListener('click', (e) => {
+    e.preventDefault();
+    Swal.fire({
+        title: 'Terms of Service',
+        html: '<p class="text-start">These are placeholder terms for the demo environment.</p>',
+        icon: 'info',
+        confirmButtonColor: '#f08e1b'
+    });
+});
+document.getElementById('privacyLink').addEventListener('click', (e) => {
+    e.preventDefault();
+    Swal.fire({
+        title: 'Privacy Policy',
+        html: '<p class="text-start">This demo does not store real personal data.</p>',
+        icon: 'info',
+        confirmButtonColor: '#f08e1b'
+    });
+});
+
+// Form submission
+form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    // reset alerts
+    formAlert.classList.add('d-none');
+    credentialEl.classList.remove('is-invalid');
+    passwordEl.classList.remove('is-invalid');
+
+    const credential = credentialEl.value.trim();
+    const password = passwordEl.value;
+
+    let valid = true;
+    if (!credential) {
+        credentialEl.classList.add('is-invalid');
+        valid = false;
+    }
+    if (!password) {
+        passwordEl.classList.add('is-invalid');
+        valid = false;
+    }
+    if (!valid) {
+        formAlert.textContent = 'Please fill in all required fields.';
+        formAlert.classList.remove('d-none');
+        return;
+    }
+
+    // Simulate loading
+    setLoading(true);
+
+    setTimeout(() => {
+        const normalizedKey = (credential.includes('@') ? credential.split('@')[0] : credential).toLowerCase();
+        const account = accounts[normalizedKey];
+        if (account && account.password === password) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Welcome, ' + account.role,
+                text: 'Redirecting to your dashboard...',
+                showConfirmButton: false,
+                timer: 1200
+            });
+            setTimeout(() => {
+                window.location.href = account.redirect;
+            }, 1100);
+        } else {
+            setLoading(false);
+            formAlert.textContent = 'Invalid credentials. Please check your username and password.';
+            formAlert.classList.remove('d-none');
+            Swal.fire({
+                icon: 'error',
+                title: 'Authentication Failed',
+                text: 'Invalid username or password.'
+            });
+        }
+    }, 800);
+});
+
+function setLoading(isLoading) {
+    if (isLoading) {
+        loginSpinner.classList.remove('d-none');
+        loginBtnText.textContent = 'Signing in...';
+        loginButton.setAttribute('disabled', 'disabled');
+        credentialEl.setAttribute('disabled', 'disabled');
+        passwordEl.setAttribute('disabled', 'disabled');
+    } else {
+        loginSpinner.classList.add('d-none');
+        loginBtnText.textContent = 'Login';
+        loginButton.removeAttribute('disabled');
+        credentialEl.removeAttribute('disabled');
+        passwordEl.removeAttribute('disabled');
+    }
+}
+  </script>
+ </body>
+</html>

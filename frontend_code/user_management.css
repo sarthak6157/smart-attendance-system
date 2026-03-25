@@ -1,0 +1,66 @@
+/* User Management page specific styles */
+:root {
+    /* Ensure Poppins is applied on this page */
+    }
+body {
+    font-family: "Poppins", var(--font-sans)
+    }
+/* Control bar tweaks */
+#controlBar .form-select, #controlBar .form-control {
+    min-height: 42px
+    }
+/* Table column sizing for better readability */
+#usersTable th:nth-child(1), #usersTable td.name-col {
+    min-width: 260px
+    }
+#usersTable th:nth-child(2) {
+    min-width: 100px
+    }
+#usersTable th:nth-child(3) {
+    min-width: 220px
+    }
+#usersTable th:nth-child(7) {
+    min-width: 180px
+    }
+/* Sortable header styling */
+th.sortable {
+    cursor: pointer;
+    user-select: none
+    }
+th.sortable i {
+    color: var(--text-muted)
+    }
+th.sortable.text-strong i {
+    color: var(--text-strong)
+    }
+/* Modal adjustments */
+#userModal .modal-header {
+    border-bottom: 1px solid var(--border-color)
+    }
+#userModal .modal-footer {
+    border-top: 1px solid var(--border-color)
+    }
+/* Chart card canvas responsiveness */
+#roleChart {
+    max-width: 100%
+    }
+/* Buttons group spacing */
+.btn-group .btn {
+    min-width: 36px
+    }
+/* Adjust pagination spacing on small screens */
+@media (max-width: 575.98px) {
+    #paginationInfo {
+        text-align: center
+        }
+    }
+/* Align metric cards */
+.metric-card {
+    height: 100%
+    }
+/* Ensure main content uses available space beside fixed sidebar */
+@media (min-width: 768px) {
+    main {
+        overflow: hidden
+        }
+    }

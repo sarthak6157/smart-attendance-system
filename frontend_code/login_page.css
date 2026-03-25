@@ -1,0 +1,41 @@
+/* login_page.css - Page specific styles for Login Page */
+/* Use brand typography (Poppins) on this page */
+body {
+    font-family: "Poppins", var(--font-sans)
+    }
+/* Auth logo sizing */
+.auth-logo {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    box-shadow: var(--shadow-1)
+    }
+/* Form spacing tweaks */
+.sign-in-form .form-label {
+    font-weight: 600
+    }
+/* Improve alignment of input group addon for password toggle */
+#togglePassword {
+    border-color: var(--border-color)
+    }
+#togglePassword:hover {
+    background: var(--neutral-soft)
+    }
+/* Alert spacing within the container */
+#formAlert {
+    margin-bottom: 12px
+    }
+/* Demo table badges spacing */
+.badge-soft {
+    vertical-align: middle
+    }
+/* Enhance focus ring for accessibility on this page only (leveraging theme colors) */
+:focus-visible {
+    outline: none
+    }
+/* Ensure the card does not exceed the container width on small screens */
+@media (max-width: 575.98px) {
+    .login-form-container {
+        padding: var(--space-4)
+        }
+    }

@@ -1,0 +1,41 @@
+/* pending_approval.css - Page-specific styles (kept minimal, leveraging global style.css) */
+/* Center card, control width, and provide subtle hero-like focus */
+#approvalCard.app-card {
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto
+    }
+/* Status icon ring container */
+.status-icon-ring {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--warning-soft);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06)
+    }
+.status-icon-inner {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--surface-0);
+    border: 1px solid var(--border-color)
+    }
+/* Pulse for the icon using existing theme animation */
+.status-pulse {
+    animation: pulseGlow 2.2s ease-in-out infinite
+    }
+/* Adjust alert spacing inside the card */
+#approvalCard .alert {
+    margin-top: 4px;
+    margin-bottom: 14px
+    }
+/* Loading skeleton container spacing */
+#approvalLoading.app-card {
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto
+    }

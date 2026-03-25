@@ -1,0 +1,49 @@
+/* Faculty Dashboard - Page-specific CSS */
+body {
+    font-family: "Poppins", var(--font-sans)
+    }
+/* Ensure main content fills height beside sidebar */
+main.flex-grow-1 {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column
+    }
+/* QR Box styling */
+.live-monitor .qr-box {
+    width: 260px;
+    height: 260px;
+    border: 1px dashed var(--border-color);
+    border-radius: var(--radius-2);
+    display: grid;
+    place-items: center;
+    background: var(--surface-0)
+    }
+.live-monitor .qr-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain
+    }
+/* Clickable rows for manual override */
+.cursor-pointer {
+    cursor: pointer
+    }
+/* Sortable header visual cue */
+#reportTable thead th.sortable:hover {
+    background: var(--neutral-soft)
+    }
+/* Toast container elevation */
+.toast-container .toast {
+    box-shadow: var(--shadow-2)
+    }
+/* Adjust card headers for better fit */
+.card-header .title {
+    font-weight: 600
+    }
+/* Responsive tweaks */
+@media (max-width: 991.98px) {
+    /* Stack QR and roster */
+    .live-monitor .qr-box {
+        margin-left: auto;
+        margin-right: auto
+        }
+    }

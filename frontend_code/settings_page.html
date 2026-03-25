@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>
+   Settings | Hybrid Attendance Admin
+  </title>
+  <!-- Poppins Typography -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <!-- Font Awesome 6 -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet"/>
+  <!-- SweetAlert2 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.12.4/dist/sweetalert2.min.css" rel="stylesheet"/>
+  <!-- Global Theme CSS -->
+  <link href="style.css" rel="stylesheet"/>
+  <!-- Page-specific CSS -->
+  <link href="settings_page.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <!-- Header (Top Navbar) -->
+  <nav class="navbar navbar-expand-md navbar-dark" style="background:#f08e1b;">
+   <div class="container-fluid">
+    <button class="btn btn-outline-light d-md-none me-2" data-bs-target="#adminSidebar" data-bs-toggle="collapse" type="button">
+     <i class="fa-solid fa-bars">
+     </i>
+    </button>
+    <a class="navbar-brand fw-bold" href="/admin">
+     Admin
+    </a>
+    <form class="d-none d-md-flex ms-3" role="search" style="max-width:480px;flex:1;">
+     <input aria-label="Search" class="form-control" placeholder="Search users, courses, departments" type="search"/>
+    </form>
+    <div class="d-flex align-items-center ms-auto">
+     <a class="btn btn-light me-2" href="/reports">
+      <i class="fa-solid fa-file-lines me-1">
+      </i>
+      New Report
+     </a>
+     <button class="btn btn-link text-white me-2 position-relative">
+      <i class="fa-solid fa-bell">
+      </i>
+      <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+       7
+      </span>
+     </button>
+     <div class="dropdown">
+      <button class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
+       <i class="fa-solid fa-user me-1">
+       </i>
+       Me
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end">
+       <li>
+        <a class="dropdown-item" href="/profile">
+         My Profile
+        </a>
+       </li>
+       <li>
+        <a class="dropdown-item" href="/settings">
+         Settings
+        </a>
+       </li>
+       <li>
+        <hr class="dropdown-divider"/>
+       </li>
+       <li>
+        <a class="dropdown-item text-danger" href="/login">
+         Logout
+        </a>
+       </li>
+      </ul>
+     </div>
+    </div>
+   </div>
+  </nav>
+  <div class="d-flex">
+   <!-- Left Sidebar (Admin App Sidebar) -->
+   <aside class="d-flex flex-column flex-shrink-0 bg-light border-end" style="min-height:100vh;width:260px;">
+    <div class="p-3 border-bottom d-flex align-items-center justify-content-between" style="background:#f08e1b;">
+     <a class="text-white fw-bold text-decoration-none" href="/admin">
+      Hybrid Attendance
+     </a>
+     <button class="btn btn-sm btn-outline-light d-md-none" data-bs-target="#adminSidebar" data-bs-toggle="collapse" type="button">
+      <i class="fa-solid fa-bars">
+      </i>
+     </button>
+    </div>
+    <div class="collapse show" id="adminSidebar">
+     <div class="p-3">
+      <div class="d-flex align-items-center mb-4">
+       <img alt="Avatar" class="rounded-circle me-2" onerror="this.onerror=null;this.src='https://picsum.photos/seed/admin/80/80';" src="/assets/avatar-admin.png" style="width:40px;height:40px;"/>
+       <div>
+        <div class="fw-semibold">
+         Administrator
+        </div>
+        <small class="text-muted">
+         Control Center
+        </small>
+       </div>
+      </div>
+      <ul class="nav nav-pills flex-column">
+       <li class="nav-item mb-1">
+        <a class="nav-link text-dark" href="/admin">
+         <i class="fa-solid fa-gauge me-2">
+         </i>
+         Dashboard
+        </a>
+       </li>
+       <li class="nav-item mb-1">
+        <a class="nav-link text-dark" href="/analytics">
+         <i class="fa-solid fa-chart-line me-2">
+         </i>
+         Analytics
+        </a>
+       </li>
+       <li class="nav-item mb-1">
+        <a class="nav-link text-dark" href="/reports">
+         <i class="fa-solid fa-file-lines me-2">
+         </i>
+         Reports
+        </a>
+       </li>
+       <li class="nav-item mb-1">
+        <a class="nav-link d-flex align-items-center text-dark" href="/user-management">
+         <i class="fa-solid fa-users-gear me-2">
+         </i>
+         <span>
+          User Management
+         </span>
+         <span class="badge bg-danger ms-auto">
+          5
+         </span>
+        </a>
+       </li>
+       <li class="nav-item mb-1">
+        <a class="nav-link active text-white" href="/settings">
+         <i class="fa-solid fa-gear me-2">
+         </i>
+         Settings
+        </a>
+       </li>
+      </ul>
+     </div>
+    </div>
+    <style>
+     .nav-link:hover{background:rgba(240,142,27,.1);border-radius:.5rem}
+        .nav-link.active{background:#f08e1b;color:#fff;border-radius:.5rem}
+    </style>
+   </aside>
+   <!-- Main Content Area -->
+   <main class="flex-grow-1">
+    <div class="container-fluid py-4">
+     <!-- Breadcrumb / Page Header -->
+     <nav aria-label="breadcrumb" class="mb-3">
+      <ol class="breadcrumb mb-1">
+       <li class="breadcrumb-item">
+        <a href="./admin_dashboard.html">
+         Admin
+        </a>
+       </li>
+       <li aria-current="page" class="breadcrumb-item active">
+        Settings
+       </li>
+      </ol>
+     </nav>
+     <div class="d-flex align-items-center justify-content-between mb-3">
+      <div>
+       <h1 class="page-title mb-1">
+        <i class="fa-solid fa-sliders me-2 text-primary">
+        </i>
+        System Settings
+       </h1>
+       <div class="text-muted">
+        Configure policies for alerts, GPS tolerance, QR refresh, and random facial scans.
+       </div>
+      </div>
+      <div class="d-flex gap-2">
+       <a class="btn btn-light" href="#">
+        <i class="fa-regular fa-circle-question me-1">
+        </i>
+        View Docs
+       </a>
+       <button class="btn btn-outline-danger" id="restoreDefaultsBtn">
+        <i class="fa-solid fa-rotate-left me-1">
+        </i>
+        Restore Defaults
+       </button>
+      </div>
+     </div>
+     <!-- Feedback area (alerts) -->
+     <div aria-live="polite" class="mb-3" id="feedbackArea">
+     </div>
+     <div class="row g-3">
+      <!-- Policy Configuration Panel -->
+      <div class="col-lg-8">
+       <div aria-busy="true" class="card app-card" id="settingsCard">
+        <div class="card-header">
+         <div class="d-flex align-items-center gap-2">
+          <i class="fa-solid fa-gear text-primary">
+          </i>
+          <span class="widget-title">
+           System Settings
+          </span>
+         </div>
+         <div class="text-muted small" id="lastSavedLabel">
+          Last saved: never
+         </div>
+        </div>
+        <div class="card-body">
+         <!-- Loading state -->
+         <div class="d-flex align-items-center gap-2 py-2" id="loadingState">
+          <div aria-hidden="true" class="spinner-border text-primary spinner-border-sm" role="status">
+          </div>
+          <span>
+           Loading current settings…
+          </span>
+         </div>
+         <form class="d-none" id="policyForm" novalidate="">
+          <!-- Attendance Alert Threshold (%) -->
+          <div class="mb-4">
+           <label class="form-label fw-semibold" for="thresholdInput">
+            Low Attendance Alert Threshold (%)
+            <i class="fa-regular fa-circle-question text-muted ms-1" data-bs-toggle="tooltip" title="Students below this percentage receive a low-attendance notification.">
+            </i>
+           </label>
+           <div class="input-group">
+            <input aria-describedby="thresholdHelp" class="form-control" id="thresholdInput" max="100" min="0" required="" step="1" type="number"/>
+            <span class="input-group-text">
+             %
+            </span>
+           </div>
+           <div class="form-text" id="thresholdHelp">
+            Set the attendance percentage below which students will receive a low-attendance notification.
+           </div>
+           <div class="invalid-feedback">
+            Enter a whole number between 0 and 100.
+           </div>
+          </div>
+          <!-- GPS Tolerance Radius (meters) -->
+          <div class="mb-4">
+           <label class="form-label fw-semibold" for="radiusInput">
+            GPS Tolerance Radius (meters)
+            <i class="fa-regular fa-circle-question text-muted ms-1" data-bs-toggle="tooltip" title="Acceptable distance from class location for valid GPS check.">
+            </i>
+           </label>
+           <div class="input-group">
+            <input aria-describedby="radiusHelp" class="form-control" id="radiusInput" max="100" min="5" required="" step="1" type="number"/>
+            <span class="input-group-text">
+             m
+            </span>
+           </div>
+           <div class="form-text" id="radiusHelp">
+            Define the acceptable distance from the class location for a valid GPS check. Helps mitigate minor GPS inaccuracies.
+           </div>
+           <div class="invalid-feedback">
+            Enter a whole number between 5 and 100.
+           </div>
+          </div>
+          <!-- QR Code Refresh Rate (seconds) -->
+          <div class="mb-4">
+           <label class="form-label fw-semibold" for="qrRefreshInput">
+            QR Code Refresh Rate (seconds)
+            <i class="fa-regular fa-circle-question text-muted ms-1" data-bs-toggle="tooltip" title="QR validity duration before a new code is generated.">
+            </i>
+           </label>
+           <div class="input-group">
+            <input aria-describedby="qrHelp" class="form-control" id="qrRefreshInput" max="120" min="15" required="" step="1" type="number"/>
+            <span class="input-group-text">
+             sec
+            </span>
+           </div>
+           <div class="form-text" id="qrHelp">
+            Set the duration (30-60 seconds recommended) for how long a QR code remains valid before refreshing.
+           </div>
+           <div class="invalid-feedback">
+            Enter a whole number between 15 and 120.
+           </div>
+          </div>
+          <!-- Random Facial Scan Chance (%) -->
+          <div class="mb-4">
+           <label class="form-label fw-semibold" for="faceScanChanceInput">
+            Random Facial Scan Chance (%)
+            <i class="fa-regular fa-circle-question text-muted ms-1" data-bs-toggle="tooltip" title="Approximate percentage of check-ins requiring facial scan.">
+            </i>
+           </label>
+           <div class="input-group">
+            <input aria-describedby="faceHelp" class="form-control" id="faceScanChanceInput" max="100" min="0" required="" step="1" type="number"/>
+            <span class="input-group-text">
+             %
+            </span>
+           </div>
+           <div class="form-text" id="faceHelp">
+            The approximate percentage of attendance check-ins that will require a facial scan to verify identity.
+           </div>
+           <div class="invalid-feedback">
+            Enter a whole number between 0 and 100.
+           </div>
+          </div>
+         </form>
+        </div>
+        <div class="card-footer d-flex align-items-center justify-content-between">
+         <div class="text-muted small" hidden="" id="unsavedIndicator">
+          <i class="fa-solid fa-circle text-warning me-1" style="font-size:8px">
+          </i>
+          Changes not saved
+         </div>
+         <button class="btn btn-primary save-changes-button" disabled="" id="saveBtn">
+          <span aria-hidden="true" class="spinner-border spinner-border-sm me-2 d-none" id="saveSpinner" role="status">
+          </span>
+          <i class="fa-solid fa-floppy-disk me-1">
+          </i>
+          Save Changes
+         </button>
+        </div>
+       </div>
+      </div>
+      <!-- Side panel: Impact Preview / Tips -->
+      <div class="col-lg-4">
+       <div class="card app-card mb-3">
+        <div class="card-header">
+         <div class="d-flex align-items-center gap-2">
+          <i class="fa-solid fa-chart-line text-info">
+          </i>
+          <span class="widget-title">
+           Impact Preview
+          </span>
+         </div>
+         <span class="text-muted small">
+          Live projection
+         </span>
+        </div>
+        <div class="card-body">
+         <canvas aria-label="Projected alerts chart" height="200" id="impactChart" role="img">
+         </canvas>
+         <div class="small text-muted mt-2">
+          Projection adjusts with Threshold and Facial Scan Chance.
+         </div>
+        </div>
+       </div>
+       <div class="card app-card">
+        <div class="card-header">
+         <div class="d-flex align-items-center gap-2">
+          <i class="fa-regular fa-lightbulb text-warning">
+          </i>
+          <span class="widget-title">
+           Tips
+          </span>
+         </div>
+        </div>
+        <div class="card-body">
+         <ul class="mb-0 ps-3">
+          <li>
+           Start with QR refresh between 30–60 sec to curb code sharing.
+          </li>
+          <li>
+           GPS tolerance of 20–40 m balances accuracy and indoor drift.
+          </li>
+          <li>
+           Use 10–30% random facial scans to deter proxy attendance.
+          </li>
+         </ul>
+        </div>
+       </div>
+      </div>
+     </div>
+     <!-- Recent Changes Log -->
+     <div class="card app-card mt-3">
+      <div class="card-header">
+       <div class="d-flex align-items-center gap-2">
+        <i class="fa-regular fa-clock text-secondary">
+        </i>
+        <span class="widget-title">
+         Recent Changes
+        </span>
+       </div>
+       <div class="d-flex align-items-center gap-2">
+        <div class="input-group input-group-sm" style="width:260px;">
+         <span class="input-group-text">
+          <i class="fa-solid fa-magnifying-glass">
+          </i>
+         </span>
+         <input aria-label="Search logs" class="form-control" id="auditSearch" placeholder="Search logs…" type="text"/>
+        </div>
+       </div>
+      </div>
+      <div class="card-body p-0">
+       <div class="table-responsive">
+        <table class="table table-hover table-theme mb-0" id="changesTable">
+         <thead>
+          <tr>
+           <th class="sortable" data-field="date" role="button">
+            Date
+            <i class="fa-solid fa-sort ms-1">
+            </i>
+           </th>
+           <th class="sortable" data-field="user" role="button">
+            User
+            <i class="fa-solid fa-sort ms-1">
+            </i>
+           </th>
+           <th class="sortable" data-field="setting" role="button">
+            Setting
+            <i class="fa-solid fa-sort ms-1">
+            </i>
+           </th>
+           <th>
+            From
+           </th>
+           <th>
+            To
+           </th>
+           <th>
+            Action
+           </th>
+          </tr>
+         </thead>
+         <tbody id="changesTbody">
+          <!-- rows injected via JS -->
+         </tbody>
+        </table>
+       </div>
+      </div>
+      <div class="card-footer d-flex align-items-center justify-content-between">
+       <div class="small text-muted" id="auditPaginationInfo">
+        Showing 0–0 of 0
+       </div>
+       <nav aria-label="Pagination">
+        <ul class="pagination pagination-sm mb-0" id="auditPagination">
+         <!-- optional pager (static small dataset) -->
+         <li class="page-item disabled">
+          <span class="page-link">
+           Prev
+          </span>
+         </li>
+         <li class="page-item active">
+          <span class="page-link">
+           1
+          </span>
+         </li>
+         <li class="page-item disabled">
+          <span class="page-link">
+           Next
+          </span>
+         </li>
+        </ul>
+       </nav>
+      </div>
+     </div>
+    </div>
+   </main>
+  </div>
+  <!-- Footer -->
+  <footer class="py-3 border-top bg-white">
+   <div class="container d-flex flex-wrap justify-content-between align-items-center">
+    <span class="text-muted">
+     ©
+     <span id="year-adm">
+      2025
+     </span>
+     Hybrid Attendance
+    </span>
+    <ul class="nav">
+     <li class="nav-item">
+      <a class="nav-link px-2 text-muted" href="/terms">
+       Terms
+      </a>
+     </li>
+     <li class="nav-item">
+      <a class="nav-link px-2 text-muted" href="/privacy">
+       Privacy
+      </a>
+     </li>
+    </ul>
+   </div>
+  </footer>
+  <script>
+   document.getElementById('year-adm').textContent = new Date().getFullYear();
+  </script>
+  <!-- Toast Container (optional, for future use) -->
+  <div class="position-fixed top-0 end-0 p-3" style="z-index: 1060">
+   <div aria-atomic="true" aria-live="assertive" class="toast align-items-center text-bg-primary border-0" id="liveToast" role="alert">
+    <div class="d-flex">
+     <div class="toast-body">
+      Settings saved successfully
+     </div>
+     <button aria-label="Close" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" type="button">
+     </button>
+    </div>
+   </div>
+  </div>
+  <!-- JS: Bootstrap Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+  </script>
+  <!-- JS: SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.12.4/dist/sweetalert2.all.min.js">
+  </script>
+  <!-- JS: Chart.js for impact preview -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js">
+  </script>
+  <script>
+   // Initialize Bootstrap tooltips
+document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => new bootstrap.Tooltip(el));
+
+// State
+const defaults = {
+    threshold: 75,
+    gpsRadius: 30,
+    qrRefresh: 45,
+    faceScanChance: 20
+};
+let original = null;
+let current = null;
+let isSaving = false;
+let isDirty = false;
+
+// Elements
+const loadingState = document.getElementById('loadingState');
+const formEl = document.getElementById('policyForm');
+const feedbackArea = document.getElementById('feedbackArea');
+const lastSavedLabel = document.getElementById('lastSavedLabel');
+const unsavedIndicator = document.getElementById('unsavedIndicator');
+const saveBtn = document.getElementById('saveBtn');
+const saveSpinner = document.getElementById('saveSpinner');
+
+const thresholdInput = document.getElementById('thresholdInput');
+const radiusInput = document.getElementById('radiusInput');
+const qrRefreshInput = document.getElementById('qrRefreshInput');
+const faceScanChanceInput = document.getElementById('faceScanChanceInput');
+
+const restoreBtn = document.getElementById('restoreDefaultsBtn');
+
+// Audit elements
+const changesTbody = document.getElementById('changesTbody');
+const auditSearch = document.getElementById('auditSearch');
+const auditPaginationInfo = document.getElementById('auditPaginationInfo');
+const changesTable = document.getElementById('changesTable');
+
+// Chart
+let impactChart = null;
+
+// Utility
+function readSettings() {
+    const saved = localStorage.getItem('systemSettings');
+    return saved ? JSON.parse(saved) : {
+        ...defaults
+    };
+}
+
+function writeSettings(s) {
+    localStorage.setItem('systemSettings', JSON.stringify(s));
+}
+
+function nowISO() {
+    return new Date().toISOString();
+}
+
+// Audit log utilities
+function readAudit() {
+    const saved = localStorage.getItem('settingsAudit');
+    if (saved) return JSON.parse(saved);
+    const seed = [{
+        date: new Date(Date.now() - 3600 * 1000 * 2).toISOString(),
+        user: 'Admin',
+        setting: 'QR Refresh (sec)',
+        from: '60',
+        to: '45'
+    }, {
+        date: new Date(Date.now() - 3600 * 1000 * 5).toISOString(),
+        user: 'Admin',
+        setting: 'GPS Radius (m)',
+        from: '25',
+        to: '30'
+    }, {
+        date: new Date(Date.now() - 3600 * 1000 * 26).toISOString(),
+        user: 'Scheduler',
+        setting: 'Facial Scan Chance (%)',
+        from: '10',
+        to: '20'
+    }, {
+        date: new Date(Date.now() - 3600 * 1000 * 30).toISOString(),
+        user: 'Admin',
+        setting: 'Low Attendance Threshold (%)',
+        from: '70',
+        to: '75'
+    }, {
+        date: new Date(Date.now() - 3600 * 1000 * 50).toISOString(),
+        user: 'Compliance',
+        setting: 'QR Refresh (sec)',
+        from: '45',
+        to: '60'
+    }, {
+        date: new Date(Date.now() - 3600 * 1000 * 80).toISOString(),
+        user: 'Admin',
+        setting: 'GPS Radius (m)',
+        from: '30',
+        to: '25'
+    }];
+    localStorage.setItem('settingsAudit', JSON.stringify(seed));
+    return seed;
+}
+
+function writeAudit(a) {
+    localStorage.setItem('settingsAudit', JSON.stringify(a));
+}
+
+// Render audit table
+let auditData = [];
+let auditFiltered = [];
+let sortField = 'date';
+let sortDir = 'desc';
+
+function renderAudit() {
+    const data = [...auditFiltered];
+    data.sort((a, b) => {
+        let va = a[sortField],
+            vb = b[sortField];
+        if (sortField === 'date') {
+            va = new Date(va).getTime();
+            vb = new Date(vb).getTime();
+        }
+        if (va < vb) return sortDir === 'asc' ? -1 : 1;
+        if (va > vb) return sortDir === 'asc' ? 1 : -1;
+        return 0;
+    });
+    changesTbody.innerHTML = data.map((r, idx) => `
+        <tr>
+          <td>${new Date(r.date).toLocaleString()}</td>
+          <td>${r.user}</td>
+          <td>${r.setting}</td>
+          <td>${r.from}</td>
+          <td>${r.to}</td>
+          <td>
+            <button class="btn btn-sm btn-light" data-idx="${idx}" data-action="rollback" title="Rollback to '${r.from}'" aria-label="Rollback">
+              <i class="fa-solid fa-rotate-left"></i>
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    auditPaginationInfo.textContent = `Showing 1–${data.length} of ${auditData.length}`;
+}
+
+function applyAuditFilter() {
+    const q = auditSearch.value.trim().toLowerCase();
+    if (!q) {
+        auditFiltered = [...auditData];
+        return;
+    }
+    auditFiltered = auditData.filter(r =>
+        r.user.toLowerCase().includes(q) ||
+        r.setting.toLowerCase().includes(q) ||
+        String(r.from).toLowerCase().includes(q) ||
+        String(r.to).toLowerCase().includes(q)
+    );
+}
+
+function setSort(field) {
+    if (sortField === field) {
+        sortDir = (sortDir === 'asc') ? 'desc' : 'asc';
+    } else {
+        sortField = field;
+        sortDir = 'asc';
+    }
+    // update header icons
+    document.querySelectorAll('#changesTable thead .sortable').forEach(th => {
+        const icon = th.querySelector('i');
+        icon.className = 'fa-solid fa-sort';
+        if (th.dataset.field === sortField) icon.className = sortDir === 'asc' ? 'fa-solid fa-sort-up' : 'fa-solid fa-sort-down';
+    });
+    renderAudit();
+}
+
+// Chart helpers
+function getCssVar(name) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || '#f08e1b';
+}
+
+function buildChart() {
+    const ctx = document.getElementById('impactChart');
+    const primary = getCssVar('--color-primary');
+    const info = getCssVar('--color-info');
+    const labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    const alerts = projectAlerts(current.threshold, current.faceScanChance);
+    if (impactChart) impactChart.destroy();
+    impactChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels,
+            datasets: [{
+                label: 'Projected Alerts',
+                data: alerts,
+                borderColor: primary,
+                backgroundColor: 'rgba(240,142,27,0.15)',
+                tension: 0.3,
+                fill: true,
+                pointRadius: 3
+            }, {
+                label: 'Facial Scans',
+                data: alerts.map(v => Math.round(v * (current.faceScanChance / 100))),
+                borderColor: info,
+                backgroundColor: 'rgba(0,153,210,0.12)',
+                tension: 0.3,
+                fill: true,
+                pointRadius: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false
+                }
+            }
+        }
+    });
+}
+
+function projectAlerts(threshold, faceScan) {
+    // Simple heuristic projection: higher threshold => more alerts; weak weekly variability
+    const base = 30 + Math.round((threshold - 50) * 0.8);
+    const week = [1.0, 0.9, 1.1, 1.0, 1.2, 0.7, 0.6];
+    return week.map(f => Math.max(0, Math.round(base * f)));
+}
+
+// Validation and dirty state
+function validateField(input, min, max) {
+    const val = input.value.trim();
+    const num = Number(val);
+    const valid = val !== '' && Number.isInteger(num) && num >= min && num <= max;
+    input.classList.toggle('is-invalid', !valid);
+    input.classList.toggle('is-valid', valid);
+    return valid;
+}
+
+function updateDirty() {
+    isDirty = (
+        Number(thresholdInput.value) !== original.threshold ||
+        Number(radiusInput.value) !== original.gpsRadius ||
+        Number(qrRefreshInput.value) !== original.qrRefresh ||
+        Number(faceScanChanceInput.value) !== original.faceScanChance
+    );
+    unsavedIndicator.hidden = !isDirty;
+    const allValid = (
+        validateField(thresholdInput, 0, 100) &&
+        validateField(radiusInput, 5, 100) &&
+        validateField(qrRefreshInput, 15, 120) &&
+        validateField(faceScanChanceInput, 0, 100)
+    );
+    saveBtn.disabled = !(isDirty && allValid) || isSaving;
+    current = {
+        threshold: Number(thresholdInput.value) || 0,
+        gpsRadius: Number(radiusInput.value) || 0,
+        qrRefresh: Number(qrRefreshInput.value) || 0,
+        faceScanChance: Number(faceScanChanceInput.value) || 0
+    };
+    buildChart();
+}
+
+function showAlert(type, title, text) {
+    const iconMap = {
+        success: 'success',
+        error: 'error',
+        info: 'info',
+        warning: 'warning'
+    };
+    Swal.fire({
+        icon: iconMap[type] || 'info',
+        title,
+        text,
+        confirmButtonColor: getCssVar('--color-primary') || '#f08e1b'
+    });
+}
+
+function addFeedback(type, message) {
+    feedbackArea.innerHTML = `
+        <div class="alert alert-${type === 'error' ? 'danger' : type} d-flex align-items-center" role="alert">
+          <i class="fa-solid ${type==='success'?'fa-circle-check':type==='warning'?'fa-triangle-exclamation':type==='error'?'fa-circle-exclamation':'fa-circle-info'} me-2"></i>
+          <div>${message}</div>
+        </div>`;
+    setTimeout(() => {
+        feedbackArea.innerHTML = '';
+    }, 4000);
+}
+
+// Save logic
+async function saveSettings() {
+    isSaving = true;
+    saveBtn.disabled = true;
+    saveSpinner.classList.remove('d-none');
+    try {
+        // Simulate network
+        await new Promise(res => setTimeout(res, 700));
+        // Persist
+        writeSettings(current);
+        // Update audit log: push entries for each changed field
+        const changes = [];
+        if (current.threshold !== original.threshold) changes.push({
+            setting: 'Low Attendance Threshold (%)',
+            from: String(original.threshold),
+            to: String(current.threshold)
+        });
+        if (current.gpsRadius !== original.gpsRadius) changes.push({
+            setting: 'GPS Radius (m)',
+            from: String(original.gpsRadius),
+            to: String(current.gpsRadius)
+        });
+        if (current.qrRefresh !== original.qrRefresh) changes.push({
+            setting: 'QR Refresh (sec)',
+            from: String(original.qrRefresh),
+            to: String(current.qrRefresh)
+        });
+        if (current.faceScanChance !== original.faceScanChance) changes.push({
+            setting: 'Facial Scan Chance (%)',
+            from: String(original.faceScanChance),
+            to: String(current.faceScanChance)
+        });
+        if (changes.length) {
+            const batch = changes.map(c => ({
+                date: nowISO(),
+                user: 'Admin',
+                ...c
+            }));
+            auditData = [...batch, ...auditData];
+            writeAudit(auditData);
+            applyAuditFilter();
+            renderAudit();
+        }
+        original = {
+            ...current
+        };
+        isDirty = false;
+        unsavedIndicator.hidden = true;
+        lastSavedLabel.textContent = 'Last saved: ' + new Date().toLocaleString();
+        addFeedback('success', 'Settings have been saved successfully.');
+        showAlert('success', 'Saved', 'Your policy changes are now active.');
+    } catch (e) {
+        addFeedback('error', 'Failed to save settings. Please try again.');
+        showAlert('error', 'Save Failed', 'Network error or server unavailable.');
+    } finally {
+        isSaving = false;
+        saveSpinner.classList.add('d-none');
+        updateDirty();
+    }
+}
+
+// Restore defaults
+function restoreDefaults() {
+    Swal.fire({
+        title: 'Restore Defaults?',
+        text: 'This will reset all settings to recommended defaults.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: getCssVar('--color-primary') || '#f08e1b',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Yes, restore'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            thresholdInput.value = defaults.threshold;
+            radiusInput.value = defaults.gpsRadius;
+            qrRefreshInput.value = defaults.qrRefresh;
+            faceScanChanceInput.value = defaults.faceScanChance;
+            updateDirty();
+            addFeedback('info', 'Defaults loaded. Click Save Changes to apply.');
+        }
+    });
+}
+
+// Rollback action handler (from audit table)
+changesTbody.addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-action="rollback"]');
+    if (!btn) return;
+    const rowIdx = Number(btn.getAttribute('data-idx'));
+    const row = auditFiltered[rowIdx];
+    if (!row) return;
+    Swal.fire({
+        title: 'Rollback Change?',
+        text: `Set "${row.setting}" back to ${row.from}?`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: getCssVar('--color-primary') || '#f08e1b',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Rollback'
+    }).then((result) => {
+        if (!result.isConfirmed) return;
+        // Map setting names to inputs
+        if (row.setting.includes('Threshold')) thresholdInput.value = parseInt(row.from, 10);
+        else if (row.setting.includes('GPS')) radiusInput.value = parseInt(row.from, 10);
+        else if (row.setting.includes('QR')) qrRefreshInput.value = parseInt(row.from, 10);
+        else if (row.setting.includes('Facial')) faceScanChanceInput.value = parseInt(row.from, 10);
+        updateDirty();
+        addFeedback('warning', `Rolled back field "${row.setting}". Click Save Changes to apply.`);
+    });
+});
+
+// Init
+(function init() {
+    // Load settings
+    setTimeout(() => {
+        original = readSettings();
+        current = {
+            ...original
+        };
+        thresholdInput.value = original.threshold;
+        radiusInput.value = original.gpsRadius;
+        qrRefreshInput.value = original.qrRefresh;
+        faceScanChanceInput.value = original.faceScanChance;
+        loadingState.classList.add('d-none');
+        formEl.classList.remove('d-none');
+        lastSavedLabel.textContent = localStorage.getItem('settingsLastSaved') || 'Last saved: never';
+        updateDirty();
+    }, 450);
+
+    // Inputs listeners
+    [thresholdInput, radiusInput, qrRefreshInput, faceScanChanceInput].forEach(inp => {
+        inp.addEventListener('input', updateDirty);
+        inp.addEventListener('blur', updateDirty);
+    });
+
+    // Save
+    saveBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        saveSettings().then(() => localStorage.setItem('settingsLastSaved', lastSavedLabel.textContent));
+    });
+
+    // Restore Defaults
+    restoreBtn.addEventListener('click', restoreDefaults);
+
+    // Audit init
+    auditData = readAudit();
+    applyAuditFilter();
+    renderAudit();
+    auditSearch.addEventListener('input', () => {
+        applyAuditFilter();
+        renderAudit();
+    });
+    document.querySelectorAll('#changesTable thead .sortable').forEach(th => th.addEventListener('click', () => setSort(th.dataset.field)));
+
+    // Chart init
+    buildChart();
+})();
+  </script>
+ </body>
+</html>

@@ -1,0 +1,95 @@
+/* Session Page - page-specific styles */
+:root {
+    /* ensure consistent QR size on this page */
+    --qr-size: 280px
+    }
+body {
+    font-family: "Poppins", var(--font-sans)
+    }
+/* Layout tweaks */
+main .container-fluid {
+    max-width: 1400px
+    }
+/* Session header spacing */
+#courseTitle {
+    letter-spacing: 0.2px
+    }
+#courseMeta {
+    font-weight: 500
+    }
+/* QR box */
+.qr-box {
+    width: var(--qr-size);
+    height: var(--qr-size);
+    background: var(--surface-0);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-2);
+    display: grid;
+    place-items: center;
+    box-shadow: var(--shadow-1)
+    }
+#qrcode canvas, #qrcode img {
+    width: 100% !important;
+    height: 100% !important
+    }
+#qrTokenBadge {
+    font-family: var(--font-mono)
+    }
+/* Roster table */
+#rosterTable thead th {
+    background: var(--surface-muted);
+    position: sticky;
+    top: 0;
+    z-index: 1
+    }
+#rosterTable .sortable .sort-icon {
+    opacity: 0.4;
+    transition: opacity 0.15s ease
+    }
+#rosterTable .sortable:hover .sort-icon {
+    opacity: 0.9
+    }
+/* Status badges sizing inside table */
+.badge-soft .status-dot {
+    width: 8px;
+    height: 8px
+    }
+/* Override button */
+#rosterTable .btn-outline-success[disabled] {
+    opacity: 0.5;
+    pointer-events: none
+    }
+/* Metrics */
+.metric-card {
+    min-height: 110px
+    }
+.metric-value {
+    font-weight: 800
+    }
+/* Buttons */
+#btnEndSession {
+    min-width: 160px
+    }
+#btnPauseSession {
+    min-width: 140px
+    }
+/* Toasts */
+.toast {
+    background: var(--surface-0);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-1)
+    }
+/* Responsive adjustments */
+@media (max-width: 991.98px) {
+    :root {
+        --qr-size: 240px
+        }
+    }
+@media (max-width: 575.98px) {
+    :root {
+        --qr-size: 200px
+        }
+    #rosterTable thead {
+        font-size: 0.9rem
+        }
+    }

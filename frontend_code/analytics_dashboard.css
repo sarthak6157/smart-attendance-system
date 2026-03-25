@@ -1,0 +1,68 @@
+/* analytics_dashboard.css - Page specific styles for Analytics Dashboard */
+/* Typography override for this page */
+body {
+    font-family: "Poppins", var(--font-sans), system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif
+    }
+/* Ensure main content spacing harmonizes with theme */
+main .container-fluid {
+    max-width: var(--container-max)
+    }
+/* Sticky filter bar for better context */
+#filterBar {
+    position: sticky;
+    top: 0;
+    z-index: 100
+    }
+/* Chart container heights and skeletons */
+#trendChart, #deptChart {
+    width: 100%
+    }
+.chart-skeleton {
+    height: 320px;
+    border-radius: var(--radius-2)
+    }
+/* KPI cards tweaks */
+.kpi-card {
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.08s ease
+    }
+.kpi-card:active {
+    transform: translatey(1px)
+    }
+.kpi-card:hover {
+    box-shadow: var(--shadow-2)
+    }
+/* Table rows hover */
+#defaulterTable tbody tr:hover {
+    background: rgba(0, 0, 0, 0.02)
+    }
+/* Pagination alignment on small screens */
+@media (max-width: 575.98px) {
+    #paginationInfo {
+        margin-bottom: 0.5rem
+        }
+    }
+/* Buttons group subtle spacing */
+.btn-group .btn {
+    min-width: 120px
+    }
+/* Improve navbar search input contrast on brand color */
+.navbar [type="search"] {
+    border-color: rgba(255, 255, 255, 0.35)
+    }
+.navbar [type="search"]::placeholder {
+    color: rgba(255, 255, 255, 0.85)
+    }
+/* Maintain consistent card header visuals */
+.card-header .widget-title {
+    font-weight: 600
+    }
+/* Make the main area slightly muted to separate from sidebar */
+main {
+    background: var(--surface-bg)
+    }
+/* Tooltip z-index above sticky components */
+.tooltip {
+    z-index: var(--z-dropdown)
+    }

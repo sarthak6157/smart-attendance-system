@@ -1,0 +1,40 @@
+/* attendance_history.css - Page-specific styles for Attendance History */
+/* Use brand font strongly on this page while preserving theme fallback */
+body {
+    font-family: "Poppins", var(--font-sans)
+    }
+/* Tighten metric card visuals */
+.metric-card {
+    position: relative
+    }
+.metric-card .display-5 {
+    line-height: 1.1
+    }
+/* Radial chart wrapper */
+.radial-wrapper {
+    width: 120px;
+    height: 120px
+    }
+/* Table sorting indicator hover */
+#attendanceTable thead th.sortable:hover {
+    color: var(--color-primary)
+    }
+/* Align main content to use available space alongside sidebar */
+@media (min-width: 768px) {
+    .main-panel {
+        padding-top: var(--space-4);
+        padding-bottom: var(--space-4)
+        }
+    }
+/* States spacing */
+.loading-state .skeleton + .skeleton {
+    margin-top: 10px
+    }
+/* Pagination buttons subtle elevation */
+#prevPage, #nextPage {
+    min-width: 40px
+    }
+/* Badge sizes within table */
+.badge-soft {
+    line-height: 1.2
+    }

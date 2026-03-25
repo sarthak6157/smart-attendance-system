@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>
+   Attendance History • Hybrid Attendance
+  </title>
+  <!-- Brand Font: Poppins -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <!-- Bootstrap 5 -->
+  <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" rel="stylesheet"/>
+  <!-- Font Awesome 6 -->
+  <link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2Pkf6h9eyX1nBwKs6v4KXW3NFZ6Zef3zBk0Z8s+3Q2P9QnyZf0L+X38WKg==" referrerpolicy="no-referrer" rel="stylesheet">
+   <!-- SweetAlert2 -->
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11">
+   </script>
+   <!-- Chart.js for radial progress -->
+   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js">
+   </script>
+   <!-- Site theme -->
+   <link href="style.css" rel="stylesheet"/>
+   <!-- Page specific CSS -->
+   <link href="attendance_history.css" rel="stylesheet"/>
+  </link>
+ </head>
+ <body>
+  <!-- Header (Student Header with quick Scan action) -->
+  <nav class="navbar navbar-expand-md navbar-dark" style="background:#f08e1b;">
+   <div class="container-fluid">
+    <button class="btn btn-outline-light d-md-none me-2" data-bs-target="#studentSidebar" data-bs-toggle="collapse" type="button">
+     <i class="fa-solid fa-bars">
+     </i>
+    </button>
+    <a class="navbar-brand fw-bold" href="/student">
+     Student
+    </a>
+    <form class="d-none d-md-flex ms-3" role="search" style="max-width:420px;flex:1;">
+     <input aria-label="Search" class="form-control" placeholder="Search courses" type="search"/>
+    </form>
+    <div class="d-flex align-items-center ms-auto">
+     <a class="btn btn-light me-2" href="/scan">
+      <i class="fa-solid fa-qrcode me-1">
+      </i>
+      Scan Now
+     </a>
+     <button class="btn btn-link text-white me-2 position-relative">
+      <i class="fa-solid fa-bell">
+      </i>
+      <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+       3
+      </span>
+     </button>
+     <div class="dropdown">
+      <button class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
+       <i class="fa-solid fa-user me-1">
+       </i>
+       Me
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end">
+       <li>
+        <a class="dropdown-item" href="/profile">
+         My Profile
+        </a>
+       </li>
+       <li>
+        <hr class="dropdown-divider"/>
+       </li>
+       <li>
+        <a class="dropdown-item text-danger" href="/login">
+         Logout
+        </a>
+       </li>
+      </ul>
+     </div>
+    </div>
+   </div>
+  </nav>
+  <div class="container-fluid">
+   <div class="row">
+    <!-- Left Sidebar (Student App Sidebar) -->
+    <div class="col-auto p-0">
+     <aside class="d-flex flex-column flex-shrink-0 bg-light border-end" style="min-height:100vh;width:260px;">
+      <div class="p-3 border-bottom d-flex align-items-center justify-content-between" style="background:#f08e1b;">
+       <a class="text-white fw-bold text-decoration-none" href="/student">
+        Hybrid Attendance
+       </a>
+       <button aria-controls="studentSidebar" class="btn btn-sm btn-outline-light d-md-none" data-bs-target="#studentSidebar" data-bs-toggle="collapse" type="button">
+        <i class="fa-solid fa-bars">
+        </i>
+       </button>
+      </div>
+      <div class="collapse show" id="studentSidebar">
+       <div class="p-3">
+        <div class="d-flex align-items-center mb-4">
+         <img alt="Avatar" class="rounded-circle me-2" onerror="this.onerror=null;this.src='https://picsum.photos/seed/student/40/40'" src="/assets/avatar-student.png" style="width:40px;height:40px;"/>
+         <div>
+          <div class="fw-semibold">
+           Student
+          </div>
+          <small class="text-muted">
+           My Workspace
+          </small>
+         </div>
+        </div>
+        <ul class="nav nav-pills flex-column">
+         <li class="nav-item mb-1">
+          <a class="nav-link text-dark" href="/student">
+           <i class="fa-solid fa-house me-2">
+           </i>
+           Dashboard
+          </a>
+         </li>
+         <li class="nav-item mb-1">
+          <a class="nav-link text-dark" href="/scan">
+           <i class="fa-solid fa-qrcode me-2">
+           </i>
+           Mark Attendance (Scan)
+          </a>
+         </li>
+         <li class="nav-item mb-1">
+          <a class="nav-link active text-white" href="/attendance-history">
+           <i class="fa-solid fa-list-check me-2">
+           </i>
+           Attendance History
+          </a>
+         </li>
+         <li class="nav-item mt-3">
+          <a class="nav-link text-dark" href="/profile">
+           <i class="fa-solid fa-user me-2">
+           </i>
+           My Profile
+          </a>
+         </li>
+        </ul>
+       </div>
+      </div>
+      <style>
+       .nav-link:hover{background:rgba(240,142,27,.1);border-radius:.5rem}
+            .nav-link.active{background:#f08e1b;color:#fff;border-radius:.5rem}
+      </style>
+     </aside>
+    </div>
+    <!-- Main Content Area -->
+    <div class="col ps-0" style="min-height:100vh;">
+     <main class="main-panel">
+      <!-- Breadcrumbs / Page header -->
+      <div class="page-header">
+       <div class="d-flex align-items-center gap-3">
+        <h1 class="page-title mb-0">
+         Attendance History
+        </h1>
+        <span class="badge-soft info">
+         <i class="fa-solid fa-shield-check">
+         </i>
+         Academic Standing
+        </span>
+       </div>
+       <div class="navigation-links">
+        <nav aria-label="breadcrumb">
+         <ol class="breadcrumb mb-0">
+          <li class="breadcrumb-item">
+           <a href="./student_dashboard.html">
+            Student Dashboard
+           </a>
+          </li>
+          <li aria-current="page" class="breadcrumb-item active">
+           Attendance History
+          </li>
+         </ol>
+        </nav>
+       </div>
+      </div>
+      <!-- Attendance Overview (Summary Cards + Conditional Alert) -->
+      <section class="mb-4" id="attendance-overview">
+       <div class="alert alert-warning d-none align-items-center" id="low-attendance-alert" role="alert">
+        <i class="fa-solid fa-triangle-exclamation me-2">
+        </i>
+        <span class="flex-grow-1" id="low-attendance-text">
+         Warning: Your attendance in [Course Name] is below the required threshold.
+        </span>
+        <button class="btn btn-sm btn-warning ms-3" id="view-alert-details">
+         Learn more
+        </button>
+       </div>
+       <div class="card-grid">
+        <!-- Overall Percentage Card -->
+        <div class="metric-card">
+         <div class="d-flex align-items-center justify-content-between">
+          <div class="widget-title">
+           Overall Attendance
+          </div>
+          <button class="btn btn-sm btn-light" data-bs-title="Refresh stats" data-bs-toggle="tooltip" id="refresh-overall">
+           <i class="fa-solid fa-rotate">
+           </i>
+          </button>
+         </div>
+         <div class="d-flex align-items-center gap-3">
+          <div class="radial-wrapper">
+           <canvas aria-label="Overall attendance radial chart" height="120" id="overallRadial" width="120">
+           </canvas>
+          </div>
+          <div>
+           <div class="metric-value" id="overallPercentText">
+            --%
+           </div>
+           <div class="text-muted">
+            Across all enrolled courses
+           </div>
+          </div>
+         </div>
+        </div>
+        <!-- Classes Attended Card -->
+        <div class="metric-card">
+         <div class="widget-title">
+          Classes Attended
+         </div>
+         <div class="d-flex align-items-end gap-3">
+          <div>
+           <div class="display-5 fw-bold text-strong" id="attendedFraction">
+            --/--
+           </div>
+           <div class="text-muted">
+            Attended / Total sessions
+           </div>
+          </div>
+         </div>
+         <div class="mt-2">
+          <div aria-label="Attendance progress" class="progress" role="progressbar">
+           <div class="progress-bar" id="attendedProgress" style="width:0%">
+           </div>
+          </div>
+         </div>
+        </div>
+        <!-- Next threshold info card -->
+        <div class="metric-card">
+         <div class="widget-title">
+          Threshold Monitor
+         </div>
+         <p class="mb-2 text-muted">
+          Institution threshold:
+          <strong>
+           75%
+          </strong>
+         </p>
+         <div class="d-flex gap-2 align-items-center">
+          <span class="status-dot success">
+          </span>
+          <span class="text-muted">
+           You are on track in most courses
+          </span>
+         </div>
+         <div class="mt-3">
+          <button class="btn btn-sm btn-outline-primary" id="btnViewForecast">
+           <i class="fa-solid fa-chart-line me-1">
+           </i>
+           Forecast Impact
+          </button>
+         </div>
+        </div>
+       </div>
+      </section>
+      <!-- Course Attendance Details -->
+      <section class="mb-4" id="course-attendance-details">
+       <div class="app-card mb-3">
+        <div class="card-header">
+         <div class="d-flex align-items-center gap-3">
+          <span class="fw-semibold">
+           View Attendance For:
+          </span>
+          <select class="form-select form-select-sm" id="courseSelector" style="min-width:260px">
+          </select>
+         </div>
+         <div class="d-flex align-items-center gap-2">
+          <button class="btn btn-sm btn-light" data-bs-title="Export current view" data-bs-toggle="tooltip" id="btnExportCsv">
+           <i class="fa-solid fa-file-csv me-1">
+           </i>
+           Export CSV
+          </button>
+          <button class="btn btn-sm btn-light" id="btnPrint">
+           <i class="fa-solid fa-print me-1">
+           </i>
+           Print
+          </button>
+         </div>
+        </div>
+        <div class="card-body">
+         <!-- Filters row -->
+         <div class="row g-3 mb-3 align-items-end">
+          <div class="col-12 col-md-3">
+           <label class="form-label mb-1" for="filterStatus">
+            Status
+           </label>
+           <select class="form-select" id="filterStatus">
+            <option selected="" value="all">
+             All
+            </option>
+            <option value="Present">
+             Present
+            </option>
+            <option value="Absent">
+             Absent
+            </option>
+            <option value="Present (Override)">
+             Present (Override)
+            </option>
+           </select>
+          </div>
+          <div class="col-6 col-md-3">
+           <label class="form-label mb-1" for="startDate">
+            From
+           </label>
+           <input class="form-control" id="startDate" type="date">
+           </input>
+          </div>
+          <div class="col-6 col-md-3">
+           <label class="form-label mb-1" for="endDate">
+            To
+           </label>
+           <input class="form-control" id="endDate" type="date"/>
+          </div>
+          <div class="col-12 col-md-3">
+           <label class="form-label mb-1" for="searchInput">
+            Quick Search
+           </label>
+           <div class="input-group">
+            <span class="input-group-text">
+             <i class="fa-solid fa-magnifying-glass">
+             </i>
+            </span>
+            <input class="form-control" id="searchInput" placeholder="Search by date or note..." type="text"/>
+           </div>
+          </div>
+         </div>
+         <!-- Table -->
+         <div class="table-responsive">
+          <table class="table table-theme align-middle" id="attendanceTable">
+           <thead>
+            <tr>
+             <th class="sortable" data-key="date">
+              <span class="d-inline-flex align-items-center">
+               Date
+               <i class="fa-solid fa-sort ms-1">
+               </i>
+              </span>
+             </th>
+             <th class="sortable" data-key="status">
+              <span class="d-inline-flex align-items-center">
+               Status
+               <i class="fa-solid fa-sort ms-1">
+               </i>
+              </span>
+             </th>
+             <th>
+              Notes
+             </th>
+            </tr>
+           </thead>
+           <tbody id="attendanceTbody">
+            <!-- rows injected by JS -->
+           </tbody>
+          </table>
+         </div>
+         <!-- Pagination / info -->
+         <div class="d-flex justify-content-between align-items-center mt-2">
+          <small class="text-muted" id="paginationInfo">
+           Showing 0-0 of 0
+          </small>
+          <div class="btn-group" role="group">
+           <button class="btn btn-sm btn-light" id="prevPage">
+            <i class="fa-solid fa-angle-left">
+            </i>
+           </button>
+           <button class="btn btn-sm btn-light" id="nextPage">
+            <i class="fa-solid fa-angle-right">
+            </i>
+           </button>
+          </div>
+         </div>
+         <!-- Loading / Empty / Error States -->
+         <div class="loading-state mt-3 d-none" id="loadingState">
+          <div class="skeleton" style="height:12px;width:60%;">
+          </div>
+          <div class="skeleton" style="height:12px;width:80%;">
+          </div>
+          <div class="skeleton" style="height:12px;width:40%;">
+          </div>
+         </div>
+         <div class="empty-state mt-3 d-none" id="emptyState">
+          <i class="fa-regular fa-calendar-xmark fa-2x text-muted">
+          </i>
+          <div class="empty-state-text">
+           No sessions found for the selected filters.
+          </div>
+         </div>
+         <div class="error-state mt-3 d-none" id="errorState">
+          <i class="fa-solid fa-triangle-exclamation fa-2x text-danger">
+          </i>
+          <div class="empty-state-text">
+           We couldn’t load your attendance data. Please retry.
+          </div>
+          <button class="btn btn-primary retry-button" id="retryLoad">
+           Retry
+          </button>
+         </div>
+        </div>
+       </div>
+      </section>
+     </main>
+     <!-- Footer -->
+     <footer class="py-3 border-top bg-white">
+      <div class="container d-flex flex-wrap justify-content-between align-items-center">
+       <span class="text-muted">
+        ©
+        <span id="year-stu">
+         2025
+        </span>
+        Hybrid Attendance
+       </span>
+       <ul class="nav">
+        <li class="nav-item">
+         <a class="nav-link px-2 text-muted" href="./terms.html">
+          Terms
+         </a>
+        </li>
+        <li class="nav-item">
+         <a class="nav-link px-2 text-muted" href="./privacy.html">
+          Privacy
+         </a>
+        </li>
+       </ul>
+      </div>
+     </footer>
+    </div>
+   </div>
+  </div>
+  <!-- Toast container placeholder (Bootstrap toasts if needed) -->
+  <div class="position-fixed bottom-0 end-0 p-3" style="z-index:1060">
+   <div aria-atomic="true" aria-live="assertive" class="toast align-items-center text-bg-primary border-0" id="liveToast" role="alert">
+    <div class="d-flex">
+     <div class="toast-body">
+      Updated attendance loaded.
+     </div>
+     <button aria-label="Close" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" type="button">
+     </button>
+    </div>
+   </div>
+  </div>
+  <!-- Bootstrap Bundle JS -->
+  <script crossorigin="anonymous" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+  </script>
+  <script>
+   // Apply current year in footer
+document.getElementById('year-stu').textContent = new Date().getFullYear();
+
+// Bootstrap Tooltips enable
+const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+tooltipTriggerList.map(el => new bootstrap.Tooltip(el));
+
+// Mock data
+const THRESHOLD = 75;
+const courses = [{
+    id: 'CSE101',
+    name: 'Computer Science 101'
+}, {
+    id: 'MTH201',
+    name: 'Discrete Mathematics'
+}, {
+    id: 'PHY110',
+    name: 'Physics I'
+}];
+
+// Helper to build dates
+function dateISO(offsetDays) {
+    const d = new Date();
+    d.setDate(d.getDate() - offsetDays);
+    return d.toISOString().slice(0, 10);
+}
+
+// Build sample records for each course
+const dataByCourse = {
+    'CSE101': [{
+        date: dateISO(4),
+        status: 'Present',
+        note: 'Lecture: Recursion'
+    }, {
+        date: dateISO(7),
+        status: 'Present',
+        note: 'Lab: Sorting'
+    }, {
+        date: dateISO(10),
+        status: 'Absent',
+        note: 'Missed due to travel'
+    }, {
+        date: dateISO(14),
+        status: 'Present (Override)',
+        note: 'Faculty approved'
+    }, {
+        date: dateISO(17),
+        status: 'Present',
+        note: 'Lecture: Trees'
+    }, {
+        date: dateISO(20),
+        status: 'Present',
+        note: 'Quiz 1'
+    }, {
+        date: dateISO(23),
+        status: 'Present',
+        note: 'Lecture: Graphs'
+    }, {
+        date: dateISO(26),
+        status: 'Absent',
+        note: 'Uninformed leave'
+    }, {
+        date: dateISO(29),
+        status: 'Present',
+        note: 'Lab: Graph Traversal'
+    }, {
+        date: dateISO(32),
+        status: 'Present',
+        note: 'Review'
+    }, {
+        date: dateISO(35),
+        status: 'Present',
+        note: 'Midterm Prep'
+    }, {
+        date: dateISO(38),
+        status: 'Present',
+        note: 'Midterm'
+    }],
+    'MTH201': [{
+        date: dateISO(3),
+        status: 'Present',
+        note: 'Lecture: Graph Theory'
+    }, {
+        date: dateISO(6),
+        status: 'Absent',
+        note: 'Sick'
+    }, {
+        date: dateISO(9),
+        status: 'Absent',
+        note: 'Sick'
+    }, {
+        date: dateISO(12),
+        status: 'Present',
+        note: 'Sets and Relations'
+    }, {
+        date: dateISO(15),
+        status: 'Present',
+        note: 'Functions'
+    }, {
+        date: dateISO(18),
+        status: 'Present',
+        note: 'Combinatorics'
+    }, {
+        date: dateISO(21),
+        status: 'Absent',
+        note: 'Travel'
+    }, {
+        date: dateISO(24),
+        status: 'Present',
+        note: 'Proof Techniques'
+    }, {
+        date: dateISO(27),
+        status: 'Present',
+        note: 'Induction'
+    }, {
+        date: dateISO(30),
+        status: 'Present',
+        note: 'Number Theory'
+    }],
+    'PHY110': [{
+        date: dateISO(2),
+        status: 'Present',
+        note: 'Kinematics'
+    }, {
+        date: dateISO(5),
+        status: 'Present',
+        note: 'Dynamics'
+    }, {
+        date: dateISO(8),
+        status: 'Present',
+        note: 'Work & Energy'
+    }, {
+        date: dateISO(11),
+        status: 'Present',
+        note: 'Momentum'
+    }, {
+        date: dateISO(13),
+        status: 'Present',
+        note: 'Rotational Motion'
+    }, {
+        date: dateISO(16),
+        status: 'Present',
+        note: 'Gravitation'
+    }, {
+        date: dateISO(19),
+        status: 'Present (Override)',
+        note: 'Lab attendance corrected'
+    }, {
+        date: dateISO(22),
+        status: 'Present',
+        note: 'Oscillations'
+    }, {
+        date: dateISO(25),
+        status: 'Present',
+        note: 'Waves'
+    }, {
+        date: dateISO(28),
+        status: 'Present',
+        note: 'Thermodynamics'
+    }]
+};
+
+// Compute aggregates
+function computeAggregates() {
+    let total = 0,
+        attended = 0;
+    const byCoursePct = {};
+    Object.keys(dataByCourse).forEach(cid => {
+        const records = dataByCourse[cid];
+        const t = records.length;
+        const a = records.filter(r => r.status.startsWith('Present')).length;
+        total += t;
+        attended += a;
+        byCoursePct[cid] = t ? Math.round((a / t) * 100) : 0;
+    });
+    const overallPct = total ? Math.round((attended / total) * 100) : 0;
+    return {
+        total,
+        attended,
+        overallPct,
+        byCoursePct
+    };
+}
+
+// Populate Course Selector
+const courseSelector = document.getElementById('courseSelector');
+
+function populateCourseSelector() {
+    courseSelector.innerHTML = '';
+    courses.forEach((c, idx) => {
+        const opt = document.createElement('option');
+        opt.value = c.id;
+        opt.textContent = c.name;
+        if (idx === 0) opt.selected = true;
+        courseSelector.appendChild(opt);
+    });
+}
+
+// Low Attendance Alert
+function updateLowAttendanceAlert(byCoursePct) {
+    const low = Object.entries(byCoursePct).filter(([cid, pct]) => pct < THRESHOLD);
+    const alertEl = document.getElementById('low-attendance-alert');
+    const textEl = document.getElementById('low-attendance-text');
+    if (low.length > 0) {
+        const [firstId, firstPct] = low[0];
+        const courseName = (courses.find(c => c.id === firstId) || {}).name || firstId;
+        textEl.textContent = `Warning: Your attendance in ${courseName} is below the required threshold (${firstPct}%).`;
+        alertEl.classList.remove('d-none');
+        document.getElementById('view-alert-details').onclick = () => {
+            const listHtml = low.map(([cid, pct]) => {
+                const name = (courses.find(c => c.id === cid) || {}).name || cid;
+                return `<li><strong>${name}</strong>: ${pct}%</li>`;
+            }).join('');
+            Swal.fire({
+                icon: 'warning',
+                title: 'Low Attendance Warning',
+                html: `<p>Your attendance is below ${THRESHOLD}% in the courses below:</p><ul class="text-start">${listHtml}</ul>`,
+                confirmButtonText: 'Ok, I understand'
+            });
+        };
+    } else {
+        alertEl.classList.add('d-none');
+    }
+}
+
+// Radial Chart
+let radialChart;
+const ctx = document.getElementById('overallRadial');
+const centerText = {
+    id: 'centerText',
+    afterDatasetsDraw(chart, args, pluginOptions) {
+        const {
+            ctx,
+            chartArea: {
+                width,
+                height
+            }
+        } = chart;
+        ctx.save();
+        ctx.font = '600 22px Poppins, system-ui, -apple-system, Segoe UI, Roboto';
+        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text-strong') || '#0b1220';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        const value = chart.config.data.datasets[0].centerValue || 0;
+        ctx.fillText(value + '%', width / 2, height / 2);
+        ctx.restore();
+    }
+};
+
+function initRadial(initial) {
+    radialChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Present', 'Remaining'],
+            datasets: [{
+                data: [initial, 100 - initial],
+                backgroundColor: ['#f08e1b', 'rgba(0,0,0,0.08)'],
+                borderWidth: 0,
+                centerValue: initial
+            }]
+        },
+        options: {
+            cutout: '70%',
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    enabled: true
+                }
+            },
+        },
+        plugins: [centerText]
+    });
+}
+
+function updateRadial(value) {
+    if (!radialChart) return initRadial(value);
+    radialChart.data.datasets[0].data = [value, 100 - value];
+    radialChart.data.datasets[0].centerValue = value;
+    radialChart.update();
+}
+
+// Update Summaries
+function updateSummaries() {
+    const {
+        total,
+        attended,
+        overallPct,
+        byCoursePct
+    } = computeAggregates();
+    document.getElementById('overallPercentText').textContent = overallPct + '%';
+    document.getElementById('attendedFraction').textContent = `${attended}/${total}`;
+    document.getElementById('attendedProgress').style.width = (total ? (attended / total * 100).toFixed(0) : 0) + '%';
+    updateRadial(overallPct);
+    updateLowAttendanceAlert(byCoursePct);
+}
+
+// Table rendering with sorting, filtering, pagination
+let currentCourse = null;
+let currentSort = {
+    key: 'date',
+    dir: 'desc'
+};
+let currentPage = 1;
+const PAGE_SIZE = 10;
+
+function matchesFilters(rec) {
+    const statusVal = document.getElementById('filterStatus').value;
+    const searchVal = document.getElementById('searchInput').value.trim().toLowerCase();
+    const startVal = document.getElementById('startDate').value;
+    const endVal = document.getElementById('endDate').value;
+
+    if (statusVal !== 'all' && rec.status !== statusVal) return false;
+    if (startVal && rec.date < startVal) return false;
+    if (endVal && rec.date > endVal) return false;
+    if (searchVal) {
+        if (!(rec.date.toLowerCase().includes(searchVal) || (rec.note || '').toLowerCase().includes(searchVal))) return false;
+    }
+    return true;
+}
+
+function sortRecords(records) {
+    const {
+        key,
+        dir
+    } = currentSort;
+    const sorted = [...records].sort((a, b) => {
+        if (key === 'date') return (a.date > b.date ? 1 : -1) * (dir === 'asc' ? 1 : -1);
+        if (key === 'status') return (a.status > b.status ? 1 : -1) * (dir === 'asc' ? 1 : -1);
+        return 0;
+    });
+    return sorted;
+}
+
+function paginate(records) {
+    const total = records.length;
+    const startIdx = (currentPage - 1) * PAGE_SIZE;
+    const endIdx = Math.min(startIdx + PAGE_SIZE, total);
+    const pageItems = records.slice(startIdx, endIdx);
+    const info = `Showing ${total ? startIdx + 1 : 0}-${endIdx} of ${total}`;
+    document.getElementById('paginationInfo').textContent = info;
+    document.getElementById('prevPage').disabled = currentPage === 1;
+    document.getElementById('nextPage').disabled = endIdx >= total;
+    return pageItems;
+}
+
+function statusBadge(rec) {
+    let klass = 'badge-soft';
+    if (rec.status === 'Present') klass += ' success';
+    else if (rec.status === 'Absent') klass += ' error';
+    else klass += ' info';
+    return `<span class="${klass}"><i class="fa-solid fa-circle-check"></i> ${rec.status}</span>`;
+}
+
+function renderTable() {
+    const tbody = document.getElementById('attendanceTbody');
+    const all = dataByCourse[currentCourse] || [];
+    const filtered = all.filter(matchesFilters);
+    const sorted = sortRecords(filtered);
+    const pageItems = paginate(sorted);
+
+    if (sorted.length === 0) {
+        tbody.innerHTML = '';
+        document.getElementById('emptyState').classList.remove('d-none');
+    } else {
+        document.getElementById('emptyState').classList.add('d-none');
+        tbody.innerHTML = pageItems.map(r => `
+          <tr>
+            <td>${new Date(r.date).toLocaleDateString()}</td>
+            <td>${statusBadge(r)}</td>
+            <td>${r.note || ''}</td>
+          </tr>
+        `).join('');
+    }
+}
+
+function loadCourse(courseId) {
+    currentCourse = courseId;
+    currentPage = 1;
+    document.getElementById('loadingState').classList.remove('d-none');
+    document.getElementById('errorState').classList.add('d-none');
+    setTimeout(() => {
+        try {
+            document.getElementById('loadingState').classList.add('d-none');
+            renderTable();
+            const toastEl = document.getElementById('liveToast');
+            const t = new bootstrap.Toast(toastEl, {
+                delay: 1200
+            });
+            const c = courses.find(x => x.id === courseId);
+            toastEl.querySelector('.toast-body').textContent = `Loaded attendance for ${c ? c.name : courseId}`;
+            t.show();
+        } catch (err) {
+            document.getElementById('errorState').classList.remove('d-none');
+        }
+    }, 350);
+}
+
+// Event handlers
+document.getElementById('prevPage').addEventListener('click', () => {
+    if (currentPage > 1) {
+        currentPage--;
+        renderTable();
+    }
+});
+document.getElementById('nextPage').addEventListener('click', () => {
+    currentPage++;
+    renderTable();
+});
+
+document.getElementById('filterStatus').addEventListener('change', () => {
+    currentPage = 1;
+    renderTable();
+});
+document.getElementById('startDate').addEventListener('change', () => {
+    currentPage = 1;
+    renderTable();
+});
+document.getElementById('endDate').addEventListener('change', () => {
+    currentPage = 1;
+    renderTable();
+});
+document.getElementById('searchInput').addEventListener('input', () => {
+    currentPage = 1;
+    renderTable();
+});
+
+document.getElementById('retryLoad').addEventListener('click', () => {
+    document.getElementById('errorState').classList.add('d-none');
+    loadCourse(currentCourse || courses[0].id);
+});
+
+// Sorting
+document.querySelectorAll('#attendanceTable thead th.sortable').forEach(th => {
+    th.style.cursor = 'pointer';
+    th.addEventListener('click', () => {
+        const key = th.getAttribute('data-key');
+        if (currentSort.key === key) {
+            currentSort.dir = currentSort.dir === 'asc' ? 'desc' : 'asc';
+        } else {
+            currentSort.key = key;
+            currentSort.dir = 'asc';
+        }
+        renderTable();
+    });
+});
+
+// Export CSV
+function exportToCsv(filename, rows) {
+    const process = r => [r.date, r.status, r.note || ''];
+    const header = ['Date', 'Status', 'Notes'];
+    const lines = [header, ...rows.map(process)].map(arr => arr.map(v => '"' + (String(v).replaceAll('"', '""')) + '"').join(',')).join('\n');
+    const blob = new Blob([lines], {
+        type: 'text/csv;charset=utf-8;'
+    });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    link.click();
+    URL.revokeObjectURL(link.href);
+}
+document.getElementById('btnExportCsv').addEventListener('click', () => {
+    const all = dataByCourse[currentCourse] || [];
+    const filtered = sortRecords(all.filter(matchesFilters));
+    exportToCsv(`attendance_${currentCourse}.csv`, filtered);
+});
+
+// Print
+document.getElementById('btnPrint').addEventListener('click', () => window.print());
+
+// Refresh Overall
+document.getElementById('refresh-overall').addEventListener('click', () => {
+    // Simulate refresh
+    Swal.fire({
+        icon: 'success',
+        title: 'Refreshed',
+        text: 'Overall attendance stats have been refreshed.',
+        timer: 1200,
+        showConfirmButton: false
+    });
+    updateSummaries();
+});
+
+// Forecast Impact (what if I attend next N sessions?)
+document.getElementById('btnViewForecast').addEventListener('click', () => {
+    const {
+        total,
+        attended,
+        overallPct
+    } = computeAggregates();
+    const simulateAttend = 5;
+    const forecast = total ? Math.round(((attended + simulateAttend) / (total + simulateAttend)) * 100) : 0;
+    Swal.fire({
+        title: 'Forecast Impact',
+        html: `<p>If you attend the next <strong>${simulateAttend}</strong> sessions, your overall attendance may reach approximately <strong>${forecast}%</strong> (current: ${overallPct}%).</p>`,
+        icon: 'info',
+        confirmButtonText: 'Got it'
+    });
+});
+
+// Initialize
+(function init() {
+    populateCourseSelector();
+    const {
+        overallPct
+    } = computeAggregates();
+    initRadial(overallPct);
+    updateSummaries();
+    const defaultCourse = courses[0].id;
+    loadCourse(defaultCourse);
+
+    courseSelector.addEventListener('change', (e) => {
+        loadCourse(e.target.value);
+    });
+})();
+  </script>
+ </body>
+</html>

@@ -1,0 +1,70 @@
+/* user_profile.css - Page-specific styles for User Profile */
+/* Ensure main content area uses space next to the fixed-width aside */
+@media (min-width: 768px) {
+    main.flex-grow-1 {
+        min-height: calc(100vh - 56px - 64px)
+        }
+    }
+/* Avatar wrapper with edit overlay */
+.avatar-wrapper {
+    width: 96px;
+    height: 96px
+    }
+.avatar-wrapper img {
+    object-fit: cover;
+    width: 96px;
+    height: 96px;
+    border: 2px solid #fff
+    }
+.avatar-edit-btn {
+    position: absolute;
+    bottom: -6px;
+    right: -6px;
+    border-radius: 9999px;
+    padding: 6px 8px;
+    box-shadow: var(--shadow-1)
+    }
+.uploading-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: grid;
+    place-items: center;
+    border-radius: 50%
+    }
+/* Role badge uses badge-soft variants; adjust padding for compact header */
+#roleBadge {
+    padding: 6px 10px;
+    border-radius: var(--radius-pill);
+    font-weight: 600
+    }
+/* Profile form spacing */
+#profileForm .form-label {
+    font-weight: 600
+    }
+/* Password visibility buttons */
+.input-group .toggle-visibility {
+    border-color: var(--border-color)
+    }
+.input-group .toggle-visibility:hover {
+    background: var(--neutral-soft)
+    }
+/* Sortable headers visual cue */
+th.sortable {
+    user-select: none
+    }
+th.sortable:hover {
+    background: var(--neutral-soft)
+    }
+/* Activity table row status coloring assistance (in addition to badges) */
+.table-theme tbody tr:hover {
+    background: rgba(0, 0, 0, 0.02)
+    }
+/* Breadcrumb and header spacing on small screens */
+@media (max-width: 575.98px) {
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px
+        }
+    }

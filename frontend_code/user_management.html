@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>
+   User Management - Hybrid Attendance
+  </title>
+  <!-- Brand font: Poppins -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <!-- Bootstrap 5 CSS -->
+  <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" rel="stylesheet"/>
+  <!-- Font Awesome 6 -->
+  <link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/J6MdGzS7f6bJwG1a5r9O7r5G5a7G8e4xqBf4f8mftbKxQO7o6rQmM6J2VbTnq9QkQwX5Zy1g==" referrerpolicy="no-referrer" rel="stylesheet">
+   <!-- Global Theme Styles -->
+   <link href="style.css" rel="stylesheet"/>
+   <!-- Page specific CSS -->
+   <link href="user_management.css" rel="stylesheet"/>
+  </link>
+ </head>
+ <body>
+  <!-- Admin Header with global search and quick actions -->
+  <nav class="navbar navbar-expand-md navbar-dark" style="background:#f08e1b;">
+   <div class="container-fluid">
+    <button class="btn btn-outline-light d-md-none me-2" data-bs-target="#adminSidebar" data-bs-toggle="collapse" type="button">
+     <i class="fa-solid fa-bars">
+     </i>
+    </button>
+    <a class="navbar-brand fw-bold" href="/admin">
+     Admin
+    </a>
+    <form class="d-none d-md-flex ms-3" role="search" style="max-width:480px;flex:1;">
+     <input aria-label="Search" class="form-control" placeholder="Search users, courses, departments" type="search"/>
+    </form>
+    <div class="d-flex align-items-center ms-auto">
+     <a class="btn btn-light me-2" href="/reports">
+      <i class="fa-solid fa-file-lines me-1">
+      </i>
+      New Report
+     </a>
+     <button class="btn btn-link text-white me-2 position-relative">
+      <i class="fa-solid fa-bell">
+      </i>
+      <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+       7
+      </span>
+     </button>
+     <div class="dropdown">
+      <button class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
+       <i class="fa-solid fa-user me-1">
+       </i>
+       Me
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end">
+       <li>
+        <a class="dropdown-item" href="/profile">
+         My Profile
+        </a>
+       </li>
+       <li>
+        <a class="dropdown-item" href="/settings">
+         Settings
+        </a>
+       </li>
+       <li>
+        <hr class="dropdown-divider"/>
+       </li>
+       <li>
+        <a class="dropdown-item text-danger" href="/login">
+         Logout
+        </a>
+       </li>
+      </ul>
+     </div>
+    </div>
+   </div>
+  </nav>
+  <div class="container-fluid p-0">
+   <div class="d-flex">
+    <!-- Admin App Sidebar -->
+    <aside class="d-flex flex-column flex-shrink-0 bg-light border-end" style="min-height:100vh;width:260px;">
+     <div class="p-3 border-bottom d-flex align-items-center justify-content-between" style="background:#f08e1b;">
+      <a class="text-white fw-bold text-decoration-none" href="/admin">
+       Hybrid Attendance
+      </a>
+      <button class="btn btn-sm btn-outline-light d-md-none" data-bs-target="#adminSidebar" data-bs-toggle="collapse" type="button">
+       <i class="fa-solid fa-bars">
+       </i>
+      </button>
+     </div>
+     <div class="collapse show" id="adminSidebar">
+      <div class="p-3">
+       <div class="d-flex align-items-center mb-4">
+        <img alt="Avatar" class="rounded-circle me-2" src="https://picsum.photos/seed/admin/80/80" style="width:40px;height:40px;"/>
+        <div>
+         <div class="fw-semibold">
+          Administrator
+         </div>
+         <small class="text-muted">
+          Control Center
+         </small>
+        </div>
+       </div>
+       <ul class="nav nav-pills flex-column">
+        <li class="nav-item mb-1">
+         <a class="nav-link text-dark" href="/admin">
+          <i class="fa-solid fa-gauge me-2">
+          </i>
+          Dashboard
+         </a>
+        </li>
+        <li class="nav-item mb-1">
+         <a class="nav-link text-dark" href="/analytics">
+          <i class="fa-solid fa-chart-line me-2">
+          </i>
+          Analytics
+         </a>
+        </li>
+        <li class="nav-item mb-1">
+         <a class="nav-link text-dark" href="/reports">
+          <i class="fa-solid fa-file-lines me-2">
+          </i>
+          Reports
+         </a>
+        </li>
+        <li class="nav-item mb-1">
+         <a class="nav-link d-flex align-items-center text-dark active" href="/user-management">
+          <i class="fa-solid fa-users-gear me-2">
+          </i>
+          <span>
+           User Management
+          </span>
+          <span class="badge bg-danger ms-auto">
+           5
+          </span>
+         </a>
+        </li>
+        <li class="nav-item mb-1">
+         <a class="nav-link text-dark" href="/settings">
+          <i class="fa-solid fa-gear me-2">
+          </i>
+          Settings
+         </a>
+        </li>
+       </ul>
+      </div>
+     </div>
+     <style>
+      .nav-link:hover{background:rgba(240,142,27,.1);border-radius:.5rem}
+          .nav-link.active{background:#f08e1b;color:#fff;border-radius:.5rem}
+     </style>
+    </aside>
+    <!-- Main Content Area -->
+    <main class="flex-grow-1" style="min-height:100vh;">
+     <div class="p-3 p-lg-4">
+      <!-- Breadcrumbs -->
+      <nav aria-label="breadcrumb" class="breadcrumb">
+       <ol class="breadcrumb mb-2">
+        <li class="breadcrumb-item">
+         <a href="/admin">
+          Admin
+         </a>
+        </li>
+        <li aria-current="page" class="breadcrumb-item active">
+         User Management
+        </li>
+       </ol>
+      </nav>
+      <!-- Page Header -->
+      <div class="page-header">
+       <div>
+        <h1 class="page-title mb-1">
+         User Management
+        </h1>
+        <small class="text-muted">
+         Create, update, and manage all user accounts, roles, and permissions. Handle onboarding and biometric resets.
+        </small>
+       </div>
+       <div class="um-header-actions d-none d-md-flex">
+        <button class="btn btn-primary" id="btnAddUserHeader">
+         <i class="fa-solid fa-user-plus me-2">
+         </i>
+         Add User
+        </button>
+       </div>
+      </div>
+      <!-- Metrics + Chart Row -->
+      <div class="row g-3 mb-3">
+       <div class="col-12 col-md-4">
+        <div class="metric-card">
+         <div class="metric-title">
+          Total Users
+         </div>
+         <div class="metric-value" id="metricTotalUsers">
+          --
+         </div>
+         <div class="text-muted small">
+          All roles
+         </div>
+        </div>
+       </div>
+       <div class="col-6 col-md-4">
+        <div class="metric-card">
+         <div class="metric-title">
+          Students
+         </div>
+         <div class="metric-value text-primary" id="metricStudents">
+          --
+         </div>
+         <div class="text-muted small">
+          Includes pending approvals
+         </div>
+        </div>
+       </div>
+       <div class="col-6 col-md-4">
+        <div class="metric-card">
+         <div class="metric-title">
+          Pending Approvals
+         </div>
+         <div class="metric-value text-warning" id="metricPending">
+          --
+         </div>
+         <div class="text-muted small">
+          Awaiting admin review
+         </div>
+        </div>
+       </div>
+       <div class="col-12">
+        <div class="card">
+         <div class="card-header">
+          <div class="d-flex align-items-center gap-2">
+           <i class="fa-solid fa-chart-pie text-info">
+           </i>
+           <span class="widget-title">
+            Role Distribution
+           </span>
+          </div>
+         </div>
+         <div class="card-body">
+          <div class="row align-items-center">
+           <div class="col-12 col-md-6">
+            <canvas aria-label="Role distribution chart" height="160" id="roleChart" role="img">
+            </canvas>
+           </div>
+           <div class="col-12 col-md-6 mt-3 mt-md-0">
+            <ul class="list-unstyled mb-0" id="roleBreakdown">
+             <!-- dynamic -->
+            </ul>
+           </div>
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+      <!-- Alerts Area -->
+      <div class="alert alert-warning d-none" id="alertArea" role="alert">
+       <i class="fa-solid fa-circle-exclamation me-2">
+       </i>
+       <span id="alertMessage">
+        There was a problem fetching users.
+       </span>
+      </div>
+      <!-- Control Bar: Search + Filters -->
+      <div class="card mb-3">
+       <div class="card-body">
+        <form class="row g-2 align-items-center" id="controlBar">
+         <div class="col-12 col-lg-5">
+          <div class="input-group">
+           <span class="input-group-text bg-white">
+            <i class="fa-solid fa-magnifying-glass">
+            </i>
+           </span>
+           <input aria-label="Search users" class="form-control" id="searchInput" placeholder="Search by name, email, or ID..." type="text"/>
+          </div>
+         </div>
+         <div class="col-6 col-lg-2">
+          <select aria-label="Filter by role" class="form-select" id="roleFilter">
+           <option value="">
+            All Roles
+           </option>
+           <option value="Student">
+            Student
+           </option>
+           <option value="Faculty">
+            Faculty
+           </option>
+           <option value="Admin">
+            Admin
+           </option>
+          </select>
+         </div>
+         <div class="col-6 col-lg-2">
+          <select aria-label="Filter by status" class="form-select" id="statusFilter">
+           <option value="">
+            All Statuses
+           </option>
+           <option value="Active">
+            Active
+           </option>
+           <option value="Pending Approval">
+            Pending Approval
+           </option>
+           <option value="Suspended">
+            Suspended
+           </option>
+          </select>
+         </div>
+         <div class="col-6 col-lg-2">
+          <select aria-label="Rows per page" class="form-select" id="pageSize">
+           <option value="5">
+            5 / page
+           </option>
+           <option selected="" value="10">
+            10 / page
+           </option>
+           <option value="20">
+            20 / page
+           </option>
+          </select>
+         </div>
+         <div class="col-6 col-lg-1 text-lg-end">
+          <button class="btn btn-light w-100" id="btnClearFilters" type="button">
+           <i class="fa-solid fa-eraser me-1">
+           </i>
+           Clear
+          </button>
+         </div>
+         <div class="col-12 d-flex d-md-none">
+          <button class="btn btn-primary w-100" id="btnAddUserMobile" type="button">
+           <i class="fa-solid fa-user-plus me-2">
+           </i>
+           Add User
+          </button>
+         </div>
+        </form>
+       </div>
+      </div>
+      <!-- Users Table -->
+      <div class="card">
+       <div class="card-header">
+        <div class="d-flex align-items-center gap-2">
+         <i class="fa-solid fa-users">
+         </i>
+         <span class="widget-title">
+          Users
+         </span>
+         <span class="badge-soft info ms-2">
+          <i class="fa-solid fa-database me-1">
+          </i>
+          <span id="recordCount">
+           -- records
+          </span>
+         </span>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+         <button class="btn btn-light btn-sm" id="btnExportCsv">
+          <i class="fa-solid fa-file-export me-1">
+          </i>
+          Export CSV
+         </button>
+        </div>
+       </div>
+       <div class="card-body p-0">
+        <div class="table-responsive">
+         <table class="table table-hover align-middle table-theme mb-0" id="usersTable">
+          <thead>
+           <tr>
+            <th class="text-nowrap sortable" data-col="name">
+             Name
+             <i class="fa-solid fa-sort ms-1">
+             </i>
+            </th>
+            <th class="text-nowrap sortable" data-col="id">
+             ID
+             <i class="fa-solid fa-sort ms-1">
+             </i>
+            </th>
+            <th class="text-nowrap sortable" data-col="email">
+             Email
+             <i class="fa-solid fa-sort ms-1">
+             </i>
+            </th>
+            <th class="text-nowrap sortable" data-col="role">
+             Role
+             <i class="fa-solid fa-sort ms-1">
+             </i>
+            </th>
+            <th class="text-nowrap sortable" data-col="status">
+             Status
+             <i class="fa-solid fa-sort ms-1">
+             </i>
+            </th>
+            <th class="text-nowrap sortable" data-col="createdAt">
+             Joined
+             <i class="fa-solid fa-sort ms-1">
+             </i>
+            </th>
+            <th class="text-nowrap">
+             Actions
+            </th>
+           </tr>
+          </thead>
+          <tbody id="tableBody">
+           <!-- Loading skeleton rows -->
+           <tr class="loading-row">
+            <td class="p-3" colspan="7">
+             <div class="skeleton" style="height:16px;width:100%">
+             </div>
+            </td>
+           </tr>
+           <tr class="loading-row">
+            <td class="p-3" colspan="7">
+             <div class="skeleton" style="height:16px;width:100%">
+             </div>
+            </td>
+           </tr>
+           <tr class="loading-row">
+            <td class="p-3" colspan="7">
+             <div class="skeleton" style="height:16px;width:100%">
+             </div>
+            </td>
+           </tr>
+          </tbody>
+         </table>
+        </div>
+       </div>
+       <div class="card-footer d-flex flex-column flex-md-row align-items-center justify-content-between gap-2">
+        <div class="text-muted small" id="paginationInfo">
+         Showing -- to -- of -- users
+        </div>
+        <nav aria-label="User list pagination">
+         <ul class="pagination mb-0" id="pagination">
+          <!-- dynamic -->
+         </ul>
+        </nav>
+       </div>
+      </div>
+     </div>
+    </main>
+   </div>
+  </div>
+  <!-- Add/Edit User Modal (Bootstrap) -->
+  <div aria-hidden="true" aria-labelledby="userModalLabel" class="modal fade" id="userModal" tabindex="-1">
+   <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+     <div class="modal-header bg-muted">
+      <h5 class="modal-title" id="userModalLabel">
+       Add User
+      </h5>
+      <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button">
+      </button>
+     </div>
+     <form id="userForm" novalidate="">
+      <div class="modal-body">
+       <div class="mb-3">
+        <label class="form-label" for="fullName">
+         Full Name
+        </label>
+        <input class="form-control" id="fullName" required="" type="text"/>
+        <div class="invalid-feedback">
+         Full name is required.
+        </div>
+       </div>
+       <div class="mb-3">
+        <label class="form-label" for="email">
+         Email
+        </label>
+        <input class="form-control" id="email" required="" type="email"/>
+        <div class="invalid-feedback">
+         Please enter a valid email.
+        </div>
+       </div>
+       <div class="mb-3">
+        <label class="form-label" for="userId">
+         User ID
+        </label>
+        <input class="form-control" id="userId" required="" type="text"/>
+        <div class="invalid-feedback">
+         User ID is required.
+        </div>
+       </div>
+       <div class="row g-2">
+        <div class="col-6">
+         <label class="form-label" for="role">
+          Role
+         </label>
+         <select class="form-select" id="role" required="">
+          <option value="">
+           Select role...
+          </option>
+          <option value="Student">
+           Student
+          </option>
+          <option value="Faculty">
+           Faculty
+          </option>
+          <option value="Admin">
+           Admin
+          </option>
+         </select>
+         <div class="invalid-feedback">
+          Select a role.
+         </div>
+        </div>
+        <div class="col-6">
+         <label class="form-label" for="status">
+          Status
+         </label>
+         <select class="form-select" id="status" required="">
+          <option value="">
+           Select status...
+          </option>
+          <option value="Active">
+           Active
+          </option>
+          <option value="Pending Approval">
+           Pending Approval
+          </option>
+          <option value="Suspended">
+           Suspended
+          </option>
+         </select>
+         <div class="invalid-feedback">
+          Select a status.
+         </div>
+        </div>
+       </div>
+      </div>
+      <div class="modal-footer">
+       <button class="btn btn-light" data-bs-dismiss="modal" type="button">
+        Cancel
+       </button>
+       <button class="btn btn-primary" id="btnSaveUser" type="submit">
+        <i class="fa-solid fa-floppy-disk me-1">
+        </i>
+        Save
+       </button>
+      </div>
+     </form>
+    </div>
+   </div>
+  </div>
+  <!-- Admin Footer -->
+  <footer class="py-3 border-top bg-white">
+   <div class="container d-flex flex-wrap justify-content-between align-items-center">
+    <span class="text-muted">
+     ©
+     <span id="year-adm">
+      2025
+     </span>
+     Hybrid Attendance
+    </span>
+    <ul class="nav">
+     <li class="nav-item">
+      <a class="nav-link px-2 text-muted" href="/terms">
+       Terms
+      </a>
+     </li>
+     <li class="nav-item">
+      <a class="nav-link px-2 text-muted" href="/privacy">
+       Privacy
+      </a>
+     </li>
+    </ul>
+   </div>
+  </footer>
+  <script>
+   document.getElementById('year-adm').textContent = new Date().getFullYear();
+  </script>
+  <!-- JS: Bootstrap, SweetAlert2, Chart.js -->
+  <script crossorigin="anonymous" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js">
+  </script>
+  <script>
+   // Utilities
+const debounce = (fn, delay = 300) => {
+    let t;
+    return (...args) => {
+        clearTimeout(t);
+        t = setTimeout(() => fn.apply(null, args), delay);
+    };
+};
+
+// Mock Data
+const mockUsers = [{
+    id: 'S1001',
+    name: 'Ava Johnson',
+    email: 'ava.johnson@univ.edu',
+    role: 'Student',
+    status: 'Active',
+    createdAt: '2024-08-12'
+}, {
+    id: 'S1002',
+    name: 'Liam Patel',
+    email: 'liam.patel@univ.edu',
+    role: 'Student',
+    status: 'Pending Approval',
+    createdAt: '2024-09-01'
+}, {
+    id: 'S1003',
+    name: 'Noah Kim',
+    email: 'noah.kim@univ.edu',
+    role: 'Student',
+    status: 'Active',
+    createdAt: '2024-10-20'
+}, {
+    id: 'F2001',
+    name: 'Dr. Sophia Lee',
+    email: 'sophia.lee@univ.edu',
+    role: 'Faculty',
+    status: 'Active',
+    createdAt: '2023-11-10'
+}, {
+    id: 'F2002',
+    name: 'Prof. Ethan Chen',
+    email: 'ethan.chen@univ.edu',
+    role: 'Faculty',
+    status: 'Active',
+    createdAt: '2022-03-04'
+}, {
+    id: 'A3001',
+    name: 'Olivia Martin',
+    email: 'olivia.martin@univ.edu',
+    role: 'Admin',
+    status: 'Active',
+    createdAt: '2021-07-22'
+}, {
+    id: 'S1004',
+    name: 'Mia Rodriguez',
+    email: 'mia.rod@univ.edu',
+    role: 'Student',
+    status: 'Suspended',
+    createdAt: '2024-05-14'
+}, {
+    id: 'S1005',
+    name: 'James Wilson',
+    email: 'james.w@univ.edu',
+    role: 'Student',
+    status: 'Active',
+    createdAt: '2024-04-09'
+}, {
+    id: 'F2003',
+    name: 'Dr. Daniel Brown',
+    email: 'daniel.brown@univ.edu',
+    role: 'Faculty',
+    status: 'Active',
+    createdAt: '2020-12-01'
+}, {
+    id: 'S1006',
+    name: 'Emily Davis',
+    email: 'emily.davis@univ.edu',
+    role: 'Student',
+    status: 'Pending Approval',
+    createdAt: '2024-09-29'
+}, {
+    id: 'S1007',
+    name: 'Benjamin Carter',
+    email: 'ben.carter@univ.edu',
+    role: 'Student',
+    status: 'Active',
+    createdAt: '2024-06-02'
+}, {
+    id: 'S1008',
+    name: 'Harper Nguyen',
+    email: 'harper.nguyen@univ.edu',
+    role: 'Student',
+    status: 'Active',
+    createdAt: '2024-01-17'
+}, {
+    id: 'A3002',
+    name: 'Admin Test',
+    email: 'admin.test@univ.edu',
+    role: 'Admin',
+    status: 'Active',
+    createdAt: '2022-10-10'
+}, {
+    id: 'F2004',
+    name: 'Prof. Grace Park',
+    email: 'grace.park@univ.edu',
+    role: 'Faculty',
+    status: 'Active',
+    createdAt: '2023-02-22'
+}, {
+    id: 'S1009',
+    name: 'Lucas Hernandez',
+    email: 'lucas.hz@univ.edu',
+    role: 'Student',
+    status: 'Active',
+    createdAt: '2024-08-30'
+}, {
+    id: 'S1010',
+    name: 'Charlotte Gomez',
+    email: 'char.gomez@univ.edu',
+    role: 'Student',
+    status: 'Pending Approval',
+    createdAt: '2024-11-05'
+}, {
+    id: 'S1011',
+    name: 'Henry Scott',
+    email: 'henry.scott@univ.edu',
+    role: 'Student',
+    status: 'Active',
+    createdAt: '2024-07-11'
+}, {
+    id: 'S1012',
+    name: 'Amelia Rivera',
+    email: 'amelia.riv@univ.edu',
+    role: 'Student',
+    status: 'Active',
+    createdAt: '2024-03-19'
+}, {
+    id: 'F2005',
+    name: 'Dr. Kevin Liu',
+    email: 'kevin.liu@univ.edu',
+    role: 'Faculty',
+    status: 'Active',
+    createdAt: '2021-11-30'
+}, {
+    id: 'S1013',
+    name: 'Zoe Thompson',
+    email: 'zoe.th@univ.edu',
+    role: 'Student',
+    status: 'Suspended',
+    createdAt: '2024-02-25'
+}, {
+    id: 'S1014',
+    name: 'Jack Miller',
+    email: 'jack.miller@univ.edu',
+    role: 'Student',
+    status: 'Active',
+    createdAt: '2024-09-03'
+}, {
+    id: 'S1015',
+    name: 'Ella Clarke',
+    email: 'ella.clarke@univ.edu',
+    role: 'Student',
+    status: 'Active',
+    createdAt: '2024-05-28'
+}, {
+    id: 'A3003',
+    name: 'Sys Admin',
+    email: 'sys.admin@univ.edu',
+    role: 'Admin',
+    status: 'Active',
+    createdAt: '2020-05-15'
+}];
+
+const state = {
+    users: [...mockUsers],
+    searchText: '',
+    selectedRole: '',
+    selectedStatus: '',
+    sortColumn: 'createdAt',
+    sortDirection: 'desc',
+    currentPage: 1,
+    pageSize: 10,
+    isLoading: true
+};
+
+let roleChartInstance = null;
+
+function fmtDate(d) {
+    const dt = (d instanceof Date) ? d : new Date(d);
+    return dt.toLocaleDateString(undefined, {
+        year: 'numeric',
+        month: 'short',
+        day: '2-digit'
+    });
+}
+
+function statusBadge(status) {
+    const map = {
+        'Active': 'success',
+        'Pending Approval': 'warning',
+        'Suspended': 'error'
+    };
+    const tone = map[status] || 'info';
+    return `<span class="badge-soft ${tone}">${status}</span>`;
+}
+
+function compare(a, b, col) {
+    const av = a[col];
+    const bv = b[col];
+    if (col === 'createdAt') {
+        return new Date(av) - new Date(bv);
+    }
+    return ('' + av).localeCompare(('' + bv), undefined, {
+        sensitivity: 'base'
+    });
+}
+
+function getFiltered() {
+    const q = state.searchText.trim().toLowerCase();
+    return state.users.filter(u => {
+        const matchQ = !q || [u.name, u.email, u.id].some(v => v.toLowerCase().includes(q));
+        const matchRole = !state.selectedRole || u.role === state.selectedRole;
+        const matchStatus = !state.selectedStatus || u.status === state.selectedStatus;
+        return matchQ && matchRole && matchStatus;
+    });
+}
+
+function paginate(items) {
+    const start = (state.currentPage - 1) * state.pageSize;
+    return items.slice(start, start + state.pageSize);
+}
+
+function sortItems(items) {
+    const dir = state.sortDirection === 'asc' ? 1 : -1;
+    return items.slice().sort((a, b) => compare(a, b, state.sortColumn) * dir);
+}
+
+function renderTable() {
+    const tbody = document.getElementById('tableBody');
+    tbody.innerHTML = '';
+
+    const filtered = sortItems(getFiltered());
+    const pageItems = paginate(filtered);
+
+    document.getElementById('recordCount').textContent = `${filtered.length} records`;
+
+    // Metrics
+    document.getElementById('metricTotalUsers').textContent = state.users.length.toString();
+    document.getElementById('metricStudents').textContent = state.users.filter(u => u.role === 'Student').length.toString();
+    document.getElementById('metricPending').textContent = state.users.filter(u => u.status === 'Pending Approval').length.toString();
+
+    // Pagination info
+    const from = filtered.length ? ((state.currentPage - 1) * state.pageSize + 1) : 0;
+    const to = Math.min(state.currentPage * state.pageSize, filtered.length);
+    document.getElementById('paginationInfo').textContent = `Showing ${from} to ${to} of ${filtered.length} users`;
+
+    // Rows
+    if (pageItems.length === 0) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td colspan="7" class="p-4"><div class="empty-state"><div class="text-muted">No users found for current filters.</div></div></td>`;
+        tbody.appendChild(tr);
+    } else {
+        pageItems.forEach(u => {
+            const tr = document.createElement('tr');
+            const avatar = `https://picsum.photos/seed/${encodeURIComponent(u.id)}/64/64`;
+            tr.innerHTML = `
+            <td class="name-col">
+              <div class="d-flex align-items-center">
+                <img src="${avatar}" alt="${u.name} avatar" class="rounded-circle me-2" style="width:36px;height:36px;object-fit:cover;" onerror="this.src='https://picsum.photos/seed/${encodeURIComponent(u.id)}/64/64'">
+                <div>
+                  <div class="fw-semibold">${u.name}</div>
+                  <div class="text-muted small">${u.email}</div>
+                </div>
+              </div>
+            </td>
+            <td class="text-nowrap">${u.id}</td>
+            <td class="d-none d-xl-table-cell">${u.email}</td>
+            <td>${u.role}</td>
+            <td>${statusBadge(u.status)}</td>
+            <td class="text-nowrap">${fmtDate(u.createdAt)}</td>
+            <td class="text-nowrap">
+              <div class="btn-group" role="group" aria-label="Actions">
+                <button class="btn btn-light btn-sm" data-action="edit" data-id="${u.id}" aria-label="Edit ${u.name}"><i class="fa-solid fa-pen"></i></button>
+                <button class="btn btn-light btn-sm" data-action="delete" data-id="${u.id}" aria-label="Delete ${u.name}"><i class="fa-solid fa-trash"></i></button>
+                ${u.role==='Student' ? `<button class="btn btn-warning btn-sm" data-action="reset" data-id="${u.id}" aria-label="Reset biometrics for ${u.name}"><i class="fa-solid fa-face-smile"></i></button>` : ''}
+              </div>
+            </td>
+          `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    renderPagination(filtered.length);
+    updateRoleChart();
+    renderRoleBreakdown();
+}
+
+function renderPagination(total) {
+    const pages = Math.max(1, Math.ceil(total / state.pageSize));
+    const ul = document.getElementById('pagination');
+    ul.innerHTML = '';
+
+    const createItem = (label, page, disabled = false, active = false, icon = null) => {
+        const li = document.createElement('li');
+        li.className = `page-item ${disabled?'disabled':''} ${active?'active':''}`;
+        const a = document.createElement('a');
+        a.className = 'page-link';
+        a.href = '#';
+        a.innerHTML = icon ? `<i class="${icon}"></i>` : label;
+        a.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (!disabled && state.currentPage !== page) {
+                state.currentPage = page;
+                renderTable();
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            }
+        });
+        li.appendChild(a);
+        ul.appendChild(li);
+    };
+
+    createItem('Prev', Math.max(1, state.currentPage - 1), state.currentPage === 1, false, 'fa-solid fa-chevron-left');
+
+    const maxVisible = 5;
+    let start = Math.max(1, state.currentPage - Math.floor(maxVisible / 2));
+    let end = Math.min(pages, start + maxVisible - 1);
+    if (end - start < maxVisible - 1) {
+        start = Math.max(1, end - maxVisible + 1);
+    }
+
+    for (let p = start; p <= end; p++) {
+        createItem(String(p), p, false, p === state.currentPage);
+    }
+
+    createItem('Next', Math.min(pages, state.currentPage + 1), state.currentPage === pages, false, 'fa-solid fa-chevron-right');
+}
+
+function setSort(col) {
+    if (state.sortColumn === col) {
+        state.sortDirection = state.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+        state.sortColumn = col;
+        state.sortDirection = 'asc';
+    }
+    updateSortIcons();
+    renderTable();
+}
+
+function updateSortIcons() {
+    document.querySelectorAll('th.sortable').forEach(th => {
+        const icon = th.querySelector('i');
+        const col = th.getAttribute('data-col');
+        if (col === state.sortColumn) {
+            icon.className = `fa-solid ${state.sortDirection==='asc'?'fa-sort-up':'fa-sort-down'} ms-1`;
+            th.classList.add('text-strong');
+        } else {
+            icon.className = 'fa-solid fa-sort ms-1';
+            th.classList.remove('text-strong');
+        }
+    });
+}
+
+// Chart
+function updateRoleChart() {
+    const roles = ['Student', 'Faculty', 'Admin'];
+    const counts = roles.map(r => state.users.filter(u => u.role === r).length);
+    const ctx = document.getElementById('roleChart');
+    const colors = ['#f08e1b', '#0099D2', '#9a296a'];
+    if (roleChartInstance) {
+        roleChartInstance.data.datasets[0].data = counts;
+        roleChartInstance.update();
+    } else {
+        roleChartInstance = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: roles,
+                datasets: [{
+                    data: counts,
+                    backgroundColor: colors,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    },
+                    tooltip: {
+                        enabled: true
+                    }
+                }
+            }
+        });
+    }
+}
+
+function renderRoleBreakdown() {
+    const list = document.getElementById('roleBreakdown');
+    const total = state.users.length || 1;
+    const roles = ['Student', 'Faculty', 'Admin'];
+    const colors = {
+        Student: 'var(--color-primary)',
+        Faculty: 'var(--color-info)',
+        Admin: 'var(--color-secondary)'
+    };
+    list.innerHTML = roles.map(r => {
+        const c = state.users.filter(u => u.role === r).length;
+        const pct = Math.round((c / total) * 100);
+        return `<li class="mb-2 d-flex align-items-center gap-2"><span class="status-dot" style="background:${colors[r]}"></span><strong>${r}</strong><span class="ms-auto text-muted">${c} • ${pct}%</span></li>`;
+    }).join('');
+}
+
+// Actions
+function openAddModal() {
+    document.getElementById('userModalLabel').textContent = 'Add User';
+    document.getElementById('userForm').dataset.mode = 'add';
+    document.getElementById('fullName').value = '';
+    document.getElementById('email').value = '';
+    document.getElementById('userId').value = '';
+    document.getElementById('role').value = '';
+    document.getElementById('status').value = '';
+    const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('userModal'));
+    modal.show();
+}
+
+function openEditModal(u) {
+    document.getElementById('userModalLabel').textContent = `Edit User`;
+    const form = document.getElementById('userForm');
+    form.dataset.mode = 'edit';
+    form.dataset.targetId = u.id;
+    document.getElementById('fullName').value = u.name;
+    document.getElementById('email').value = u.email;
+    document.getElementById('userId').value = u.id;
+    document.getElementById('role').value = u.role;
+    document.getElementById('status').value = u.status;
+    const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('userModal'));
+    modal.show();
+}
+
+function saveUserFromForm(e) {
+    e.preventDefault();
+    const form = e.target;
+    // basic validation
+    if (!form.checkValidity()) {
+        form.classList.add('was-validated');
+        return;
+    }
+    const user = {
+        name: document.getElementById('fullName').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        id: document.getElementById('userId').value.trim(),
+        role: document.getElementById('role').value,
+        status: document.getElementById('status').value,
+        createdAt: new Date().toISOString().slice(0, 10)
+    };
+
+    const mode = form.dataset.mode;
+    if (mode === 'add') {
+        if (state.users.some(u => u.id === user.id)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Duplicate ID',
+                text: 'A user with this ID already exists.'
+            });
+            return;
+        }
+        state.users.unshift(user);
+        Swal.fire({
+            icon: 'success',
+            title: 'User created',
+            timer: 1400,
+            showConfirmButton: false
+        });
+    } else {
+        const idx = state.users.findIndex(u => u.id === form.dataset.targetId);
+        if (idx > -1) {
+            state.users[idx] = {
+                ...state.users[idx],
+                ...user
+            };
+        }
+        Swal.fire({
+            icon: 'success',
+            title: 'User updated',
+            timer: 1300,
+            showConfirmButton: false
+        });
+    }
+    bootstrap.Modal.getOrCreateInstance(document.getElementById('userModal')).hide();
+    form.reset();
+    form.classList.remove('was-validated');
+    renderTable();
+}
+
+function confirmDelete(id) {
+    const u = state.users.find(x => x.id === id);
+    Swal.fire({
+        icon: 'warning',
+        title: 'Delete User?',
+        html: `Are you sure you want to delete <strong>${u.name}</strong> (${u.id})? This action cannot be undone.`,
+        showCancelButton: true,
+        confirmButtonText: 'Delete',
+        confirmButtonColor: '#CD2026'
+    }).then(res => {
+        if (res.isConfirmed) {
+            state.users = state.users.filter(x => x.id !== id);
+            Swal.fire({
+                icon: 'success',
+                title: 'Deleted',
+                timer: 1200,
+                showConfirmButton: false
+            });
+            state.currentPage = 1;
+            renderTable();
+        }
+    });
+}
+
+function confirmResetBiometrics(id) {
+    const u = state.users.find(x => x.id === id);
+    Swal.fire({
+        icon: 'question',
+        title: 'Reset Facial Biometrics?',
+        html: `Reset biometric data for <strong>${u.name}</strong> (${u.id}). The student will be prompted to re-register.`,
+        showCancelButton: true,
+        confirmButtonText: 'Reset',
+        confirmButtonColor: '#f08e1b'
+    }).then(res => {
+        if (res.isConfirmed) {
+            // simulate API
+            setTimeout(() => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Biometrics reset',
+                    timer: 1400,
+                    showConfirmButton: false
+                });
+            }, 500);
+        }
+    });
+}
+
+function exportCsv() {
+    const filtered = sortItems(getFiltered());
+    const headers = ['Name', 'ID', 'Email', 'Role', 'Status', 'Joined'];
+    const rows = filtered.map(u => [u.name, u.id, u.email, u.role, u.status, fmtDate(u.createdAt)]);
+    const csv = [headers, ...rows].map(r => r.map(v => `"${String(v).replaceAll('"','""')}"`).join(',')).join('\n');
+    const blob = new Blob([csv], {
+        type: 'text/csv;charset=utf-8;'
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'users.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+function attachEvents() {
+    document.getElementById('searchInput').addEventListener('input', debounce((e) => {
+        state.searchText = e.target.value;
+        state.currentPage = 1;
+        renderTable();
+    }, 250));
+    document.getElementById('roleFilter').addEventListener('change', (e) => {
+        state.selectedRole = e.target.value;
+        state.currentPage = 1;
+        renderTable();
+    });
+    document.getElementById('statusFilter').addEventListener('change', (e) => {
+        state.selectedStatus = e.target.value;
+        state.currentPage = 1;
+        renderTable();
+    });
+    document.getElementById('pageSize').addEventListener('change', (e) => {
+        state.pageSize = parseInt(e.target.value, 10) || 10;
+        state.currentPage = 1;
+        renderTable();
+    });
+    document.getElementById('btnClearFilters').addEventListener('click', () => {
+        document.getElementById('searchInput').value = '';
+        document.getElementById('roleFilter').value = '';
+        document.getElementById('statusFilter').value = '';
+        state.searchText = '';
+        state.selectedRole = '';
+        state.selectedStatus = '';
+        state.currentPage = 1;
+        renderTable();
+    });
+
+    document.getElementById('btnAddUserHeader').addEventListener('click', openAddModal);
+    document.getElementById('btnAddUserMobile').addEventListener('click', openAddModal);
+    document.getElementById('userForm').addEventListener('submit', saveUserFromForm);
+    document.getElementById('btnExportCsv').addEventListener('click', exportCsv);
+
+    document.getElementById('usersTable').addEventListener('click', (e) => {
+        const btn = e.target.closest('button');
+        if (!btn) return;
+        const id = btn.getAttribute('data-id');
+        const action = btn.getAttribute('data-action');
+        if (action === 'edit') {
+            const u = state.users.find(x => x.id === id);
+            openEditModal(u);
+        } else if (action === 'delete') {
+            confirmDelete(id);
+        } else if (action === 'reset') {
+            confirmResetBiometrics(id);
+        }
+    });
+
+    document.querySelectorAll('th.sortable').forEach(th => th.addEventListener('click', () => setSort(th.getAttribute('data-col'))));
+}
+
+function simulateFetch() {
+    state.isLoading = true;
+    setTimeout(() => {
+        state.isLoading = false;
+        document.querySelectorAll('#tableBody .loading-row').forEach(r => r.remove());
+        renderTable();
+        updateSortIcons();
+    }, 600);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    attachEvents();
+    simulateFetch();
+});
+  </script>
+ </body>
+</html>

@@ -1,0 +1,39 @@
+/* settings_page.css - page-specific styles for Settings Page */
+/* Use Poppins for this page to match brand typography */
+body {
+    font-family: "Poppins", var(--font-sans), system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif
+    }
+/* Ensure main content doesn’t hide behind sticky header on small screens */
+main .container-fluid {
+    scroll-margin-top: 72px
+    }
+/* Card header title alignment tweaks */
+.widget-title {
+    display: inline-block
+    }
+/* Visual cue for sortable table headers */
+#changesTable thead th.sortable {
+    user-select: none;
+    white-space: nowrap
+    }
+#changesTable thead th.sortable:hover {
+    background: var(--neutral-soft)
+    }
+/* Chart container height for better responsiveness */
+#impactChart {
+    min-height: 220px
+    }
+/* Feedback area spacing */
+#feedbackArea .alert {
+    margin-bottom: 0
+    }
+/* Make Save button more prominent on this page */
+#saveBtn {
+    min-width: 160px
+    }
+/* Small devices: stack header actions */
+@media (max-width: 575.98px) {
+    .page-title {
+        font-size: 1.25rem
+        }
+    }

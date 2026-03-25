@@ -1,0 +1,36 @@
+/* Registration Page (registration_page.css)
+   Keep styles minimal and leverage global theme (style.css) */
+/* Brand typography override to Poppins for this page */
+body {
+    font-family: "Poppins", var(--font-sans)
+    }
+/* Container tuning for registration form */
+.register-form-container {
+    max-width: 560px
+    }
+/* Adjust alert spacing inside form container */
+#formAlert {
+    margin-top: 0.25rem
+    }
+/* Illustration styling (left panel) */
+#registerHero {
+    border-radius: var(--radius-2);
+    box-shadow: var(--shadow-1)
+    }
+/* Make input-group toggle buttons consistent with theme */
+.input-group .btn.btn-light {
+    border-color: var(--border-color)
+    }
+.input-group .btn.btn-light:hover {
+    background: var(--neutral-soft)
+    }
+/* Strength meter coloring handled inline via JS; ensure smooth transition */
+.progress-bar {
+    transition: width 0.2s ease
+    }
+/* Responsive: on small screens ensure form has breathing room */
+@media (max-width: 575.98px) {
+    .register-form-container {
+        padding: var(--space-4)
+        }
+    }

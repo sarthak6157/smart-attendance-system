@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>
+   Admin Dashboard — Hybrid Attendance
+  </title>
+  <!-- Brand Typography -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+   <!-- Font Awesome 6 -->
+   <link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkfAmjXf36+M7qUz2V/MHnYxZspGDZCBo2uiGNsq4c1HJdpMPJ+F2zYkg==" referrerpolicy="no-referrer" rel="stylesheet"/>
+   <!-- Theme CSS -->
+   <link href="style.css" rel="stylesheet"/>
+   <!-- Page-specific CSS -->
+   <link href="admin_dashboard.css" rel="stylesheet"/>
+  </link>
+ </head>
+ <body>
+  <!-- Admin Header with global search and quick actions -->
+  <nav class="navbar navbar-expand-md navbar-dark" style="background:#f08e1b;">
+   <div class="container-fluid">
+    <button class="btn btn-outline-light d-md-none me-2" data-bs-target="#adminSidebar" data-bs-toggle="collapse" type="button">
+     <i class="fa-solid fa-bars">
+     </i>
+    </button>
+    <a class="navbar-brand fw-bold" href="/admin">
+     Admin
+    </a>
+    <form class="d-none d-md-flex ms-3" role="search" style="max-width:480px;flex:1;">
+     <input aria-label="Search" class="form-control" placeholder="Search users, courses, departments" type="search"/>
+    </form>
+    <div class="d-flex align-items-center ms-auto">
+     <a class="btn btn-light me-2" href="/reports">
+      <i class="fa-solid fa-file-lines me-1">
+      </i>
+      New Report
+     </a>
+     <button class="btn btn-link text-white me-2 position-relative">
+      <i class="fa-solid fa-bell">
+      </i>
+      <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+       7
+      </span>
+     </button>
+     <div class="dropdown">
+      <button class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
+       <i class="fa-solid fa-user me-1">
+       </i>
+       Me
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end">
+       <li>
+        <a class="dropdown-item" href="/profile">
+         My Profile
+        </a>
+       </li>
+       <li>
+        <a class="dropdown-item" href="/settings">
+         Settings
+        </a>
+       </li>
+       <li>
+        <hr class="dropdown-divider"/>
+       </li>
+       <li>
+        <a class="dropdown-item text-danger" href="/login" id="logoutLink">
+         Logout
+        </a>
+       </li>
+      </ul>
+     </div>
+    </div>
+   </div>
+  </nav>
+  <div class="admin-layout d-flex">
+   <!-- Admin App Sidebar -->
+   <!-- Icons used: fa-gauge, fa-chart-line, fa-file-lines, fa-users-gear, fa-gear -->
+   <!-- Interactive: Collapsible via #adminSidebar; badges for pending approvals -->
+   <aside class="d-flex flex-column flex-shrink-0 bg-light border-end" style="min-height:100vh;width:260px;">
+    <div class="p-3 border-bottom d-flex align-items-center justify-content-between" style="background:#f08e1b;">
+     <a class="text-white fw-bold text-decoration-none" href="/admin">
+      Hybrid Attendance
+     </a>
+     <button class="btn btn-sm btn-outline-light d-md-none" data-bs-target="#adminSidebar" data-bs-toggle="collapse" type="button">
+      <i class="fa-solid fa-bars">
+      </i>
+     </button>
+    </div>
+    <div class="collapse show" id="adminSidebar">
+     <div class="p-3">
+      <div class="d-flex align-items-center mb-4">
+       <img alt="Avatar" class="rounded-circle me-2" src="/assets/avatar-admin.png" style="width:40px;height:40px;"/>
+       <div>
+        <div class="fw-semibold">
+         Administrator
+        </div>
+        <small class="text-muted">
+         Control Center
+        </small>
+       </div>
+      </div>
+      <ul class="nav nav-pills flex-column">
+       <li class="nav-item mb-1">
+        <a class="nav-link text-dark" href="/admin">
+         <i class="fa-solid fa-gauge me-2">
+         </i>
+         Dashboard
+        </a>
+       </li>
+       <li class="nav-item mb-1">
+        <a class="nav-link text-dark" href="/analytics">
+         <i class="fa-solid fa-chart-line me-2">
+         </i>
+         Analytics
+        </a>
+       </li>
+       <li class="nav-item mb-1">
+        <a class="nav-link text-dark" href="/reports">
+         <i class="fa-solid fa-file-lines me-2">
+         </i>
+         Reports
+        </a>
+       </li>
+       <li class="nav-item mb-1">
+        <a class="nav-link d-flex align-items-center text-dark" href="/user-management">
+         <i class="fa-solid fa-users-gear me-2">
+         </i>
+         <span>
+          User Management
+         </span>
+         <span class="badge bg-danger ms-auto" id="sidebarPendingBadge">
+          5
+         </span>
+        </a>
+       </li>
+       <li class="nav-item mb-1">
+        <a class="nav-link text-dark" href="/settings">
+         <i class="fa-solid fa-gear me-2">
+         </i>
+         Settings
+        </a>
+       </li>
+      </ul>
+     </div>
+    </div>
+    <style>
+     .nav-link:hover{background:rgba(240,142,27,.1);border-radius:.5rem}
+        .nav-link.active{background:#f08e1b;color:#fff;border-radius:.5rem}
+    </style>
+   </aside>
+   <main class="admin-main flex-grow-1">
+    <div class="container-fluid py-3 py-lg-4">
+     <!-- Breadcrumb / Page Header -->
+     <div class="page-header">
+      <div class="d-flex align-items-center gap-2">
+       <h1 class="page-title mb-0">
+        Dashboard
+       </h1>
+       <span class="badge-soft info">
+        <i class="fa-solid fa-calendar me-1">
+        </i>
+        <span id="dateRangeLabel">
+         Last 30 days
+        </span>
+       </span>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+       <select class="form-select form-select-sm" id="globalDateRange" style="max-width:200px;">
+        <option value="7">
+         Last 7 days
+        </option>
+        <option selected="" value="30">
+         Last 30 days
+        </option>
+        <option value="90">
+         Last 90 days
+        </option>
+        <option value="180">
+         Semester to date
+        </option>
+       </select>
+       <button class="btn btn-light" id="btnRefresh">
+        <i class="fa-solid fa-rotate me-1">
+        </i>
+        Refresh
+       </button>
+      </div>
+     </div>
+     <!-- System info/notification -->
+     <div class="alert alert-info d-flex align-items-center justify-content-between" role="alert">
+      <div>
+       <i class="fa-solid fa-circle-info me-2">
+       </i>
+       Data auto-updates every 15 minutes. Last refresh
+       <span id="lastRefreshed">
+        —
+       </span>
+       .
+      </div>
+      <div>
+       <button class="btn btn-sm btn-outline-info" id="btnShowChangelog">
+        <i class="fa-solid fa-list me-1">
+        </i>
+        Changelog
+       </button>
+      </div>
+     </div>
+     <!-- KPI Cards -->
+     <div class="grid auto-fit-lg" id="kpiGrid">
+      <div class="metric-card kpi-card" data-target="./reports_page.html">
+       <div class="metric-title">
+        Overall Attendance
+       </div>
+       <div class="d-flex align-items-baseline gap-2">
+        <div class="metric-value" id="kpiOverall">
+         —%
+        </div>
+        <span class="text-success" id="kpiTrend">
+         <i class="fa-solid fa-arrow-trend-up me-1">
+         </i>
+         +1.8%
+        </span>
+       </div>
+       <div class="text-muted small">
+        Compared to previous period
+       </div>
+      </div>
+      <div class="metric-card kpi-card" data-target="./user_management.html?filter=pending">
+       <div class="metric-title">
+        Pending Approvals
+       </div>
+       <div class="metric-value" id="kpiApprovals">
+        —
+       </div>
+       <div class="text-muted small">
+        Users awaiting review
+       </div>
+      </div>
+      <div class="metric-card kpi-card" data-target="">
+       <div class="metric-title">
+        Active Sessions
+       </div>
+       <div class="metric-value" id="kpiActiveSessions">
+        —
+       </div>
+       <div class="text-muted small">
+        Across all departments
+       </div>
+      </div>
+      <div class="metric-card kpi-card" data-target="./reports_page.html?filter=low_attendance">
+       <div class="metric-title">
+        Low Attendance Alerts
+       </div>
+       <div class="metric-value text-danger" id="kpiLowAlerts">
+        —
+       </div>
+       <div class="text-muted small">
+        Below threshold
+       </div>
+      </div>
+     </div>
+     <!-- Analytics & Lists -->
+     <div class="row g-4 mt-2">
+      <div class="col-12 col-xl-8">
+       <div class="card">
+        <div class="card-header">
+         <div class="title">
+          Attendance Trend
+         </div>
+         <div class="d-flex gap-2">
+          <button class="btn btn-sm btn-light" id="btnResetZoom">
+           <i class="fa-solid fa-magnifying-glass-minus me-1">
+           </i>
+           Reset Zoom
+          </button>
+         </div>
+        </div>
+        <div class="card-body">
+         <canvas height="120" id="trendChart">
+         </canvas>
+         <div class="small text-muted mt-2">
+          Tip: Drag to zoom. Alt + Scroll to zoom. Double-click to reset.
+         </div>
+        </div>
+       </div>
+       <div class="card mt-4">
+        <div class="card-header">
+         <div class="title">
+          At-Risk Students
+         </div>
+         <div class="d-flex gap-2">
+          <input class="form-control form-control-sm" id="defaulterSearch" placeholder="Search name, department..." type="search"/>
+          <select class="form-select form-select-sm" id="defaulterDeptFilter">
+           <option value="">
+            All Departments
+           </option>
+           <option value="CSE">
+            CSE
+           </option>
+           <option value="ECE">
+            ECE
+           </option>
+           <option value="ME">
+            ME
+           </option>
+           <option value="CE">
+            CE
+           </option>
+           <option value="MBA">
+            MBA
+           </option>
+          </select>
+         </div>
+        </div>
+        <div class="card-body p-0">
+         <div class="table-responsive">
+          <table class="table table-theme table-hover-reveal mb-0" id="defaulterTable">
+           <thead>
+            <tr>
+             <th class="sortable" data-sort="name">
+              Student
+              <i class="fa-solid fa-sort ms-1">
+              </i>
+             </th>
+             <th class="sortable" data-sort="dept">
+              Department
+              <i class="fa-solid fa-sort ms-1">
+              </i>
+             </th>
+             <th class="sortable text-end" data-sort="attendance">
+              Attendance %
+              <i class="fa-solid fa-sort ms-1">
+              </i>
+             </th>
+             <th class="sortable" data-sort="updated">
+              Last Updated
+              <i class="fa-solid fa-sort ms-1">
+              </i>
+             </th>
+             <th class="text-end">
+              Actions
+             </th>
+            </tr>
+           </thead>
+           <tbody>
+           </tbody>
+          </table>
+         </div>
+        </div>
+        <div class="card-footer d-flex align-items-center justify-content-between">
+         <div class="text-muted small" id="defaulterPaginationInfo">
+          Showing 1-6 of 0
+         </div>
+         <div class="d-flex align-items-center gap-2">
+          <button class="btn btn-sm btn-light" disabled="" id="prevPage">
+           <i class="fa-solid fa-chevron-left">
+           </i>
+          </button>
+          <span class="small" id="pageIndicator">
+           1 / 1
+          </span>
+          <button class="btn btn-sm btn-light" disabled="" id="nextPage">
+           <i class="fa-solid fa-chevron-right">
+           </i>
+          </button>
+         </div>
+        </div>
+       </div>
+      </div>
+      <div class="col-12 col-xl-4">
+       <div class="card">
+        <div class="card-header">
+         <div class="title">
+          Department Summary
+         </div>
+        </div>
+        <div class="card-body">
+         <canvas height="180" id="deptChart">
+         </canvas>
+        </div>
+       </div>
+       <div class="card mt-4">
+        <div class="card-header">
+         <div class="title">
+          Quick Actions
+         </div>
+        </div>
+        <div class="card-body">
+         <div class="d-grid gap-2">
+          <a class="btn btn-warning" href="./user_management.html?filter=pending">
+           <i class="fa-solid fa-user-check me-2">
+           </i>
+           Review Pending Approvals
+          </a>
+          <a class="btn btn-info" href="./reports_page.html">
+           <i class="fa-solid fa-arrow-up-right-from-square me-2">
+           </i>
+           Generate Reports
+          </a>
+          <a class="btn btn-secondary" href="./settings_page.html">
+           <i class="fa-solid fa-sliders me-2">
+           </i>
+           Configure Policies
+          </a>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </main>
+  </div>
+  <!-- Admin Footer -->
+  <footer class="py-3 border-top bg-white">
+   <div class="container d-flex flex-wrap justify-content-between align-items-center">
+    <span class="text-muted">
+     ©
+     <span id="year-adm">
+      2025
+     </span>
+     Hybrid Attendance
+    </span>
+    <ul class="nav">
+     <li class="nav-item">
+      <a class="nav-link px-2 text-muted" href="/terms">
+       Terms
+      </a>
+     </li>
+     <li class="nav-item">
+      <a class="nav-link px-2 text-muted" href="/privacy">
+       Privacy
+      </a>
+     </li>
+    </ul>
+   </div>
+  </footer>
+  <script>
+   document.getElementById('year-adm').textContent = new Date().getFullYear();
+  </script>
+  <!-- Loading Overlay -->
+  <div class="loading-overlay d-none" id="loadingOverlay">
+   <div class="text-center">
+    <div class="spinner-border text-warning" role="status">
+    </div>
+    <div class="mt-2 text-white-50">
+     Refreshing data...
+    </div>
+   </div>
+  </div>
+  <!-- Toasts -->
+  <div class="position-fixed top-0 end-0 p-3" style="z-index: 1060">
+   <div aria-atomic="true" aria-live="assertive" class="toast align-items-center text-bg-success border-0" id="refreshToast" role="alert">
+    <div class="d-flex">
+     <div class="toast-body">
+      <i class="fa-solid fa-circle-check me-2">
+      </i>
+      Data updated successfully.
+     </div>
+     <button aria-label="Close" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" type="button">
+     </button>
+    </div>
+   </div>
+  </div>
+  <!-- JS: Bootstrap, Chart.js, Zoom plugin, SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.umd.min.js">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11">
+  </script>
+  <script>
+   // State
+let currentRangeDays = 30;
+let trendChart, deptChart;
+
+// Helpers
+const fmtPercent = (n) => `${n.toFixed(1)}%`;
+const rand = (min, max) => Math.random() * (max - min) + min;
+const today = new Date();
+const dateMinus = (d, days) => new Date(d.getTime() - days * 24 * 3600 * 1000);
+
+function formatDate(d) {
+    return d.toLocaleDateString(undefined, {
+        month: 'short',
+        day: '2-digit'
+    });
+}
+
+function makeDateLabels(n) {
+    const labels = [];
+    for (let i = n - 1; i >= 0; i--) {
+        labels.push(formatDate(dateMinus(today, i)));
+    }
+    return labels;
+}
+
+// Mock Data Generators
+function simulateKpis(days) {
+    const base = days >= 90 ? 86 : 88;
+    const overall = Math.max(80, Math.min(96, base + rand(-3, 3)));
+    const approvals = Math.round(rand(2, 18));
+    const sessions = Math.round(rand(12, 48));
+    const lowAlerts = Math.round(rand(20, 64));
+    const trendDelta = rand(-2.5, 2.5);
+    return {
+        overall,
+        approvals,
+        sessions,
+        lowAlerts,
+        trendDelta
+    };
+}
+
+function simulateTrend(days) {
+    const labels = makeDateLabels(days);
+    const data = labels.map(() => Math.max(78, Math.min(97, 88 + rand(-4.5, 4.5))));
+    return {
+        labels,
+        data
+    };
+}
+
+function simulateDepartmentSummary() {
+    const depts = ['CSE', 'ECE', 'ME', 'CE', 'MBA'];
+    const values = depts.map(() => Math.max(80, Math.min(95, 88 + rand(-5, 5))));
+    return {
+        depts,
+        values
+    };
+}
+
+// Defaulter table mock data
+const defaultersBase = [{
+    name: 'Aarav Sharma',
+    dept: 'CSE'
+}, {
+    name: 'Priya Verma',
+    dept: 'ECE'
+}, {
+    name: 'Rohit Kumar',
+    dept: 'ME'
+}, {
+    name: 'Neha Singh',
+    dept: 'CE'
+}, {
+    name: 'Ananya Gupta',
+    dept: 'MBA'
+}, {
+    name: 'Karan Patel',
+    dept: 'CSE'
+}, {
+    name: 'Ishita Nair',
+    dept: 'ECE'
+}, {
+    name: 'Aditya Rao',
+    dept: 'ME'
+}, {
+    name: 'Simran Kaur',
+    dept: 'CE'
+}, {
+    name: 'Vikram Shah',
+    dept: 'MBA'
+}, {
+    name: 'Sanya Mehta',
+    dept: 'CSE'
+}, {
+    name: 'Rahul Jain',
+    dept: 'ECE'
+}, {
+    name: 'Pooja Desai',
+    dept: 'ME'
+}, {
+    name: 'Kabir Malhotra',
+    dept: 'CE'
+}, {
+    name: 'Tanya Kapoor',
+    dept: 'MBA'
+}, {
+    name: 'Yash Gupta',
+    dept: 'CSE'
+}, {
+    name: 'Riya Das',
+    dept: 'ECE'
+}, {
+    name: 'Manish Tiwari',
+    dept: 'ME'
+}, {
+    name: 'Nikita Bose',
+    dept: 'CE'
+}, {
+    name: 'Farhan Ali',
+    dept: 'MBA'
+}, {
+    name: 'Devika Iyer',
+    dept: 'CSE'
+}, {
+    name: 'Harsh Vardhan',
+    dept: 'ECE'
+}, {
+    name: 'Meera Menon',
+    dept: 'ME'
+}, {
+    name: 'Arjun Reddy',
+    dept: 'CE'
+}].map((r, i) => ({
+    ...r,
+    attendance: Math.round(rand(58, 74) * 10) / 10,
+    updated: dateMinus(today, Math.floor(rand(0, 10)))
+}));
+
+// Table State
+let tableData = [...defaultersBase];
+let filteredData = [...tableData];
+let sortField = null;
+let sortDir = 'asc';
+const pageSize = 6;
+let pageIndex = 0;
+
+function renderTable() {
+    const tbody = document.querySelector('#defaulterTable tbody');
+    tbody.innerHTML = '';
+    const start = pageIndex * pageSize;
+    const pageItems = filteredData.slice(start, start + pageSize);
+    for (const row of pageItems) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>
+            <div class="d-flex align-items-center gap-2">
+              <span class="status-dot ${row.attendance < 65 ? 'error' : 'warning'}"></span>
+              <span>${row.name}</span>
+            </div>
+          </td>
+          <td>${row.dept}</td>
+          <td class="text-end">${row.attendance.toFixed(1)}%</td>
+          <td>${row.updated.toLocaleDateString()}</td>
+          <td class="text-end">
+            <div class="btn-group">
+              <a class="btn btn-sm btn-light" href="./reports_page.html?student=${encodeURIComponent(row.name)}"><i class="fa-solid fa-chart-column"></i></a>
+              <button class="btn btn-sm btn-warning" data-name="${row.name}"><i class="fa-solid fa-bell"></i></button>
+            </div>
+          </td>`;
+        tbody.appendChild(tr);
+    }
+    // Pagination info
+    const info = document.getElementById('defaulterPaginationInfo');
+    const total = filteredData.length;
+    const from = Math.min(total, start + 1);
+    const to = Math.min(total, start + pageSize);
+    info.textContent = total ? `Showing ${from}-${to} of ${total}` : 'No results';
+    document.getElementById('pageIndicator').textContent = `${Math.min(Math.ceil((start+1)/pageSize), Math.max(1, Math.ceil(total/pageSize)))} / ${Math.max(1, Math.ceil(total/pageSize))}`;
+    document.getElementById('prevPage').disabled = pageIndex === 0;
+    document.getElementById('nextPage').disabled = (start + pageSize) >= total;
+
+    // Wire alert buttons
+    tbody.querySelectorAll('button.btn-warning').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const name = e.currentTarget.getAttribute('data-name');
+            Swal.fire({
+                icon: 'warning',
+                title: 'Notify Student',
+                text: `Send low-attendance notification to ${name}?`,
+                showCancelButton: true,
+                confirmButtonText: 'Send',
+                confirmButtonColor: '#f08e1b'
+            }).then((res) => {
+                if (res.isConfirmed) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Notification sent',
+                        timer: 1200,
+                        showConfirmButton: false
+                    });
+                }
+            });
+        });
+    });
+}
+
+function applyFilters() {
+    const q = document.getElementById('defaulterSearch').value.toLowerCase();
+    const dept = document.getElementById('defaulterDeptFilter').value;
+    filteredData = tableData.filter(r => {
+        const matchesQ = r.name.toLowerCase().includes(q) || r.dept.toLowerCase().includes(q);
+        const matchesDept = dept ? r.dept === dept : true;
+        return matchesQ && matchesDept;
+    });
+    applySort();
+}
+
+function applySort() {
+    if (sortField) {
+        filteredData.sort((a, b) => {
+            let va = a[sortField],
+                vb = b[sortField];
+            if (va instanceof Date) va = va.getTime();
+            if (vb instanceof Date) vb = vb.getTime();
+            if (va < vb) return sortDir === 'asc' ? -1 : 1;
+            if (va > vb) return sortDir === 'asc' ? 1 : -1;
+            return 0;
+        });
+    }
+    pageIndex = 0;
+    renderTable();
+}
+
+function bindTableControls() {
+    document.getElementById('defaulterSearch').addEventListener('input', () => {
+        applyFilters();
+    });
+    document.getElementById('defaulterDeptFilter').addEventListener('change', () => {
+        applyFilters();
+    });
+    document.querySelectorAll('#defaulterTable thead th.sortable').forEach(th => {
+        th.style.cursor = 'pointer';
+        th.addEventListener('click', () => {
+            const field = th.getAttribute('data-sort');
+            if (sortField === field) {
+                sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+            } else {
+                sortField = field;
+                sortDir = 'asc';
+            }
+            // Update sort icons
+            document.querySelectorAll('#defaulterTable thead th.sortable i').forEach(i => i.className = 'fa-solid fa-sort ms-1');
+            const icon = th.querySelector('i');
+            icon.className = `fa-solid ${sortDir==='asc'?'fa-sort-up':'fa-sort-down'} ms-1`;
+            applySort();
+        });
+    });
+    document.getElementById('prevPage').addEventListener('click', () => {
+        if (pageIndex > 0) {
+            pageIndex--;
+            renderTable();
+        }
+    });
+    document.getElementById('nextPage').addEventListener('click', () => {
+        if ((pageIndex + 1) * pageSize < filteredData.length) {
+            pageIndex++;
+            renderTable();
+        }
+    });
+}
+
+// Charts
+function buildTrendChart(labels, data) {
+    const ctx = document.getElementById('trendChart');
+    if (trendChart) trendChart.destroy();
+    trendChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels,
+            datasets: [{
+                label: '% Attendance',
+                data,
+                borderColor: '#f08e1b',
+                backgroundColor: 'rgba(240,142,27,0.12)',
+                tension: 0.25,
+                fill: true,
+                pointRadius: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            interaction: {
+                mode: 'index',
+                intersect: false
+            },
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: (ctx) => `${ctx.parsed.y.toFixed(1)}%`
+                    }
+                },
+                zoom: {
+                    zoom: {
+                        wheel: {
+                            enabled: true,
+                            modifierKey: 'alt'
+                        },
+                        drag: {
+                            enabled: true
+                        },
+                        mode: 'x'
+                    },
+                    pan: {
+                        enabled: true,
+                        mode: 'x'
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    min: 60,
+                    max: 100,
+                    ticks: {
+                        callback: (v) => v + '%'
+                    }
+                }
+            }
+        }
+    });
+}
+
+function buildDeptChart(labels, values) {
+    const ctx = document.getElementById('deptChart');
+    if (deptChart) deptChart.destroy();
+    deptChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels,
+            datasets: [{
+                label: 'Avg %',
+                data: values,
+                backgroundColor: 'rgba(0,153,210,0.35)',
+                borderColor: '#0099D2'
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: (ctx) => `${ctx.raw.toFixed(1)}%`
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    min: 70,
+                    max: 100,
+                    ticks: {
+                        callback: (v) => v + '%'
+                    }
+                }
+            }
+        }
+    });
+}
+
+// KPI interactions
+function bindKpiCards() {
+    document.querySelectorAll('.kpi-card').forEach(card => {
+        card.addEventListener('click', () => {
+            const target = card.getAttribute('data-target');
+            if (target) {
+                window.location.href = target;
+            } else {
+                Swal.fire({
+                    title: 'Active Sessions',
+                    html: '<div class="text-start">Currently active class sessions across the institution.<br><small class="text-muted">Use Analytics for deeper drill-down.</small></div>',
+                    icon: 'info',
+                    confirmButtonColor: '#f08e1b'
+                });
+            }
+        });
+    });
+}
+
+function updateSidebarBadge(val) {
+    const badge = document.querySelector('#sidebarPendingBadge');
+    if (badge) {
+        badge.textContent = val;
+    }
+}
+
+function setLastRefreshed() {
+    document.getElementById('lastRefreshed').textContent = new Date().toLocaleString();
+}
+
+function showRefreshToast() {
+    const toastEl = document.getElementById('refreshToast');
+    const t = new bootstrap.Toast(toastEl);
+    t.show();
+}
+
+function toggleLoading(show) {
+    document.getElementById('loadingOverlay').classList.toggle('d-none', !show);
+}
+
+async function refreshAll() {
+    toggleLoading(true);
+    // Simulate API latency
+    await new Promise(r => setTimeout(r, 700));
+    const kpis = simulateKpis(currentRangeDays);
+    document.getElementById('kpiOverall').textContent = fmtPercent(kpis.overall);
+    const trendEl = document.getElementById('kpiTrend');
+    trendEl.innerHTML = `${kpis.trendDelta>=0?'<i class="fa-solid fa-arrow-trend-up me-1"></i>+':'<i class="fa-solid fa-arrow-trend-down me-1"></i>'}${Math.abs(kpis.trendDelta).toFixed(1)}%`;
+    trendEl.classList.toggle('text-success', kpis.trendDelta >= 0);
+    trendEl.classList.toggle('text-danger', kpis.trendDelta < 0);
+    document.getElementById('kpiApprovals').textContent = kpis.approvals;
+    document.getElementById('kpiActiveSessions').textContent = kpis.sessions;
+    document.getElementById('kpiLowAlerts').textContent = kpis.lowAlerts;
+    updateSidebarBadge(kpis.approvals);
+
+    const trend = simulateTrend(currentRangeDays);
+    buildTrendChart(trend.labels, trend.data);
+
+    const dept = simulateDepartmentSummary();
+    buildDeptChart(dept.depts, dept.values);
+
+    setLastRefreshed();
+    showRefreshToast();
+    toggleLoading(false);
+}
+
+function applyRangeLabel() {
+    const map = {
+        7: 'Last 7 days',
+        30: 'Last 30 days',
+        90: 'Last 90 days',
+        180: 'Semester to date'
+    };
+    document.getElementById('dateRangeLabel').textContent = map[currentRangeDays] || `Last ${currentRangeDays} days`;
+}
+
+function bindGlobalControls() {
+    document.getElementById('globalDateRange').addEventListener('change', (e) => {
+        currentRangeDays = parseInt(e.target.value, 10);
+        applyRangeLabel();
+        refreshAll();
+    });
+    document.getElementById('btnRefresh').addEventListener('click', () => refreshAll());
+    document.getElementById('btnResetZoom').addEventListener('click', () => {
+        if (trendChart) {
+            trendChart.resetZoom();
+        }
+    });
+
+    // Changelog
+    document.getElementById('btnShowChangelog').addEventListener('click', () => {
+        Swal.fire({
+            title: 'Recent Changes',
+            html: `
+            <ul class="text-start">
+              <li>Added interactive zoom/pan to trend chart</li>
+              <li>Improved KPI accuracy with new aggregation</li>
+              <li>Enhanced defaulter table with sorting & filtering</li>
+            </ul>
+          `,
+            icon: 'info',
+            confirmButtonColor: '#f08e1b'
+        });
+    });
+
+    // Logout confirm
+    const logoutLink = document.getElementById('logoutLink');
+    if (logoutLink) {
+        logoutLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            Swal.fire({
+                title: 'Logout?',
+                text: 'Are you sure you want to end your session?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#f08e1b',
+                confirmButtonText: 'Logout'
+            }).then((res) => {
+                if (res.isConfirmed) {
+                    window.location.href = './login_page.html';
+                }
+            });
+        });
+    }
+}
+
+// Init
+document.addEventListener('DOMContentLoaded', () => {
+    bindKpiCards();
+    bindGlobalControls();
+    bindTableControls();
+    applyFilters();
+    applyRangeLabel();
+    refreshAll();
+});
+  </script>
+ </body>
+</html>

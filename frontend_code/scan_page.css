@@ -1,0 +1,170 @@
+/* scan_page.css - Page-specific styles for Scan Page */
+/* Use Poppins brand font for this page */
+body {
+    font-family: "Poppins", var(--font-sans)
+    }
+/* Fullscreen scanner shell height = viewport minus header & footer */
+.scanner-shell {
+    background: #000
+    }
+.scanner-stage {
+    min-height: calc(100dvh - var(--header-h, 64px) - var(--footer-h, 56px));
+    position: relative;
+    overflow: hidden
+    }
+.object-fit-cover {
+    object-fit: cover
+    }
+/* Topbar and bottombar overlays */
+.scanner-topbar {
+    position: relative;
+    z-index: 3;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0));
+    color: #fff
+    }
+.scanner-bottombar {
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0))
+    }
+/* Scan target overlay (corner brackets) */
+.scan-target-overlay {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    pointer-events: none;
+    z-index: 2
+    }
+.scan-target-overlay .corner {
+    position: absolute;
+    width: 70px;
+    height: 70px;
+    border: 3px solid rgba(255, 255, 255, 0.9)
+    }
+.scan-target-overlay .corner.tl {
+    top: 18%;
+    left: 50%;
+    transform: translate(-150px, -40px);
+    border-right: none;
+    border-bottom: none;
+    border-radius: 8px 0 0 0
+    }
+.scan-target-overlay .corner.tr {
+    top: 18%;
+    left: 50%;
+    transform: translate(80px, -40px);
+    border-left: none;
+    border-bottom: none;
+    border-radius: 0 8px 0 0
+    }
+.scan-target-overlay .corner.bl {
+    top: 52%;
+    left: 50%;
+    transform: translate(-150px, 10px);
+    border-right: none;
+    border-top: none;
+    border-radius: 0 0 0 8px
+    }
+.scan-target-overlay .corner.br {
+    top: 52%;
+    left: 50%;
+    transform: translate(80px, 10px);
+    border-left: none;
+    border-top: none;
+    border-radius: 0 0 8px 0
+    }
+.scan-target-overlay .scan-hint {
+    position: absolute;
+    top: 57%;
+    left: 50%;
+    transform: translatex(-50%)
+    }
+@media (max-width: 575.98px) {
+    .scan-target-overlay .corner {
+        width: 56px;
+        height: 56px
+        }
+    .scan-target-overlay .corner.tl {
+        transform: translate(-120px, -30px)
+        }
+    .scan-target-overlay .corner.tr {
+        transform: translate(60px, -30px)
+        }
+    .scan-target-overlay .corner.bl {
+        transform: translate(-120px, 6px)
+        }
+    .scan-target-overlay .corner.br {
+        transform: translate(60px, 6px)
+        }
+    }
+/* Status overlay */
+.status-overlay {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: rgba(0, 0, 0, 0.35);
+    z-index: 4
+    }
+.status-overlay .status-card {
+    width: min(94%, 360px);
+    background: var(--surface-0);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-2);
+    padding: 16px;
+    box-shadow: var(--shadow-2)
+    }
+.status-overlay .icon-wrap i {
+    font-size: 1.75rem
+    }
+/* Face verification overlay */
+.face-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    display: grid
+    }
+.face-stage {
+    position: relative
+    }
+.face-outline {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: min(70vw, 360px);
+    height: min(50vh, 380px);
+    transform: translate(-50%, -50%);
+    border: 3px solid rgba(255, 255, 255, 0.9);
+    border-radius: 50%/60%;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.25) inset;
+    pointer-events: none
+    }
+.face-instructions {
+    position: absolute;
+    left: 50%;
+    bottom: 92px;
+    transform: translatex(-50%);
+    color: #fff;
+    text-align: center;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6)
+    }
+.face-actions {
+    position: absolute;
+    left: 50%;
+    bottom: 24px;
+    transform: translatex(-50%)
+    }
+/* Table sorting indicators */
+#attemptsTable thead th.sorted-asc i.fa-sort::before {
+    content: "";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900
+    }
+#attemptsTable thead th.sorted-desc i.fa-sort::before {
+    content: "";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900
+    }
+/* Utility tweaks */
+.btn-light.btn-sm, .btn-primary.btn-sm {
+    border-radius: var(--radius-1)
+    }

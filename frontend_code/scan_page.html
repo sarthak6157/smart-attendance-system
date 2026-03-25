@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>
+   Scan Attendance | Hybrid Attendance
+  </title>
+  <!-- Brand Typography: Poppins -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <!-- Bootstrap 5 CSS -->
+  <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" rel="stylesheet"/>
+  <!-- Font Awesome 6 -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+   <!-- SweetAlert2 -->
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11">
+   </script>
+   <!-- Site Theme -->
+   <link href="style.css" rel="stylesheet"/>
+   <!-- Page-specific CSS -->
+   <link href="scan_page.css" rel="stylesheet"/>
+  </link>
+ </head>
+ <body class="d-flex flex-column min-vh-100">
+  <!-- Header (needed: brand + quick access + account) -->
+  <nav class="navbar navbar-expand-md navbar-dark" style="background:#f08e1b;">
+   <div class="container-fluid">
+    <button class="btn btn-outline-light d-md-none me-2" data-bs-target="#studentSidebar" data-bs-toggle="collapse" type="button">
+     <i class="fa-solid fa-bars">
+     </i>
+    </button>
+    <a class="navbar-brand fw-bold" href="./student_dashboard.html">
+     Student
+    </a>
+    <form class="d-none d-md-flex ms-3" role="search" style="max-width:420px;flex:1;">
+     <input aria-label="Search" class="form-control" placeholder="Search courses" type="search"/>
+    </form>
+    <div class="d-flex align-items-center ms-auto">
+     <a class="btn btn-light me-2" href="./scan_page.html">
+      <i class="fa-solid fa-qrcode me-1">
+      </i>
+      Scan Now
+     </a>
+     <button aria-label="Notifications" class="btn btn-link text-white me-2 position-relative">
+      <i class="fa-solid fa-bell">
+      </i>
+      <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+       3
+      </span>
+     </button>
+     <div class="dropdown">
+      <button aria-expanded="false" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
+       <i class="fa-solid fa-user me-1">
+       </i>
+       Me
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end">
+       <li>
+        <a class="dropdown-item" href="./user_profile.html">
+         My Profile
+        </a>
+       </li>
+       <li>
+        <hr class="dropdown-divider"/>
+       </li>
+       <li>
+        <a class="dropdown-item text-danger" href="./login_page.html">
+         Logout
+        </a>
+       </li>
+      </ul>
+     </div>
+    </div>
+   </div>
+  </nav>
+  <main class="flex-grow-1">
+   <!-- Attendance Scanner Full-Screen Component -->
+   <section class="scanner-shell" id="attendanceScanner">
+    <!-- Top overlay controls -->
+    <div class="scanner-topbar d-flex justify-content-between align-items-center px-2 py-2">
+     <div class="d-flex align-items-center gap-2">
+      <a class="btn btn-light btn-sm" href="./student_dashboard.html">
+       <i class="fa-solid fa-arrow-left">
+       </i>
+       Exit
+      </a>
+     </div>
+     <div class="d-flex align-items-center gap-2">
+      <button class="btn btn-light btn-sm" disabled="" id="torchToggle" type="button">
+       <i class="fa-solid fa-bolt me-1">
+       </i>
+       Torch
+      </button>
+      <button class="btn btn-light btn-sm" id="switchCameraBtn" type="button">
+       <i class="fa-solid fa-camera-rotate">
+       </i>
+      </button>
+     </div>
+    </div>
+    <!-- Camera stage (rear camera) -->
+    <div class="scanner-stage position-relative bg-black" id="scannerStage">
+     <video autoplay="" class="w-100 h-100 object-fit-cover" id="qrVideo" muted="" playsinline="">
+     </video>
+     <canvas class="visually-hidden" height="480" id="qrCanvas" width="640">
+     </canvas>
+     <!-- Scan target overlay (corner brackets) -->
+     <div aria-hidden="true" class="scan-target-overlay">
+      <div class="corner tl">
+      </div>
+      <div class="corner tr">
+      </div>
+      <div class="corner bl">
+      </div>
+      <div class="corner br">
+      </div>
+      <div class="scan-hint text-white-50 small">
+       Align the QR inside the frame
+      </div>
+     </div>
+     <!-- Status Overlay -->
+     <div aria-live="polite" class="status-overlay d-none" id="statusOverlay" role="status">
+      <div class="status-card app-card text-center">
+       <div class="icon-wrap mb-2">
+        <i class="fa-solid fa-spinner fa-spin text-info" id="statusIcon">
+        </i>
+       </div>
+       <div class="fw-semibold mb-2" id="statusMessage">
+        Initializing camera...
+       </div>
+       <button class="btn btn-primary btn-sm d-none" id="retryBtn" type="button">
+        <i class="fa-solid fa-rotate-right me-1">
+        </i>
+        Retry
+       </button>
+      </div>
+     </div>
+     <!-- Facial Scan Overlay (front camera) -->
+     <div class="face-overlay d-none" id="faceOverlay">
+      <div class="face-stage position-relative">
+       <video autoplay="" class="w-100 h-100 object-fit-cover" id="faceVideo" playsinline="">
+       </video>
+       <div aria-hidden="true" class="face-outline">
+       </div>
+       <div class="face-instructions">
+        <div class="fw-semibold">
+         <i class="fa-solid fa-user-shield me-1">
+         </i>
+         Identity Verification
+        </div>
+        <small class="text-white-50">
+         Center your face within the oval. Good lighting helps.
+        </small>
+       </div>
+       <div class="face-actions d-flex gap-2">
+        <button class="btn btn-light" id="cancelFaceBtn" type="button">
+         <i class="fa-solid fa-xmark me-1">
+         </i>
+         Cancel
+        </button>
+        <button class="btn btn-primary" disabled="" id="captureFaceBtn" type="button">
+         <i class="fa-solid fa-user-check me-1">
+         </i>
+         Verify My Identity
+        </button>
+       </div>
+      </div>
+     </div>
+    </div>
+    <!-- Bottom instruction strip -->
+    <div class="scanner-bottombar bg-dark text-white-50 small px-3 py-2 d-flex align-items-center justify-content-between">
+     <div>
+      <i class="fa-solid fa-location-crosshairs me-1">
+      </i>
+      GPS required to validate class location
+     </div>
+     <div class="d-none d-sm-block">
+      <i class="fa-solid fa-shield-halved me-1">
+      </i>
+      Data secured
+     </div>
+    </div>
+   </section>
+   <!-- Collapsible: Recent Attendance Attempts (sample data, table with sorting/filter) -->
+   <section class="container my-4">
+    <div class="card app-card">
+     <div class="card-header">
+      <div class="d-flex align-items-center gap-2">
+       <i class="fa-solid fa-clock-rotate-left text-primary">
+       </i>
+       <span class="widget-title">
+        Recent Attendance Attempts
+       </span>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+       <input class="form-control form-control-sm" id="logFilter" placeholder="Filter by course or status" type="search"/>
+       <button aria-expanded="true" class="btn btn-light btn-sm" data-bs-target="#attemptsBody" data-bs-toggle="collapse">
+        <i class="fa-solid fa-chevron-down">
+        </i>
+       </button>
+      </div>
+     </div>
+     <div class="collapse show" id="attemptsBody">
+      <div class="card-body p-0">
+       <div class="table-responsive">
+        <table class="table table-theme mb-0 align-middle" id="attemptsTable">
+         <thead>
+          <tr>
+           <th data-sort="datetime" role="button">
+            Date &amp; Time
+            <i class="fa-solid fa-sort ms-1 text-muted">
+            </i>
+           </th>
+           <th data-sort="course" role="button">
+            Course
+            <i class="fa-solid fa-sort ms-1 text-muted">
+            </i>
+           </th>
+           <th>
+            Session Code
+           </th>
+           <th data-sort="result" role="button">
+            Result
+            <i class="fa-solid fa-sort ms-1 text-muted">
+            </i>
+           </th>
+           <th>
+            Location
+           </th>
+           <th>
+            Actions
+           </th>
+          </tr>
+         </thead>
+         <tbody>
+          <tr>
+           <td data-datetime="2025-03-01T09:00:00Z">
+            Mar 1, 2025 09:00
+           </td>
+           <td data-course="ME-201">
+            ME-201: Thermodynamics
+           </td>
+           <td>
+            THR-9A2C
+           </td>
+           <td data-result="Success">
+            <span class="badge-soft success">
+             Success
+            </span>
+           </td>
+           <td>
+            Building A, Room 210
+           </td>
+           <td>
+            <button class="btn btn-sm btn-light view-row">
+             <i class="fa-solid fa-eye">
+             </i>
+            </button>
+           </td>
+          </tr>
+          <tr>
+           <td data-datetime="2025-02-28T14:05:00Z">
+            Feb 28, 2025 14:05
+           </td>
+           <td data-course="EE-110">
+            EE-110: Circuits
+           </td>
+           <td>
+            CIR-5K8M
+           </td>
+           <td data-result="Error">
+            <span class="badge-soft error">
+             Error
+            </span>
+           </td>
+           <td>
+            Outside bounds
+           </td>
+           <td>
+            <button class="btn btn-sm btn-light view-row">
+             <i class="fa-solid fa-eye">
+             </i>
+            </button>
+           </td>
+          </tr>
+          <tr>
+           <td data-datetime="2025-02-28T10:03:00Z">
+            Feb 28, 2025 10:03
+           </td>
+           <td data-course="CS-305">
+            CS-305: Data Structures
+           </td>
+           <td>
+            DS-3H2Z
+           </td>
+           <td data-result="Success">
+            <span class="badge-soft success">
+             Success
+            </span>
+           </td>
+           <td>
+            Building C, Lab 3
+           </td>
+           <td>
+            <button class="btn btn-sm btn-light view-row">
+             <i class="fa-solid fa-eye">
+             </i>
+            </button>
+           </td>
+          </tr>
+          <tr>
+           <td data-datetime="2025-02-27T08:55:00Z">
+            Feb 27, 2025 08:55
+           </td>
+           <td data-course="CE-150">
+            CE-150: Materials
+           </td>
+           <td>
+            MAT-1N9Q
+           </td>
+           <td data-result="Success">
+            <span class="badge-soft success">
+             Success
+            </span>
+           </td>
+           <td>
+            Building B, Room 105
+           </td>
+           <td>
+            <button class="btn btn-sm btn-light view-row">
+             <i class="fa-solid fa-eye">
+             </i>
+            </button>
+           </td>
+          </tr>
+          <tr>
+           <td data-datetime="2025-02-26T12:10:00Z">
+            Feb 26, 2025 12:10
+           </td>
+           <td data-course="ME-201">
+            ME-201: Thermodynamics
+           </td>
+           <td>
+            THR-7X2P
+           </td>
+           <td data-result="Error">
+            <span class="badge-soft warning">
+             Retry
+            </span>
+           </td>
+           <td>
+            Weak GPS
+           </td>
+           <td>
+            <button class="btn btn-sm btn-light view-row">
+             <i class="fa-solid fa-eye">
+             </i>
+            </button>
+           </td>
+          </tr>
+          <tr>
+           <td data-datetime="2025-02-25T15:30:00Z">
+            Feb 25, 2025 15:30
+           </td>
+           <td data-course="CS-305">
+            CS-305: Data Structures
+           </td>
+           <td>
+            DS-7T4V
+           </td>
+           <td data-result="Success">
+            <span class="badge-soft success">
+             Success
+            </span>
+           </td>
+           <td>
+            Building C, Lab 3
+           </td>
+           <td>
+            <button class="btn btn-sm btn-light view-row">
+             <i class="fa-solid fa-eye">
+             </i>
+            </button>
+           </td>
+          </tr>
+         </tbody>
+        </table>
+       </div>
+      </div>
+      <div class="card-footer d-flex justify-content-between align-items-center">
+       <small class="text-muted">
+        Showing 1–6 of 6
+       </small>
+       <nav aria-label="pagination">
+        <ul class="pagination pagination-sm mb-0">
+         <li class="page-item disabled">
+          <span class="page-link">
+           Prev
+          </span>
+         </li>
+         <li class="page-item active">
+          <span class="page-link">
+           1
+          </span>
+         </li>
+         <li class="page-item disabled">
+          <span class="page-link">
+           Next
+          </span>
+         </li>
+        </ul>
+       </nav>
+      </div>
+     </div>
+    </div>
+   </section>
+  </main>
+  <!-- Footer (needed across pages) -->
+  <footer class="py-3 border-top bg-white mt-auto">
+   <div class="container d-flex flex-wrap justify-content-between align-items-center">
+    <span class="text-muted">
+     ©
+     <span id="year-stu">
+      2025
+     </span>
+     Hybrid Attendance
+    </span>
+    <ul class="nav">
+     <li class="nav-item">
+      <a class="nav-link px-2 text-muted" href="./settings_page.html#terms">
+       Terms
+      </a>
+     </li>
+     <li class="nav-item">
+      <a class="nav-link px-2 text-muted" href="./settings_page.html#privacy">
+       Privacy
+      </a>
+     </li>
+    </ul>
+   </div>
+  </footer>
+  <!-- Bootstrap JS -->
+  <script crossorigin="anonymous" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+  </script>
+  <!-- jsQR for QR detection -->
+  <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js">
+  </script>
+  <script>
+   // Year in footer
+document.getElementById('year-stu').textContent = new Date().getFullYear();
+
+// Attendance Scanner Logic
+const state = {
+    scanState: 'init',
+    errorMessage: '',
+    successMessage: '',
+    cameraPermissionStatus: 'unknown',
+    locationPermissionStatus: 'unknown',
+    useFrontCamera: false,
+    qrStream: null,
+    faceStream: null,
+    qrScanTimer: null,
+    torchEnabled: false,
+    lastQRContent: null
+};
+
+const els = {
+    stage: document.getElementById('scannerStage'),
+    qrVideo: document.getElementById('qrVideo'),
+    qrCanvas: document.getElementById('qrCanvas'),
+    statusOverlay: document.getElementById('statusOverlay'),
+    statusIcon: document.getElementById('statusIcon'),
+    statusMessage: document.getElementById('statusMessage'),
+    retryBtn: document.getElementById('retryBtn'),
+    torchToggle: document.getElementById('torchToggle'),
+    switchCameraBtn: document.getElementById('switchCameraBtn'),
+    faceOverlay: document.getElementById('faceOverlay'),
+    faceVideo: document.getElementById('faceVideo'),
+    captureFaceBtn: document.getElementById('captureFaceBtn'),
+    cancelFaceBtn: document.getElementById('cancelFaceBtn'),
+    logFilter: document.getElementById('logFilter'),
+    attemptsTable: document.getElementById('attemptsTable')
+};
+
+// Resize-aware full-height for stage using CSS variable
+function setViewportHeights() {
+    const header = document.querySelector('nav.navbar');
+    const footer = document.querySelector('footer');
+    const headerH = header ? header.offsetHeight : 0;
+    const footerH = footer ? footer.offsetHeight : 0;
+    document.documentElement.style.setProperty('--header-h', headerH + 'px');
+    document.documentElement.style.setProperty('--footer-h', footerH + 'px');
+}
+window.addEventListener('resize', setViewportHeights);
+setViewportHeights();
+
+function showStatus(type, msg, showRetry = false) {
+    els.statusOverlay.classList.remove('d-none');
+    els.statusMessage.textContent = msg || '';
+    els.retryBtn.classList.toggle('d-none', !showRetry);
+    els.statusIcon.className = '';
+    if (type === 'loading') {
+        els.statusIcon.className = 'fa-solid fa-spinner fa-spin text-info';
+    } else if (type === 'success') {
+        els.statusIcon.className = 'fa-solid fa-circle-check text-success';
+    } else if (type === 'error') {
+        els.statusIcon.className = 'fa-solid fa-circle-xmark text-danger';
+    } else {
+        els.statusIcon.className = 'fa-solid fa-info-circle text-muted';
+    }
+}
+
+function hideStatus() {
+    els.statusOverlay.classList.add('d-none');
+}
+
+async function getCameraStream(facingMode = 'environment') {
+    const constraints = {
+        audio: false,
+        video: {
+            facingMode: facingMode,
+            width: {
+                ideal: 1280
+            },
+            height: {
+                ideal: 720
+            }
+        }
+    };
+    return navigator.mediaDevices.getUserMedia(constraints);
+}
+
+function stopStream(stream) {
+    if (!stream) return;
+    stream.getTracks().forEach(t => t.stop());
+}
+
+async function initQRScanner() {
+    state.scanState = 'camera_pending';
+    showStatus('loading', 'Requesting camera permission...');
+    try {
+        state.qrStream = await getCameraStream(state.useFrontCamera ? 'user' : 'environment');
+        state.cameraPermissionStatus = 'granted';
+        els.qrVideo.srcObject = state.qrStream;
+        await els.qrVideo.play();
+        setupTorchControl(state.qrStream);
+        beginQRProcessing();
+    } catch (err) {
+        console.error('Camera error', err);
+        state.cameraPermissionStatus = 'denied';
+        showStatus('error', 'Camera access denied. Please allow camera and retry.', true);
+    }
+}
+
+function setupTorchControl(stream) {
+    try {
+        const [track] = stream.getVideoTracks();
+        const capabilities = track.getCapabilities ? track.getCapabilities() : {};
+        const torchAvailable = capabilities && 'torch' in capabilities;
+        els.torchToggle.disabled = !torchAvailable;
+        els.torchToggle.onclick = async () => {
+            try {
+                state.torchEnabled = !state.torchEnabled;
+                await track.applyConstraints({
+                    advanced: [{
+                        torch: state.torchEnabled
+                    }]
+                });
+                els.torchToggle.classList.toggle('btn-warning', state.torchEnabled);
+            } catch (e) {
+                console.warn('Torch toggle failed', e);
+            }
+        };
+    } catch (e) {
+        els.torchToggle.disabled = true;
+    }
+}
+
+function beginQRProcessing() {
+    state.scanState = 'scanning';
+    hideStatus();
+    const ctx = els.qrCanvas.getContext('2d');
+    const tick = () => {
+        if (state.scanState !== 'scanning') return; // paused or stopped
+        if (els.qrVideo.readyState === els.qrVideo.HAVE_ENOUGH_DATA) {
+            els.qrCanvas.width = els.qrVideo.videoWidth;
+            els.qrCanvas.height = els.qrVideo.videoHeight;
+            ctx.drawImage(els.qrVideo, 0, 0, els.qrCanvas.width, els.qrCanvas.height);
+            const imageData = ctx.getImageData(0, 0, els.qrCanvas.width, els.qrCanvas.height);
+            const code = jsQR(imageData.data, imageData.width, imageData.height, {
+                inversionAttempts: 'dontInvert'
+            });
+            if (code && code.data) {
+                onQRCodeDetected(code.data);
+                return; // stop loop until resumed
+            }
+        }
+        state.qrScanTimer = setTimeout(tick, 250);
+    };
+    tick();
+}
+
+function pauseQRProcessing() {
+    state.scanState = 'paused';
+    if (state.qrScanTimer) clearTimeout(state.qrScanTimer);
+}
+
+async function onQRCodeDetected(content) {
+    try {
+        state.lastQRContent = content;
+        if (navigator.vibrate) navigator.vibrate(50);
+        pauseQRProcessing();
+        showStatus('loading', 'Validating QR and location...');
+        // Simulate quick decode & validation
+        await new Promise(r => setTimeout(r, 400));
+        const locationOk = await validateLocation();
+        if (!locationOk) {
+            throw new Error('Outside class boundaries');
+        }
+        // Randomly require facial verification (30%)
+        const faceRequired = Math.random() < 0.3;
+        if (faceRequired) {
+            await startFacialVerification();
+        } else {
+            await finalizeAttendance({
+                method: 'QR+GPS',
+                face: false
+            });
+        }
+    } catch (e) {
+        console.error(e);
+        state.errorMessage = e.message || 'Unknown error';
+        showStatus('error', 'Error: ' + state.errorMessage, true);
+    }
+}
+
+function getGeolocation() {
+    return new Promise((resolve, reject) => {
+        if (!('geolocation' in navigator)) return reject(new Error('Geolocation not supported'));
+        const opts = {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0
+        };
+        navigator.geolocation.getCurrentPosition(
+            (pos) => resolve(pos.coords),
+            (err) => reject(err),
+            opts
+        );
+    });
+}
+
+async function validateLocation() {
+    state.locationPermissionStatus = 'pending';
+    showStatus('loading', 'Validating location...');
+    try {
+        const coords = await getGeolocation();
+        state.locationPermissionStatus = 'granted';
+        // Simulated boundary check: Accept if lat/lon have at least non-zero values
+        const within = Math.abs(coords.latitude) > 0 && Math.abs(coords.longitude) > 0;
+        if (!within) return false;
+        return true;
+    } catch (e) {
+        state.locationPermissionStatus = 'denied';
+        throw new Error('Location not available');
+    }
+}
+
+async function startFacialVerification() {
+    state.scanState = 'face_required';
+    showStatus('loading', 'Switching to front camera...');
+    // Stop rear stream
+    stopStream(state.qrStream);
+    // Show face overlay and start front camera
+    els.faceOverlay.classList.remove('d-none');
+    try {
+        state.faceStream = await getCameraStream('user');
+        els.faceVideo.srcObject = state.faceStream;
+        await els.faceVideo.play();
+        hideStatus();
+        // Simulate readiness after 1500ms
+        setTimeout(() => {
+            els.captureFaceBtn.disabled = false;
+        }, 1500);
+    } catch (e) {
+        console.error('Front camera error', e);
+        showStatus('error', 'Unable to access front camera for verification.', true);
+    }
+}
+
+function captureFaceImage() {
+    const canvas = document.createElement('canvas');
+    canvas.width = els.faceVideo.videoWidth;
+    canvas.height = els.faceVideo.videoHeight;
+    canvas.getContext('2d').drawImage(els.faceVideo, 0, 0);
+    return canvas.toDataURL('image/jpeg', 0.85);
+}
+
+async function finalizeAttendance({
+    method,
+    face
+}) {
+    state.scanState = 'submitting';
+    showStatus('loading', 'Submitting attendance...');
+    // Simulate API call
+    await new Promise(r => setTimeout(r, 800));
+    hideStatus();
+    state.successMessage = 'Attendance marked successfully!';
+    Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        html: `<div class="text-start">` +
+            `<div><strong>Method:</strong> ${method}${face ? '+Face' : ''}</div>` +
+            `<div class="mt-1"><strong>Session:</strong> ${sanitize(state.lastQRContent).slice(0,64)}</div>` +
+            `</div>`,
+        confirmButtonText: 'View Attendance History',
+        showCancelButton: true,
+        cancelButtonText: 'Scan Another',
+        confirmButtonColor: getComputedStyle(document.documentElement).getPropertyValue('--color-success') || '#198754'
+    }).then((res) => {
+        if (res.isConfirmed) {
+            window.location.href = './attendance_history.html';
+        } else {
+            resetToQRScan();
+        }
+    });
+}
+
+function sanitize(str) {
+    return String(str).replace(/[<>]/g, '');
+}
+
+function resetToQRScan() {
+    // hide face overlay, stop face stream, restart rear scanner
+    els.faceOverlay.classList.add('d-none');
+    els.captureFaceBtn.disabled = true;
+    stopStream(state.faceStream);
+    state.faceStream = null;
+    state.useFrontCamera = false;
+    initQRScanner();
+}
+
+// Event Listeners
+els.retryBtn.addEventListener('click', () => {
+    hideStatus();
+    if (state.scanState === 'face_required') {
+        startFacialVerification();
+    } else {
+        resetToQRScan();
+    }
+});
+
+els.switchCameraBtn.addEventListener('click', async () => {
+    try {
+        // Toggle between environment and user
+        state.useFrontCamera = !state.useFrontCamera;
+        stopStream(state.qrStream);
+        showStatus('loading', 'Switching camera...');
+        state.qrStream = await getCameraStream(state.useFrontCamera ? 'user' : 'environment');
+        els.qrVideo.srcObject = state.qrStream;
+        await els.qrVideo.play();
+        setupTorchControl(state.qrStream);
+        beginQRProcessing();
+    } catch (e) {
+        console.error('Switch camera failed', e);
+        showStatus('error', 'Unable to switch camera', true);
+    }
+});
+
+els.captureFaceBtn.addEventListener('click', async () => {
+    try {
+        els.captureFaceBtn.disabled = true;
+        showStatus('loading', 'Verifying...');
+        const faceData = captureFaceImage();
+        // Simulate verification API
+        await new Promise(r => setTimeout(r, 1200));
+        hideStatus();
+        await finalizeAttendance({
+            method: 'QR+GPS',
+            face: true
+        });
+    } catch (e) {
+        console.error('Face verify error', e);
+        showStatus('error', 'Face verification failed. Please retry.', true);
+        els.captureFaceBtn.disabled = false;
+    }
+});
+
+els.cancelFaceBtn.addEventListener('click', () => {
+    // Return to QR scanning
+    resetToQRScan();
+});
+
+// Simple table filter and sorting
+els.logFilter.addEventListener('input', () => {
+    const q = els.logFilter.value.toLowerCase();
+    els.attemptsTable.querySelectorAll('tbody tr').forEach(tr => {
+        const text = tr.innerText.toLowerCase();
+        tr.style.display = text.includes(q) ? '' : 'none';
+    });
+});
+
+els.attemptsTable.querySelectorAll('thead th[role="button"]').forEach(th => {
+    th.addEventListener('click', () => {
+        const key = th.getAttribute('data-sort');
+        const rows = Array.from(els.attemptsTable.tBodies[0].rows).filter(r => r.style.display !== 'none');
+        const asc = !th.classList.contains('sorted-asc');
+        els.attemptsTable.querySelectorAll('thead th').forEach(h => h.classList.remove('sorted-asc', 'sorted-desc'));
+        th.classList.add(asc ? 'sorted-asc' : 'sorted-desc');
+        rows.sort((a, b) => {
+            let av, bv;
+            if (key === 'datetime') {
+                av = new Date(a.cells[0].getAttribute('data-datetime')).getTime();
+                bv = new Date(b.cells[0].getAttribute('data-datetime')).getTime();
+            } else if (key === 'course') {
+                av = (a.cells[1].getAttribute('data-course') || a.cells[1].innerText).toLowerCase();
+                bv = (b.cells[1].getAttribute('data-course') || b.cells[1].innerText).toLowerCase();
+            } else if (key === 'result') {
+                av = (a.cells[3].getAttribute('data-result') || a.cells[3].innerText).toLowerCase();
+                bv = (b.cells[3].getAttribute('data-result') || b.cells[3].innerText).toLowerCase();
+            }
+            if (av < bv) return asc ? -1 : 1;
+            if (av > bv) return asc ? 1 : -1;
+            return 0;
+        });
+        rows.forEach(r => els.attemptsTable.tBodies[0].appendChild(r));
+    });
+});
+
+// Row detail modal
+document.querySelectorAll('.view-row').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        const tr = e.currentTarget.closest('tr');
+        const when = tr.cells[0].innerText;
+        const course = tr.cells[1].innerText;
+        const session = tr.cells[2].innerText;
+        const result = tr.cells[3].innerText.trim();
+        const location = tr.cells[4].innerText;
+        Swal.fire({
+            title: 'Attempt Details',
+            html: `<div class="text-start">` +
+                `<div><strong>When:</strong> ${when}</div>` +
+                `<div><strong>Course:</strong> ${course}</div>` +
+                `<div><strong>Session Code:</strong> ${session}</div>` +
+                `<div><strong>Result:</strong> ${result}</div>` +
+                `<div><strong>Location:</strong> ${location}</div>` +
+                `</div>`
+        });
+    });
+});
+
+// Start on load
+window.addEventListener('DOMContentLoaded', initQRScanner);
+window.addEventListener('pagehide', () => {
+    stopStream(state.qrStream);
+    stopStream(state.faceStream);
+});
+  </script>
+ </body>
+</html>
