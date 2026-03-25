@@ -6,8 +6,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 # Get DB URL from environment, default to SQLite for local testing
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./attendance.db")
-
+DATABASE_URL = "postgresql://neondb_owner:npg_BC1xWYptXrc5@ep-frosty-pond-a4jh189q-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require"
 # Render provides 'postgres://' but SQLAlchemy 1.4+ requires 'postgresql://'
 if DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
