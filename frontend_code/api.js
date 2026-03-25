@@ -9,7 +9,7 @@ const API = (() => {
   const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
   
   // Replace this with your actual Render backend URL once deployed!
-  const LIVE_BACKEND_URL = "https://smart-attendance-api.onrender.com/api"; 
+ const LIVE_BACKEND_URL = "https://smart-attendance-api-2dol.onrender.com/api";
   
   const BASE_URL = isLocal ? "http://localhost:8000/api" : LIVE_BACKEND_URL;
 
