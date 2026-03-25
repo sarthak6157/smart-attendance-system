@@ -8,3 +8,5 @@ pillow==10.3.0
 pydantic[email]==2.7.1
 pandas
 openpyxl
+wheel
+Pillow>=10.2.0
