@@ -58,3 +58,423 @@
          Sign in to monitor attendance and manage sessions
         </p>
        </header>
+       <div aria-live="polite" class="alert alert-danger d-none" id="formAlert" role="alert">
+       </div>
+       <form class="sign-in-form" id="loginForm" novalidate="">
+        <div class="mb-3">
+         <label class="form-label" for="credential">
+          Email or Student/Faculty ID
+         </label>
+         <input autocomplete="username" class="form-control" id="credential" name="credential" placeholder="Enter your ID or email" required="" type="text"/>
+         <div class="invalid-feedback">
+          Please enter your ID or email.
+         </div>
+        </div>
+        <div class="mb-2">
+         <div class="d-flex justify-content-between align-items-center">
+          <label class="form-label mb-0" for="password">
+           Password
+          </label>
+         </div>
+         <div class="input-group">
+          <input aria-describedby="togglePassword" autocomplete="current-password" class="form-control" id="password" name="password" placeholder="Enter your password" required="" type="password"/>
+          <button aria-label="Toggle password visibility" class="btn btn-light toggle-visibility-icon" data-bs-placement="top" data-bs-toggle="tooltip" id="togglePassword" title="Show/Hide Password" type="button">
+           <i class="fa-regular fa-eye" id="toggleIcon">
+           </i>
+          </button>
+          <div class="invalid-feedback">
+           Password is required.
+          </div>
+         </div>
+        </div>
+        <div class="d-flex justify-content-between align-items-center mt-2 mb-3">
+         <button class="btn btn-link p-0" id="forgotPassword" type="button">
+          Forgot Password?
+         </button>
+        </div>
+        <div class="d-grid mb-2">
+         <button class="btn btn-primary" id="loginButton" type="submit">
+          <span aria-hidden="true" class="spinner-border spinner-border-sm me-2 d-none" id="loginSpinner" role="status">
+          </span>
+          <span id="loginBtnText">
+           Login
+          </span>
+         </button>
+        </div>
+        <div class="text-center mt-2">
+         <small class="text-muted">
+          Don't have an account?
+          <a href="./registration_page.html">
+           Register
+          </a>
+         </small>
+        </div>
+       </form>
+      </section>
+      <section class="card mt-4">
+       <div class="card-header">
+        <div class="d-flex align-items-center gap-2">
+         <i class="fa-solid fa-flask text-warning">
+         </i>
+         <span class="widget-title">
+          Test Login Accounts
+         </span>
+        </div>
+       </div>
+       <div class="card-body">
+        <p class="text-muted mb-3">
+         Ensure these accounts exist in your backend database to test role-based redirects.
+        </p>
+        <div class="table-responsive">
+         <table class="table table-theme align-middle mb-0">
+          <thead>
+           <tr>
+            <th>
+             Username
+            </th>
+            <th>
+             Password
+            </th>
+            <th>
+             Role / State
+            </th>
+            <th>
+             Redirects To
+            </th>
+           </tr>
+          </thead>
+          <tbody>
+           <tr>
+            <td>
+             <code>
+              student1
+             </code>
+            </td>
+            <td>
+             <code>
+              Pass@123
+             </code>
+            </td>
+            <td>
+             Student
+            </td>
+            <td>
+             <span class="badge-soft info">
+              student_dashboard.html
+             </span>
+            </td>
+           </tr>
+           <tr>
+            <td>
+             <code>
+              faculty1
+             </code>
+            </td>
+            <td>
+             <code>
+              Pass@123
+             </code>
+            </td>
+            <td>
+             Faculty
+            </td>
+            <td>
+             <span class="badge-soft info">
+              faculty_dashboard.html
+             </span>
+            </td>
+           </tr>
+           <tr>
+            <td>
+             <code>
+              admin1
+             </code>
+            </td>
+            <td>
+             <code>
+              Pass@123
+             </code>
+            </td>
+            <td>
+             Administrator
+            </td>
+            <td>
+             <span class="badge-soft info">
+              admin_dashboard.html
+             </span>
+            </td>
+           </tr>
+           <tr>
+            <td>
+             <code>
+              pending_user
+             </code>
+            </td>
+            <td>
+             <code>
+              Pass@123
+             </code>
+            </td>
+            <td>
+             Student - Pending Approval
+            </td>
+            <td>
+             <span class="badge-soft warning">
+              pending_approval.html
+             </span>
+            </td>
+           </tr>
+           <tr>
+            <td>
+             <code>
+              facial_user
+             </code>
+            </td>
+            <td>
+             <code>
+              Pass@123
+             </code>
+            </td>
+            <td>
+             Student - Facial Registration Required
+            </td>
+            <td>
+             <span class="badge-soft secondary">
+              facial_registration.html
+             </span>
+            </td>
+           </tr>
+           <tr>
+            <td>
+             <code>
+              scanner_user
+             </code>
+            </td>
+            <td>
+             <code>
+              Pass@123
+             </code>
+            </td>
+            <td>
+             Scanner Operator
+            </td>
+            <td>
+             <span class="badge-soft success">
+              scan_page.html
+             </span>
+            </td>
+           </tr>
+          </tbody>
+         </table>
+        </div>
+        <small class="text-muted d-block mt-2">
+         Tip: Emails like
+         <code>
+          student1@univ.edu
+         </code>
+         also work (same username and password).
+        </small>
+       </div>
+      </section>
+     </div>
+    </div>
+   </div>
+  </main>
+  <footer class="mt-auto py-3 border-top" style="background:#fff;">
+   <div class="container d-flex flex-wrap justify-content-between align-items-center">
+    <span class="text-muted">
+     ©
+     <span id="year-auth">
+      2025
+     </span>
+     Hybrid Attendance
+    </span>
+    <ul class="nav">
+     <li class="nav-item">
+      <a class="nav-link px-2 text-muted" href="#" id="termsLink">
+       Terms
+      </a>
+     </li>
+     <li class="nav-item">
+      <a class="nav-link px-2 text-muted" href="#" id="privacyLink">
+       Privacy
+      </a>
+     </li>
+    </ul>
+   </div>
+  </footer>
+  <script>
+   document.getElementById('year-auth').textContent = new Date().getFullYear();
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11">
+  </script>
+
+  <script src="api.js"></script>
+
+  <script>
+   // Initialize tooltips
+const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+tooltipTriggerList.map(function(tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl)
+})
+
+const form = document.getElementById('loginForm');
+const credentialEl = document.getElementById('credential');
+const passwordEl = document.getElementById('password');
+const formAlert = document.getElementById('formAlert');
+const loginButton = document.getElementById('loginButton');
+const loginSpinner = document.getElementById('loginSpinner');
+const loginBtnText = document.getElementById('loginBtnText');
+
+// Password toggle
+const togglePasswordBtn = document.getElementById('togglePassword');
+const toggleIcon = document.getElementById('toggleIcon');
+togglePasswordBtn.addEventListener('click', () => {
+    const isText = passwordEl.getAttribute('type') === 'text';
+    passwordEl.setAttribute('type', isText ? 'password' : 'text');
+    toggleIcon.classList.toggle('fa-eye');
+    toggleIcon.classList.toggle('fa-eye-slash');
+});
+
+// Forgot password (Wired to Backend API)
+document.getElementById('forgotPassword').addEventListener('click', async () => {
+    const { value: email } = await Swal.fire({
+        title: 'Reset Password',
+        input: 'email',
+        inputLabel: 'Enter your registered email',
+        inputPlaceholder: 'name@university.edu',
+        confirmButtonText: 'Send Reset Link',
+        showCancelButton: true,
+        confirmButtonColor: '#f08e1b'
+    });
+    
+    if (email) {
+        try {
+            await API.auth.forgotPassword(email);
+            Swal.fire({
+                icon: 'success',
+                title: 'Email Sent',
+                text: 'If that email is registered, a reset link has been sent.',
+                timer: 2200,
+                showConfirmButton: false
+            });
+        } catch (err) {
+            Swal.fire('Error', err.message, 'error');
+        }
+    }
+});
+
+// Footer links (Terms/Privacy) mock
+document.getElementById('termsLink').addEventListener('click', (e) => {
+    e.preventDefault();
+    Swal.fire({
+        title: 'Terms of Service',
+        html: '<p class="text-start">These are placeholder terms for the demo environment.</p>',
+        icon: 'info',
+        confirmButtonColor: '#f08e1b'
+    });
+});
+document.getElementById('privacyLink').addEventListener('click', (e) => {
+    e.preventDefault();
+    Swal.fire({
+        title: 'Privacy Policy',
+        html: '<p class="text-start">This demo does not store real personal data.</p>',
+        icon: 'info',
+        confirmButtonColor: '#f08e1b'
+    });
+});
+
+// Form submission (Wired to Backend API)
+form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    // Reset alerts
+    formAlert.classList.add('d-none');
+    credentialEl.classList.remove('is-invalid');
+    passwordEl.classList.remove('is-invalid');
+
+    const credential = credentialEl.value.trim();
+    const password = passwordEl.value;
+
+    let valid = true;
+    if (!credential) {
+        credentialEl.classList.add('is-invalid');
+        valid = false;
+    }
+    if (!password) {
+        passwordEl.classList.add('is-invalid');
+        valid = false;
+    }
+    if (!valid) {
+        formAlert.textContent = 'Please fill in all required fields.';
+        formAlert.classList.remove('d-none');
+        return;
+    }
+
+    setLoading(true);
+
+    try {
+        // Call the backend via api.js
+        const result = await API.auth.login(credential, password);
+        
+        Swal.fire({
+            icon: 'success',
+            title: `Welcome, ${result.user.full_name}`,
+            text: 'Redirecting to your dashboard...',
+            showConfirmButton: false,
+            timer: 1200
+        });
+
+        // Route based on role from the database
+        setTimeout(() => {
+            const role = result.user.role;
+            const status = result.user.status;
+
+            if (status === 'pending') {
+                window.location.href = './pending_approval.html';
+            } else if (status === 'facial_required') {
+                window.location.href = './facial_registration.html';
+            } else if (role === 'admin') {
+                window.location.href = './admin_dashboard.html';
+            } else if (role === 'faculty') {
+                window.location.href = './faculty_dashboard.html';
+            } else if (role === 'student') {
+                window.location.href = './student_dashboard.html';
+            } else {
+                window.location.href = './scan_page.html'; // Default for scanners
+            }
+        }, 1100);
+
+    } catch (err) {
+        formAlert.textContent = err.message || 'Invalid credentials. Please check your username and password.';
+        formAlert.classList.remove('d-none');
+        Swal.fire({
+            icon: 'error',
+            title: 'Authentication Failed',
+            text: err.message || 'Invalid username or password.'
+        });
+    } finally {
+        setLoading(false);
+    }
+});
+
+function setLoading(isLoading) {
+    if (isLoading) {
+        loginSpinner.classList.remove('d-none');
+        loginBtnText.textContent = 'Signing in...';
+        loginButton.setAttribute('disabled', 'disabled');
+        credentialEl.setAttribute('disabled', 'disabled');
+        passwordEl.setAttribute('disabled', 'disabled');
+    } else {
+        loginSpinner.classList.add('d-none');
+        loginBtnText.textContent = 'Login';
+        loginButton.removeAttribute('disabled');
+        credentialEl.removeAttribute('disabled');
+        passwordEl.removeAttribute('disabled');
+    }
+}
+  </script>
+ </body>
+</html>
