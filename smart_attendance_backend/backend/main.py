@@ -4,11 +4,11 @@ Smart Attendance System – FastAPI Backend
 Run:  uvicorn main:app --reload --port 8000
 """
 
-import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
-# 1. NEW: Import the seed script
+# 1. Import the seed script to enable auto-sync
 import seed 
 
 from db.database import Base, engine
@@ -24,19 +24,17 @@ app = FastAPI(
     description="Hybrid (QR + Facial Recognition) Attendance Management System",
 )
 
-# 4. NEW: Auto-Seed Task on Startup
+# 4. Auto-Seed Task on Startup
+# This triggers the seed.py logic (including your 187 students) whenever the server boots.
 @app.on_event("startup")
 async def startup_event():
-    """
-    Automatically populates the database with admin1, faculty1, 
-    and demo data when the server starts.
-    """
-    print("🚀 Server starting: Running database seed...")
+    print("🚀 App starting: Running database synchronization...")
     try:
-        seed.main()
-        print("✅ Database seeding completed successfully.")
+        # Calls the main() function in your seed.py file
+        seed.main() 
+        print("✅ Database is ready and synchronized with CSV data.")
     except Exception as e:
-        print(f"❌ Seed failed: {e}")
+        print(f"❌ Auto-seed failed: {e}")
 
 # 5. Configure CORS
 origins = [
