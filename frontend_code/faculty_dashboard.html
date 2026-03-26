@@ -63,8 +63,8 @@
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            const username = document.getElementById('username').value.trim();
-            const password = document.getElementById('password').value;
+            const usernameInput = document.getElementById('username').value.trim();
+            const passwordInput = document.getElementById('password').value;
 
             // UI: Show Loading State
             loginBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Authenticating...';
@@ -76,7 +76,7 @@
                     throw new Error("Configuration Error: LIVE_BACKEND_URL is not defined in api.js");
                 }
 
-                // Sending as JSON to match Pydantic model requirements in the backend
+                // Sending as JSON to match Pydantic model (LoginRequest) in schemas.py
                 const response = await fetch(`${LIVE_BACKEND_URL}/auth/login`, {
                     method: 'POST',
                     headers: { 
@@ -84,35 +84,40 @@
                         'Accept': 'application/json'
                     },
                     body: JSON.stringify({ 
-                        username: username, 
-                        password: password 
+                        // credential matches the field name in schemas.py
+                        credential: usernameInput, 
+                        password: passwordInput 
                     })
                 });
 
                 const data = await response.json();
 
                 if (response.ok) {
-                    // 1. Save Session Data
+                    // Save Session Data from TokenResponse
                     localStorage.setItem('token', data.access_token);
-                    localStorage.setItem('user_role', data.role);
-                    localStorage.setItem('user_name', data.full_name);
-                    localStorage.setItem('user_id', data.id);
+                    localStorage.setItem('user_role', data.user.role);
+                    localStorage.setItem('user_name', data.user.full_name);
+                    localStorage.setItem('user_id', data.user.id);
 
-                    // 2. Show Success Alert
+                    // Show Success Alert
                     Swal.fire({
                         icon: 'success',
                         title: 'Welcome!',
-                        text: `Hello, ${data.full_name}`,
+                        text: `Hello, ${data.user.full_name}`,
                         timer: 1500,
                         showConfirmButton: false
                     }).then(() => {
-                        // 3. Redirection Logic based on user role and status
-                        if (data.role === 'admin') {
+                        // Redirection Logic based on UserRole and UserStatus
+                        const role = data.user.role;
+                        const status = data.user.status;
+
+                        if (role === 'admin') {
                             window.location.href = 'admin_dashboard.html';
-                        } else if (data.role === 'faculty') {
+                        } else if (role === 'faculty') {
                             window.location.href = 'faculty_dashboard.html';
-                        } else if (data.role === 'student') {
-                            if (data.status === 'facial_required') {
+                        } else if (role === 'student') {
+                            // If student hasn't registered face yet, move to facial registration
+                            if (status === 'facial_required') {
                                 window.location.href = 'facial_registration.html';
                             } else {
                                 window.location.href = 'student_dashboard.html';
@@ -120,10 +125,10 @@
                         }
                     });
                 } else {
-                    // Correctly parse detailed validation errors to display text instead of [object Object]
+                    // Handle server-side validation errors or invalid credentials
                     const errorDetail = data.detail && typeof data.detail === 'object' 
                         ? JSON.stringify(data.detail) 
-                        : (data.detail || 'Invalid Username or Password');
+                        : (data.detail || 'Invalid Credentials');
                     throw new Error(errorDetail);
                 }
             } catch (error) {
@@ -133,7 +138,7 @@
                     title: 'Login Failed',
                     text: error.message || 'Connection to server failed.'
                 });
-                // UI: Reset button state
+                // Reset button state
                 loginBtn.innerHTML = 'Login <i class="fas fa-sign-in-alt ms-2"></i>';
                 loginBtn.disabled = false;
             }
