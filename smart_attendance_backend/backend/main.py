@@ -11,7 +11,7 @@ origins = [
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins, # This specifically trusts your portal
+    allow_origins=["https://smart-attendance-portal.onrender.com"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
