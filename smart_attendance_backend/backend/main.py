@@ -21,14 +21,22 @@ app = FastAPI(
     description="Hybrid (QR + Facial Recognition) Attendance Management System",
 )
 
-# 3. Configure CORS - This must come AFTER app is defined
+# 3. Configure CORS - Make sure to include both versions (with and without a slash)
 origins = [
     "https://smart-attendance-portal.onrender.com",
+    "https://smart-attendance-portal.onrender.com/", # Added trailing slash just in case
     "http://localhost:3000",
     "http://localhost:5173",
-    "http://127.0.0.1:5500", # Common for Live Server
+    "http://127.0.0.1:5500",
 ]
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins, 
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins, 
