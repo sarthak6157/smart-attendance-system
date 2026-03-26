@@ -128,3 +128,39 @@ def forgot_password(payload: PasswordResetRequest, db: Session = Depends(get_db)
     user = db.query(User).filter(User.email == payload.email).first()
     # Always return 200 to avoid email enumeration
     return {"message": "If that email is registered, a reset link has been sent."}
+# TEMPORARY: Manual seed trigger for Free Tier users
+@router.get("/manual-db-setup-secret-777")
+def manual_db_setup(db: Session = Depends(get_db)):
+    from models.models import User, UserRole, UserStatus
+    
+    # Check if admin already exists to prevent duplicates
+    existing_admin = db.query(User).filter(User.inst_id == "admin1").first()
+    if existing_admin:
+        return {"message": "Database already has admin1. No action taken."}
+
+    # Create the Admin account
+    admin = User(
+        full_name="System Admin",
+        inst_id="admin1",
+        email="admin@smartattendance.com",
+        role=UserRole.admin,
+        status=UserStatus.active,
+        hashed_password=hash_password("Pass@123"),
+        department="Administration"
+    )
+    
+    # Create a Faculty account
+    faculty = User(
+        full_name="Prof. Test Faculty",
+        inst_id="faculty1",
+        email="faculty@smartattendance.com",
+        role=UserRole.faculty,
+        status=UserStatus.active,
+        hashed_password=hash_password("Pass@123"),
+        department="Computer Science"
+    )
+
+    db.add(admin)
+    db.add(faculty)
+    db.commit()
+    return {"status": "success", "message": "Admin1 and Faculty1 created. You can now login."}
