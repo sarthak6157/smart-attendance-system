@@ -81,4 +81,14 @@ def seed_users():
         db.rollback()
         print(f"❌ User seeding failed: {e}")
 
-    return {u.inst_id:
+    return {u.inst_id: u for u in users_list}
+
+def main():
+    print("\n🌱 Starting Database Synchronization...\n")
+    clear()
+    seed_users()
+    db.close()
+    print("\n✅ Synchronization Complete.")
+
+if __name__ == "__main__":
+    main()
