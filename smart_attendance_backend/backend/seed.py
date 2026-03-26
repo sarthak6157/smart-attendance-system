@@ -1,16 +1,11 @@
 """
-Seed the database with demo data matching the frontend test accounts.
-
-Run:
-    python seed.py
-
-Creates all tables and inserts demo users, courses, sessions, and
-attendance records so the dashboards have data to display on first launch.
+Seed the database with data from CSV and demo records.
 """
 
 from datetime import datetime, timedelta
 import sys
 import os
+import csv
 
 # Make sure we can import the app modules
 sys.path.insert(0, os.path.dirname(__file__))
@@ -41,100 +36,57 @@ def clear():
 
 
 def seed_users():
-    users = [
-        # --- Students ---
-        User(
-            full_name="Alice Johnson",
-            inst_id="student1",
-            email="student1@univ.edu",
-            role=UserRole.student,
-            status=UserStatus.active,
-            hashed_password=hash_password("Pass@123"),
-            department="Computer Science",
-        ),
-        User(
-            full_name="Bob Williams",
-            inst_id="student2",
-            email="student2@univ.edu",
-            role=UserRole.student,
-            status=UserStatus.active,
-            hashed_password=hash_password("Pass@123"),
-            department="Electrical Engineering",
-        ),
-        User(
-            full_name="Carol Davis",
-            inst_id="student3",
-            email="student3@univ.edu",
-            role=UserRole.student,
-            status=UserStatus.active,
-            hashed_password=hash_password("Pass@123"),
-            department="Computer Science",
-        ),
-        # Pending approval user
-        User(
-            full_name="David Pending",
-            inst_id="pending_user",
-            email="pending_user@univ.edu",
-            role=UserRole.student,
-            status=UserStatus.pending,
-            hashed_password=hash_password("Pass@123"),
-            department="Mathematics",
-        ),
-        # Facial registration required
-        User(
-            full_name="Eve Facial",
-            inst_id="facial_user",
-            email="facial_user@univ.edu",
-            role=UserRole.student,
-            status=UserStatus.facial_required,
-            hashed_password=hash_password("Pass@123"),
-            department="Physics",
-        ),
-        # --- Faculty ---
-        User(
-            full_name="Prof. Frank Miller",
-            inst_id="faculty1",
-            email="faculty1@univ.edu",
-            role=UserRole.faculty,
-            status=UserStatus.active,
-            hashed_password=hash_password("Pass@123"),
-            department="Computer Science",
-        ),
-        User(
-            full_name="Dr. Grace Lee",
-            inst_id="faculty2",
-            email="faculty2@univ.edu",
-            role=UserRole.faculty,
-            status=UserStatus.active,
-            hashed_password=hash_password("Pass@123"),
-            department="Electrical Engineering",
-        ),
-        # --- Admin ---
-        User(
-            full_name="Admin User",
-            inst_id="admin1",
-            email="admin1@univ.edu",
-            role=UserRole.admin,
-            status=UserStatus.active,
-            hashed_password=hash_password("Pass@123"),
-            department="Administration",
-        ),
-        # --- Scanner operator ---
-        User(
-            full_name="Scanner Operator",
-            inst_id="scanner_user",
-            email="scanner_user@univ.edu",
-            role=UserRole.scanner,
-            status=UserStatus.active,
-            hashed_password=hash_password("Pass@123"),
-            department="Administration",
-        ),
-    ]
-    for u in users:
+    users_list = []
+    
+    # 1. Add Default Admin and Faculty
+    users_list.append(User(
+        full_name="Admin User",
+        inst_id="admin1",
+        email="admin@smartattendance.com",
+        role=UserRole.admin,
+        status=UserStatus.active,
+        hashed_password=hash_password("Pass@123"),
+        department="Administration",
+    ))
+    
+    users_list.append(User(
+        full_name="Prof. Frank Miller",
+        inst_id="faculty1",
+        email="faculty1@univ.edu",
+        role=UserRole.faculty,
+        status=UserStatus.active,
+        hashed_password=hash_password("Pass@123"),
+        department="Computer Science",
+    ))
+
+    # 2. Import Students from CSV
+    csv_filename = "Student List with enrollment No. Session 2025-26.xlsx - Sheet2.csv"
+    if os.path.exists(csv_filename):
+        print(f"--> Found {csv_filename}: Importing students...")
+        with open(csv_filename, mode='r', encoding='utf-8') as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                # Password logic: password + last 3 digits of mobile
+                mobile = str(row.get('Mobile Number', '')).strip()
+                last_three = mobile[-3:] if len(mobile) >= 3 else "000"
+                
+                users_list.append(User(
+                    full_name=row.get('Student Name', 'Unknown').strip(),
+                    inst_id=row.get('Enrollment ID', '').strip(),
+                    email=row.get('Email', '').strip() or f"{row.get('Enrollment ID')}@temp.com",
+                    role=UserRole.student,
+                    status=UserStatus.facial_required,
+                    hashed_password=hash_password(f"password{last_three}"),
+                    department=row.get('Department', 'General').strip()
+                ))
+    else:
+        print(f"--> WARNING: {csv_filename} not found. Only default users created.")
+
+    for u in users_list:
         db.add(u)
     db.commit()
-    print(f"  Seeded {len(users)} users.")
-    return {u.inst_id: u for u in users}
+    print(f"  Successfully seeded {len(users_list)} users.")
+    return {u.inst_id: u for u in users_list}
 
 
 def seed_courses():
@@ -153,63 +105,15 @@ def seed_courses():
 
 
 def seed_sessions(users: dict, courses: dict):
-    faculty1 = users["faculty1"]
-    faculty2 = users["faculty2"]
-    cs101    = courses["CS101"]
-    cs202    = courses["CS202"]
-    ee101    = courses["EE101"]
-    cs301    = courses["CS301"]
+    # Check if faculty1 exists (required for sessions)
+    faculty1 = users.get("faculty1")
+    if not faculty1:
+        return []
 
+    cs101 = courses["CS101"]
     now = datetime.utcnow()
 
     sessions = [
-        # Past closed sessions
-        Session(
-            course_id=cs101.id, faculty_id=faculty1.id,
-            title="CS101 – Week 1 Lecture",
-            location="Room A-101", status=SessionStatus.closed,
-            scheduled_at=now - timedelta(days=14),
-            started_at=now - timedelta(days=14),
-            ended_at=now - timedelta(days=14, hours=-2),
-            grace_minutes=15,
-        ),
-        Session(
-            course_id=cs101.id, faculty_id=faculty1.id,
-            title="CS101 – Week 2 Lecture",
-            location="Room A-101", status=SessionStatus.closed,
-            scheduled_at=now - timedelta(days=7),
-            started_at=now - timedelta(days=7),
-            ended_at=now - timedelta(days=7, hours=-2),
-            grace_minutes=15,
-        ),
-        Session(
-            course_id=cs202.id, faculty_id=faculty1.id,
-            title="CS202 – Sorting Algorithms",
-            location="Room B-203", status=SessionStatus.closed,
-            scheduled_at=now - timedelta(days=10),
-            started_at=now - timedelta(days=10),
-            ended_at=now - timedelta(days=10, hours=-1.5),
-            grace_minutes=10,
-        ),
-        Session(
-            course_id=ee101.id, faculty_id=faculty2.id,
-            title="EE101 – Ohm's Law Lab",
-            location="Lab 1", status=SessionStatus.closed,
-            scheduled_at=now - timedelta(days=5),
-            started_at=now - timedelta(days=5),
-            ended_at=now - timedelta(days=5, hours=-3),
-            grace_minutes=20,
-        ),
-        Session(
-            course_id=cs301.id, faculty_id=faculty1.id,
-            title="CS301 – SQL Joins",
-            location="Room C-102", status=SessionStatus.closed,
-            scheduled_at=now - timedelta(days=3),
-            started_at=now - timedelta(days=3),
-            ended_at=now - timedelta(days=3, hours=-1.5),
-            grace_minutes=15,
-        ),
-        # Currently active session
         Session(
             course_id=cs101.id, faculty_id=faculty1.id,
             title="CS101 – Week 3 (Live)",
@@ -218,15 +122,7 @@ def seed_sessions(users: dict, courses: dict):
             started_at=now - timedelta(minutes=20),
             grace_minutes=15,
             qr_token="DEMO_QR_TOKEN_LIVE_SESSION",
-        ),
-        # Upcoming scheduled session
-        Session(
-            course_id=cs202.id, faculty_id=faculty1.id,
-            title="CS202 – Graph Algorithms",
-            location="Room B-203", status=SessionStatus.scheduled,
-            scheduled_at=now + timedelta(days=1),
-            grace_minutes=10,
-        ),
+        )
     ]
 
     for s in sessions:
@@ -236,76 +132,14 @@ def seed_sessions(users: dict, courses: dict):
     return sessions
 
 
-def seed_attendance(users: dict, sessions: list):
-    student1 = users["student1"]
-    student2 = users["student2"]
-    student3 = users["student3"]
-
-    closed = [s for s in sessions if s.status == SessionStatus.closed]
-
-    records = []
-    for i, session in enumerate(closed):
-        # student1 – perfect attendance
-        records.append(AttendanceRecord(
-            session_id=session.id, student_id=student1.id,
-            method=AttendanceMethod.qr, status=AttendanceStatus.present,
-            marked_at=session.started_at + timedelta(minutes=5),
-        ))
-        # student2 – occasionally late or absent
-        if i % 3 == 2:
-            records.append(AttendanceRecord(
-                session_id=session.id, student_id=student2.id,
-                method=AttendanceMethod.manual, status=AttendanceStatus.absent,
-                notes="Did not show up",
-            ))
-        elif i % 3 == 1:
-            records.append(AttendanceRecord(
-                session_id=session.id, student_id=student2.id,
-                method=AttendanceMethod.facial, status=AttendanceStatus.late,
-                marked_at=session.started_at + timedelta(minutes=25),
-            ))
-        else:
-            records.append(AttendanceRecord(
-                session_id=session.id, student_id=student2.id,
-                method=AttendanceMethod.qr, status=AttendanceStatus.present,
-                marked_at=session.started_at + timedelta(minutes=3),
-            ))
-        # student3 – good attendance, one absence
-        if i == 1:
-            pass  # absent (no record)
-        else:
-            records.append(AttendanceRecord(
-                session_id=session.id, student_id=student3.id,
-                method=AttendanceMethod.qr, status=AttendanceStatus.present,
-                marked_at=session.started_at + timedelta(minutes=8),
-            ))
-
-    for r in records:
-        db.add(r)
-    db.commit()
-    print(f"  Seeded {len(records)} attendance records.")
-
-
 def main():
-    print("\n🌱 Seeding Smart Attendance database…\n")
+    print("\n🌱 Auto-Synchronizing Smart Attendance database…\n")
     clear()
-    print("Seeding users…")
     users = seed_users()
-    print("Seeding courses…")
     courses = seed_courses()
-    print("Seeding sessions…")
-    sessions = seed_sessions(users, courses)
-    print("Seeding attendance records…")
-    seed_attendance(users, sessions)
+    seed_sessions(users, courses)
     db.close()
-    print("\n✅ Done! You can now start the server:\n")
-    print("   uvicorn main:app --reload --port 8000\n")
-    print("   Swagger docs → http://localhost:8000/docs\n")
-    print("Demo login credentials:")
-    print("   student1 / Pass@123    → Student dashboard")
-    print("   faculty1 / Pass@123    → Faculty dashboard")
-    print("   admin1   / Pass@123    → Admin dashboard")
-    print("   scanner_user / Pass@123 → Scan page\n")
+    print("\n✅ Synchronization Complete.")
 
 
 if __name__ == "__main__":
