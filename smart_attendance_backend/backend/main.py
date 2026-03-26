@@ -6,11 +6,12 @@ import seed
 from db.database import Base, engine
 from routers import auth, users, sessions, attendance, reports, biometrics, courses
 
-# Create tables
+# 1. Create database tables
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Smart Attendance System API", version="1.0.0")
 
+# 2. Auto-Sync Logic on Startup
 @app.on_event("startup")
 async def startup_event():
     print("🚀 App starting: Running database synchronization...")
@@ -20,6 +21,7 @@ async def startup_event():
     except Exception as e:
         print(f"❌ Seed failed: {e}")
 
+# 3. Configure CORS
 origins = [
     "https://smart-attendance-portal.onrender.com",
     "https://smart-attendance-portal.onrender.com/",
@@ -36,6 +38,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# 4. Register all routers (CRITICAL FOR FRONTEND)
 app.include_router(auth.router,       prefix="/api/auth",       tags=["Auth"])
 app.include_router(users.router,      prefix="/api/users",      tags=["Users"])
 app.include_router(sessions.router,   prefix="/api/sessions",   tags=["Sessions"])
