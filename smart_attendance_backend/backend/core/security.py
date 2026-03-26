@@ -13,7 +13,7 @@ from sqlalchemy.orm import Session
 from db.database import get_db
 from models.models import User
 
-# Configuration - Pull from environment variables
+# Configuration
 SECRET_KEY  = os.getenv("SECRET_KEY", "fallback_dev_key_change_me")
 ALGORITHM   = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 8   # 8 hours
@@ -21,13 +21,11 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 8   # 8 hours
 pwd_context      = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme    = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 
-# --- REPLACE YOUR OLD FUNCTIONS WITH THESE TWO ---
-
 def hash_password(plain: str) -> str:
-    """Hashes a password with strict 72-character truncation."""
+    """Hashes a password with strict 72-character truncation to prevent bcrypt crash."""
     if not plain:
         return ""
-    # Ensure it is a string and truncate to 72 chars to prevent bcrypt crash
+    # Truncate to 72 chars to stay within bcrypt's physical limit
     safe_password = str(plain)[:72]
     return pwd_context.hash(safe_password)
 
@@ -40,10 +38,8 @@ def verify_password(plain: str, hashed: str) -> bool:
         safe_password = str(plain)[:72]
         return pwd_context.verify(safe_password, hashed)
     except Exception:
-        # Returns False instead of crashing the server (500 error)
+        # Returns False instead of crashing the server (prevents 500 error)
         return False
-
-# --------------------------------------------------
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
     to_encode = data.copy()
@@ -61,10 +57,7 @@ def decode_token(token: str) -> dict:
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-def get_current_user(
-    token: str = Depends(oauth2_scheme),
-    db: Session = Depends(get_db),
-) -> User:
+def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)) -> User:
     payload  = decode_token(token)
     user_id: int = payload.get("sub")
     if user_id is None:
@@ -75,7 +68,6 @@ def get_current_user(
     return user
 
 def require_roles(*roles):
-    """Factory that returns a dependency enforcing role membership."""
     def _check(current_user: User = Depends(get_current_user)):
         if current_user.role not in roles:
             raise HTTPException(
