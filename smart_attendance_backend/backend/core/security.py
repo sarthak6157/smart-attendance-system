@@ -3,42 +3,36 @@
 import os
 from datetime import datetime, timedelta
 from typing import Optional
-
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
-
 from db.database import get_db
 from models.models import User
 
 # Configuration
 SECRET_KEY  = os.getenv("SECRET_KEY", "fallback_dev_key_change_me")
 ALGORITHM   = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 8   # 8 hours
+ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 8
 
 pwd_context      = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme    = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 
 def hash_password(plain: str) -> str:
-    """Hashes a password with strict 72-character truncation to prevent bcrypt crash."""
+    """Hashes a password with immediate truncation to prevent 72-byte crash."""
     if not plain:
         return ""
-    # Truncate to 72 chars to stay within bcrypt's physical limit
-    safe_password = str(plain)[:72]
-    return pwd_context.hash(safe_password)
+    # We truncate to 72 chars immediately so the hasher never sees more.
+    return pwd_context.hash(str(plain)[:72])
 
 def verify_password(plain: str, hashed: str) -> bool:
-    """Verifies a password, catching all length and format errors."""
+    """Verifies a password safely."""
     if not plain or not hashed:
         return False
     try:
-        # Truncate input to match the hash logic
-        safe_password = str(plain)[:72]
-        return pwd_context.verify(safe_password, hashed)
+        return pwd_context.verify(str(plain)[:72], hashed)
     except Exception:
-        # Returns False instead of crashing the server (prevents 500 error)
         return False
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
@@ -51,28 +45,19 @@ def decode_token(token: str) -> dict:
     try:
         return jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
     except JWTError:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Could not validate credentials",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+        raise HTTPException(status_code=401, detail="Could not validate credentials")
 
 def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)) -> User:
     payload  = decode_token(token)
     user_id: int = payload.get("sub")
-    if user_id is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token payload")
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found")
+        raise HTTPException(status_code=401, detail="User not found")
     return user
 
 def require_roles(*roles):
     def _check(current_user: User = Depends(get_current_user)):
         if current_user.role not in roles:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail=f"This action requires one of these roles: {[r.value for r in roles]}",
-            )
+            raise HTTPException(status_code=403, detail="Permission denied")
         return current_user
     return _check
