@@ -75,14 +75,14 @@
                     throw new Error("Configuration Error: LIVE_BACKEND_URL is not defined in api.js");
                 }
 
-                // FIX: Sending as JSON instead of Form Data to prevent 422 error
+                // FIX: Sending JSON with "credential" instead of "username" to match LoginRequest schema
                 const response = await fetch(`${LIVE_BACKEND_URL}/auth/login`, {
                     method: 'POST',
                     headers: { 
                         'Content-Type': 'application/json' 
                     },
                     body: JSON.stringify({ 
-                        username: username, 
+                        credential: username, 
                         password: password 
                     })
                 });
@@ -90,24 +90,25 @@
                 const data = await response.json();
 
                 if (response.ok) {
+                    // Note: Your backend returns TokenResponse(access_token, user)
                     localStorage.setItem('token', data.access_token);
-                    localStorage.setItem('user_role', data.role);
-                    localStorage.setItem('user_name', data.full_name);
-                    localStorage.setItem('user_id', data.id);
+                    localStorage.setItem('user_role', data.user.role);
+                    localStorage.setItem('user_name', data.user.full_name);
+                    localStorage.setItem('user_id', data.user.id);
 
                     Swal.fire({
                         icon: 'success',
                         title: 'Welcome!',
-                        text: `Hello, ${data.full_name}`,
+                        text: `Hello, ${data.user.full_name}`,
                         timer: 1500,
                         showConfirmButton: false
                     }).then(() => {
-                        if (data.role === 'admin') {
+                        if (data.user.role === 'admin') {
                             window.location.href = 'admin_dashboard.html';
-                        } else if (data.role === 'faculty') {
+                        } else if (data.user.role === 'faculty') {
                             window.location.href = 'faculty_dashboard.html';
-                        } else if (data.role === 'student') {
-                            if (data.status === 'facial_required') {
+                        } else if (data.user.role === 'student') {
+                            if (data.user.status === 'facial_required') {
                                 window.location.href = 'facial_registration.html';
                             } else {
                                 window.location.href = 'student_dashboard.html';
@@ -115,7 +116,6 @@
                         }
                     });
                 } else {
-                    // FIX: Handle validation error objects to avoid [object Object]
                     let errorMessage = "Invalid Username or Password";
                     if (data.detail) {
                         errorMessage = typeof data.detail === 'object' 
