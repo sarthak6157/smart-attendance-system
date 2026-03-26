@@ -20,19 +20,21 @@ pwd_context      = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme    = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 
 def hash_password(plain: str) -> str:
-    """Hashes a password with immediate truncation to prevent 72-byte crash."""
+    """Hashes a password with immediate strict truncation to 72 characters."""
     if not plain:
         return ""
-    # We truncate to 72 chars immediately so the hasher never sees more.
+    # THIS LINE IS THE FIX: Truncate immediately
     return pwd_context.hash(str(plain)[:72])
 
 def verify_password(plain: str, hashed: str) -> bool:
-    """Verifies a password safely."""
+    """Verifies a password, catching all length and format errors."""
     if not plain or not hashed:
         return False
     try:
+        # Match the truncation used in hash_password
         return pwd_context.verify(str(plain)[:72], hashed)
     except Exception:
+        # Returns False instead of crashing the server
         return False
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
