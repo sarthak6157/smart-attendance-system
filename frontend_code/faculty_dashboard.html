@@ -1,1176 +1,143 @@
 <!DOCTYPE html>
 <html lang="en">
- <head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1" name="viewport"/>
-  <title>
-   Faculty Dashboard - Hybrid Attendance
-  </title>
-  <!-- Brand Typography -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
-  <!-- Bootstrap 5 CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-   <!-- Font Awesome 6 -->
-   <link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" referrerpolicy="no-referrer" rel="stylesheet"/>
-   <!-- Global Theme CSS -->
-   <link href="style.css" rel="stylesheet"/>
-   <!-- Page-specific CSS (Faculty Dashboard) -->
-   <link href="faculty_dashboard.css" rel="stylesheet"/>
-  </link>
- </head>
- <body>
-  <!-- Header (Needed on dashboard) -->
-  <nav class="navbar navbar-expand-md navbar-dark sticky-top" style="background:#f08e1b;">
-   <div class="container-fluid">
-    <button class="btn btn-outline-light d-md-none me-2" data-bs-target="#facultySidebar" data-bs-toggle="collapse" type="button">
-     <i class="fa-solid fa-bars">
-     </i>
-    </button>
-    <a class="navbar-brand fw-bold" href="./faculty_dashboard.html">
-     Faculty
-    </a>
-    <form class="d-none d-md-flex ms-3 flex-grow-1" role="search" style="max-width:420px;">
-     <input aria-label="Search" class="form-control" placeholder="Search classes or students" type="search"/>
-    </form>
-    <div class="d-flex align-items-center ms-auto">
-     <a class="btn btn-light me-2" href="./session_page.html">
-      <i class="fa-solid fa-play me-1">
-      </i>
-      Start Session
-     </a>
-     <button aria-label="Notifications" class="btn btn-link text-white me-2 position-relative" id="btnNotifications">
-      <i class="fa-solid fa-bell">
-      </i>
-      <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle" id="notifDot" style="display:none">
-      </span>
-     </button>
-     <div class="dropdown">
-      <button class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
-       <i class="fa-solid fa-user me-1">
-       </i>
-       Me
-      </button>
-      <ul class="dropdown-menu dropdown-menu-end">
-       <li>
-        <a class="dropdown-item" href="./user_profile.html">
-         My Profile
-        </a>
-       </li>
-       <li>
-        <hr class="dropdown-divider"/>
-       </li>
-       <li>
-        <a class="dropdown-item text-danger" href="./login_page.html">
-         Logout
-        </a>
-       </li>
-      </ul>
-     </div>
-    </div>
-   </div>
-  </nav>
-  <!-- Page Layout: Sidebar (left) + Main Content (right) -->
-  <div class="d-flex">
-   <!-- Faculty App Sidebar (Needed on dashboard) -->
-   <aside class="d-flex flex-column flex-shrink-0 bg-light border-end" style="min-height:100vh;width:260px;">
-    <div class="p-3 border-bottom d-flex align-items-center justify-content-between" style="background:#f08e1b;">
-     <a class="text-white fw-bold text-decoration-none" href="./faculty_dashboard.html">
-      Hybrid Attendance
-     </a>
-     <button class="btn btn-sm btn-outline-light d-md-none" data-bs-target="#facultySidebar" data-bs-toggle="collapse" type="button">
-      <i class="fa-solid fa-bars">
-      </i>
-     </button>
-    </div>
-    <div class="collapse show" id="facultySidebar">
-     <div class="p-3">
-      <div class="d-flex align-items-center mb-4">
-       <img alt="Avatar" class="rounded-circle me-2" onerror="this.onerror=null;this.src='https://picsum.photos/seed/faculty-ava/80/80'" src="./assets/avatar-faculty.png" style="width:40px;height:40px;"/>
-       <div>
-        <div class="fw-semibold">
-         Faculty
-        </div>
-        <small class="text-muted">
-         Teaching Tools
-        </small>
-       </div>
-      </div>
-      <ul class="nav nav-pills flex-column">
-       <li class="nav-item mb-1">
-        <a class="nav-link text-dark active" href="./faculty_dashboard.html">
-         <i class="fa-solid fa-chalkboard-user me-2">
-         </i>
-         Dashboard
-        </a>
-       </li>
-       <li class="nav-item mb-1">
-        <a class="nav-link text-dark" href="./session_page.html">
-         <i class="fa-solid fa-play me-2">
-         </i>
-         Start Session
-        </a>
-       </li>
-       <li class="nav-item mb-1">
-        <a class="nav-link text-dark" href="./session_page.html">
-         <i class="fa-solid fa-qrcode me-2">
-         </i>
-         Live Session
-        </a>
-       </li>
-       <li class="nav-item mb-1">
-        <a class="nav-link text-dark" href="./faculty_dashboard.html#history">
-         <i class="fa-solid fa-clock-rotate-left me-2">
-         </i>
-         Session History
-        </a>
-       </li>
-       <li class="nav-item mt-3">
-        <a class="nav-link text-dark" href="./user_profile.html">
-         <i class="fa-solid fa-user me-2">
-         </i>
-         My Profile
-        </a>
-       </li>
-      </ul>
-     </div>
-    </div>
-    <style>
-     .nav-link:hover{background:rgba(240,142,27,.1);border-radius:.5rem}
-        .nav-link.active{background:#f08e1b;color:#fff;border-radius:.5rem}
-    </style>
-   </aside>
-   <!-- Main Content -->
-   <main class="flex-grow-1 bg-light">
-    <div class="container-fluid py-3 py-lg-4">
-     <!-- Page Header / Breadcrumbs -->
-     <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
-      <div>
-       <h1 class="page-title mb-0">
-        Faculty Dashboard
-       </h1>
-       <nav aria-label="breadcrumb" class="breadcrumb">
-        <span class="breadcrumb-item">
-         <a href="./faculty_dashboard.html">
-          Home
-         </a>
-        </span>
-        <span aria-current="page" class="breadcrumb-item active">
-         Dashboard
-        </span>
-       </nav>
-      </div>
-      <div class="d-flex align-items-center gap-2">
-       <button class="btn btn-info" id="btnQuickStart">
-        <i class="fa-solid fa-bolt me-2">
-        </i>
-        Quick Start
-       </button>
-       <a class="btn btn-light" href="./settings_page.html">
-        <i class="fa-solid fa-gear me-2">
-        </i>
-        Settings
-       </a>
-      </div>
-     </div>
-     <!-- System Note / Info -->
-     <div class="alert alert-info d-flex align-items-center" role="alert">
-      <i class="fa-solid fa-circle-info me-2">
-      </i>
-      <div>
-       Use the Class Session Manager to start a live attendance session. During a live session, a dynamic QR code and real-time roster will appear.
-      </div>
-     </div>
-     <!-- Class Session Manager -->
-     <section class="mb-4" id="classSessionManager">
-      <!-- Inactive State: Class Schedule -->
-      <div id="scheduleView">
-       <div class="card app-card mb-3">
-        <div class="card-header">
-         <div class="title d-flex align-items-center gap-2">
-          <i class="fa-solid fa-calendar-day text-primary">
-          </i>
-          <span class="widget-title">
-           Today's Classes
-          </span>
-         </div>
-         <div class="d-flex align-items-center gap-2">
-          <button class="btn btn-light btn-sm" id="btnRefreshSchedule">
-           <i class="fa-solid fa-rotate me-1">
-           </i>
-           Refresh
-          </button>
-         </div>
-        </div>
-        <div class="card-body">
-         <div class="row g-3 d-none" id="scheduleLoading">
-          <div class="col-12">
-           <div class="skeleton" style="height:52px">
-           </div>
-          </div>
-          <div class="col-12">
-           <div class="skeleton" style="height:52px">
-           </div>
-          </div>
-         </div>
-         <div class="row g-3" id="scheduleList">
-          <!-- Cards populated by JS -->
-         </div>
-        </div>
-       </div>
-      </div>
-      <!-- Active State: Live Session Monitor -->
-      <div class="d-none live-monitor" id="liveSessionView">
-       <div class="d-flex align-items-center justify-content-between mb-3">
-        <div class="d-flex align-items-center gap-2">
-         <i class="fa-solid fa-signal text-success">
-         </i>
-         <h5 class="mb-0">
-          Live Session Monitor
-         </h5>
-         <span class="badge bg-success" id="activeCourseBadge">
-          ENGR 201
-         </span>
-        </div>
-        <div class="d-flex align-items-center gap-2">
-         <button class="btn btn-warning" id="btnEndSession">
-          <i class="fa-solid fa-stop me-2">
-          </i>
-          End Session
-         </button>
-        </div>
-       </div>
-       <div class="row g-3">
-        <!-- QR Panel -->
-        <div class="col-12 col-lg-5">
-         <div class="card app-card h-100">
-          <div class="card-header">
-           <div class="title">
-            <i class="fa-solid fa-qrcode text-primary me-2">
-            </i>
-            Dynamic QR Code
-           </div>
-           <div class="text-muted small">
-            Auto-refresh in
-            <span id="qrCountdown">
-             --
-            </span>
-            s
-           </div>
-          </div>
-          <div class="card-body d-flex flex-column align-items-center justify-content-center">
-           <div class="qr-box mb-3">
-            <img alt="QR Code" id="qrImage" onerror="this.onerror=null;this.src='https://picsum.photos/seed/qr-fallback/260/260'" src=""/>
-           </div>
-           <div class="w-100">
-            <div aria-label="QR Refresh Timer" aria-valuemax="30" aria-valuemin="0" class="progress" role="progressbar">
-             <div class="progress-bar" id="qrProgress" style="width:0%">
-             </div>
-            </div>
-           </div>
-           <small class="text-muted mt-2">
-            Students scan this code with the app to check in.
-           </small>
-          </div>
-         </div>
-        </div>
-        <!-- Roster Panel -->
-        <div class="col-12 col-lg-7">
-         <div class="card app-card h-100">
-          <div class="card-header flex-wrap">
-           <div class="d-flex align-items-center gap-3 flex-wrap">
-            <div class="title">
-             <i class="fa-solid fa-users text-primary me-2">
-             </i>
-             Real-time Attendance Roster
-            </div>
-            <div class="d-flex align-items-center gap-2 small">
-             <span class="badge-soft success">
-              <i class="fa-solid fa-circle me-1 text-success">
-              </i>
-              Present
-              <span id="statPresent">
-               0
-              </span>
-             </span>
-             <span class="badge-soft warning">
-              <i class="fa-solid fa-circle me-1 text-warning">
-              </i>
-              Absent
-              <span id="statAbsent">
-               0
-              </span>
-             </span>
-             <span class="badge-soft error">
-              <i class="fa-solid fa-circle me-1 text-danger">
-              </i>
-              Failed
-              <span id="statFailed">
-               0
-              </span>
-             </span>
-            </div>
-           </div>
-           <div class="ms-auto d-flex align-items-center gap-2 flex-wrap">
-            <div class="input-group input-group-sm" style="max-width:260px;">
-             <span class="input-group-text">
-              <i class="fa-solid fa-magnifying-glass">
-              </i>
-             </span>
-             <input class="form-control" id="studentSearch" placeholder="Search student..." type="text">
-             </input>
-            </div>
-           </div>
-          </div>
-          <div class="card-body p-0">
-           <div class="table-responsive" style="max-height:420px;">
-            <table class="table table-hover table-theme align-middle mb-0" id="rosterTable">
-             <thead class="table-light position-sticky top-0">
-              <tr>
-               <th style="width:50px">
-                #
-               </th>
-               <th>
-                Student
-               </th>
-               <th>
-                ID
-               </th>
-               <th>
-                Status
-               </th>
-               <th>
-                Check-in Time
-               </th>
-              </tr>
-             </thead>
-             <tbody>
-              <!-- Rows injected by JS -->
-             </tbody>
-            </table>
-           </div>
-           <div class="p-2 border-top small text-muted">
-            Tip: Click an Absent/Failed student to manually override.
-           </div>
-          </div>
-         </div>
-        </div>
-       </div>
-      </div>
-     </section>
-     <!-- Attendance Trend (Data Visualization) -->
-     <section class="mb-4">
-      <div class="card app-card">
-       <div class="card-header">
-        <div class="title">
-         <i class="fa-solid fa-chart-line text-primary me-2">
-         </i>
-         Attendance Trend (Last 7 Sessions)
-        </div>
-       </div>
-       <div class="card-body">
-        <canvas height="120" id="trendChart">
-        </canvas>
-       </div>
-      </div>
-     </section>
-     <!-- Historical Attendance Reports -->
-     <section class="mb-5" id="history">
-      <div class="card app-card">
-       <div class="card-header">
-        <div class="title">
-         <i class="fa-solid fa-clock-rotate-left text-primary me-2">
-         </i>
-         Historical Attendance Reports
-        </div>
-       </div>
-       <div class="card-body">
-        <form class="row g-3 align-items-end" id="reportFilters">
-         <div class="col-12 col-md-4">
-          <label class="form-label" for="filterCourse">
-           Course
-          </label>
-          <select class="form-select" id="filterCourse">
-           <option selected="" value="">
-            All Courses
-           </option>
-           <option value="ENGR201">
-            ENGR 201 - Materials Science
-           </option>
-           <option value="MATH245">
-            MATH 245 - Linear Algebra
-           </option>
-           <option value="CS150">
-            CS 150 - Intro to CS
-           </option>
-           <option value="PHYS110">
-            PHYS 110 - Physics I
-           </option>
-          </select>
-         </div>
-         <div class="col-12 col-md-4">
-          <label class="form-label" for="filterDate">
-           Class Date
-          </label>
-          <input class="form-control" id="filterDate" type="date"/>
-         </div>
-         <div class="col-12 col-md-4 d-flex gap-2">
-          <button class="btn btn-primary flex-grow-1" id="btnViewReport" type="button">
-           <i class="fa-solid fa-table me-2">
-           </i>
-           View Report
-          </button>
-          <button class="btn btn-light" id="btnExport" type="button">
-           <i class="fa-solid fa-file-export me-2">
-           </i>
-           Export
-          </button>
-         </div>
-        </form>
-        <div class="mt-3 d-none" id="reportLoading">
-         <div class="skeleton w-100" style="height:42px">
-         </div>
-         <div class="skeleton w-100 mt-2" style="height:42px">
-         </div>
-         <div class="skeleton w-100 mt-2" style="height:42px">
-         </div>
-        </div>
-        <div class="mt-3">
-         <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-2">
-          <div class="input-group input-group-sm" style="max-width:260px;">
-           <span class="input-group-text">
-            <i class="fa-solid fa-magnifying-glass">
-            </i>
-           </span>
-           <input class="form-control" id="reportSearch" placeholder="Search by name or ID" type="text"/>
-          </div>
-          <div class="small text-muted" id="reportSummary">
-           Showing 0 of 0
-          </div>
-         </div>
-         <div class="table-responsive">
-          <table class="table table-striped table-theme align-middle" id="reportTable">
-           <thead class="table-light">
-            <tr>
-             <th class="sortable" data-key="studentName">
-              Student
-              <i class="fa-solid fa-sort ms-1 text-muted">
-              </i>
-             </th>
-             <th class="sortable" data-key="studentId" style="width:140px;">
-              ID
-              <i class="fa-solid fa-sort ms-1 text-muted">
-              </i>
-             </th>
-             <th class="sortable" data-key="attendanceStatus" style="width:140px;">
-              Status
-              <i class="fa-solid fa-sort ms-1 text-muted">
-              </i>
-             </th>
-             <th class="sortable" data-key="checkInTime" style="width:180px;">
-              Check-in Time
-              <i class="fa-solid fa-sort ms-1 text-muted">
-              </i>
-             </th>
-            </tr>
-           </thead>
-           <tbody>
-            <!-- Rows injected by JS -->
-           </tbody>
-          </table>
-         </div>
-         <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mt-2">
-          <div class="small text-muted" id="paginationInfo">
-           Page 1 of 1
-          </div>
-          <nav>
-           <ul class="pagination pagination-sm mb-0" id="pagination">
-            <li class="page-item disabled" id="prevPage">
-             <a class="page-link" href="#">
-              Prev
-             </a>
-            </li>
-            <li class="page-item active">
-             <span class="page-link" id="currentPage">
-              1
-             </span>
-            </li>
-            <li class="page-item disabled" id="nextPage">
-             <a class="page-link" href="#">
-              Next
-             </a>
-            </li>
-           </ul>
-          </nav>
-         </div>
-        </div>
-       </div>
-      </div>
-     </section>
-    </div>
-    <!-- Footer (Needed on dashboard) -->
-    <footer class="py-3 border-top bg-white mt-auto">
-     <div class="container d-flex flex-wrap justify-content-between align-items-center">
-      <span class="text-muted">
-       ©
-       <span id="year-fac">
-        2025
-       </span>
-       Hybrid Attendance
-      </span>
-      <ul class="nav">
-       <li class="nav-item">
-        <a class="nav-link px-2 text-muted" href="./reports_page.html">
-         Reports
-        </a>
-       </li>
-       <li class="nav-item">
-        <a class="nav-link px-2 text-muted" href="./settings_page.html">
-         Settings
-        </a>
-       </li>
-      </ul>
-     </div>
-    </footer>
-   </main>
-  </div>
-  <!-- Toast Container for System Feedback -->
-  <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1060;">
-   <div aria-atomic="true" aria-live="assertive" class="toast align-items-center text-bg-primary border-0" id="liveToast" role="alert">
-    <div class="d-flex">
-     <div class="toast-body" id="toastBody">
-      Action completed
-     </div>
-     <button aria-label="Close" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" type="button">
-     </button>
-    </div>
-   </div>
-  </div>
-  <script>
-   document.getElementById('year-fac').textContent = new Date().getFullYear();
-  </script>
-  <!-- Bootstrap 5 Bundle JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
-  </script>
-  <!-- SweetAlert2 -->
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11">
-  </script>
-  <!-- Chart.js (for Trend chart) -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js">
-  </script>
-  <!-- Page Script -->
-  <script>
-   // State
-let isSessionActive = false;
-let qrTimer = null;
-let qrCountdown = 30;
-let roster = [];
-let rosterUpdateTimer = null;
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Smart Attendance System</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="login_page.css">
+    
+    <script src="api.js"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <div class="card shadow-lg border-0">
+                    <div class="card-body p-5">
+                        <div class="text-center mb-4">
+                            <i class="fas fa-user-check fa-3x text-primary mb-3"></i>
+                            <h2 class="fw-bold">Smart Attendance</h2>
+                            <p class="text-muted">Login to your account</p>
+                        </div>
 
-const scheduledClasses = [{
-    courseName: 'Materials Science',
-    courseCode: 'ENGR 201',
-    classTime: '08:30 AM - 09:45 AM',
-    location: 'Room B205',
-    start: '08:30',
-    end: '09:45'
-}, {
-    courseName: 'Linear Algebra',
-    courseCode: 'MATH 245',
-    classTime: '10:00 AM - 10:50 AM',
-    location: 'Room A101',
-    start: '10:00',
-    end: '10:50'
-}, {
-    courseName: 'Intro to CS',
-    courseCode: 'CS 150',
-    classTime: '01:00 PM - 01:50 PM',
-    location: 'Room C310',
-    start: '13:00',
-    end: '13:50'
-}, {
-    courseName: 'Physics I',
-    courseCode: 'PHYS 110',
-    classTime: '03:00 PM - 03:50 PM',
-    location: 'Lab D120',
-    start: '15:00',
-    end: '15:50'
-}];
+                        <form id="loginForm">
+                            <div class="mb-3">
+                                <label class="form-label">Enrollment No / ID</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                                    <input type="text" id="username" class="form-control" required placeholder="e.g. TCA2559184">
+                                </div>
+                            </div>
 
-const sampleStudents = [{
-    id: 'S1001',
-    name: 'Ava Thompson'
-}, {
-    id: 'S1002',
-    name: 'Liam Rodriguez'
-}, {
-    id: 'S1003',
-    name: 'Olivia Patel'
-}, {
-    id: 'S1004',
-    name: 'Noah Kim'
-}, {
-    id: 'S1005',
-    name: 'Emma Johnson'
-}, {
-    id: 'S1006',
-    name: 'Ethan Chen'
-}, {
-    id: 'S1007',
-    name: 'Sophia Nguyen'
-}, {
-    id: 'S1008',
-    name: 'Mason Clark'
-}, {
-    id: 'S1009',
-    name: 'Isabella Garcia'
-}, {
-    id: 'S1010',
-    name: 'Lucas Martinez'
-}, {
-    id: 'S1011',
-    name: 'Mia Brown'
-}, {
-    id: 'S1012',
-    name: 'James Wilson'
-}];
+                            <div class="mb-3">
+                                <label class="form-label">Password</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                    <input type="password" id="password" class="form-control" required placeholder="••••••••">
+                                </div>
+                            </div>
 
-// Utilities
-const toastEl = document.getElementById('liveToast');
-const toastBody = document.getElementById('toastBody');
-const toast = new bootstrap.Toast(toastEl, {
-    delay: 2500
-});
+                            <button type="submit" id="loginBtn" class="btn btn-primary w-100 py-2 mt-3 fw-bold">
+                                Login <i class="fas fa-sign-in-alt ms-2"></i>
+                            </button>
+                        </form>
 
-function showToast(message, bgClass = 'text-bg-primary') {
-    toastEl.className = 'toast align-items-center border-0 ' + bgClass;
-    toastBody.textContent = message;
-    toast.show();
-}
-
-function timeToMinutes(time24) {
-    const [h, m] = time24.split(':').map(Number);
-    return h * 60 + m;
-}
-
-function nowMinutes() {
-    const d = new Date();
-    return d.getHours() * 60 + d.getMinutes();
-}
-
-// Schedule rendering
-function renderSchedule() {
-    const list = document.getElementById('scheduleList');
-    list.innerHTML = '';
-    const now = nowMinutes();
-    scheduledClasses.forEach((cls, idx) => {
-        const start = timeToMinutes(cls.start);
-        const end = timeToMinutes(cls.end);
-        const enable = Math.abs(now - start) <= 60; // enabled if within 60 mins of start
-        const col = document.createElement('div');
-        col.className = 'col-12 col-lg-6';
-        col.innerHTML = `
-          <div class="card app-card h-100">
-            <div class="card-body d-flex flex-column">
-              <div class="d-flex justify-content-between align-items-start mb-2">
-                <div>
-                  <div class="h6 mb-1">${cls.courseCode} — ${cls.courseName}</div>
-                  <div class="text-muted"><i class="fa-regular fa-clock me-1"></i>${cls.classTime} &nbsp; <i class="fa-solid fa-location-dot me-1"></i>${cls.location}</div>
+                        <div class="text-center mt-4">
+                            <p class="small text-muted">New student? <a href="registration_page.html" class="text-decoration-none">Register here</a></p>
+                        </div>
+                    </div>
                 </div>
-                <span class="badge ${enable ? 'bg-success' : 'bg-secondary'}">${enable ? 'Ready' : 'Scheduled'}</span>
-              </div>
-              <div class="mt-auto d-flex align-items-center gap-2">
-                <button class="btn btn-primary start-session-btn" data-idx="${idx}" ${enable ? '' : 'disabled'}><i class="fa-solid fa-play me-2"></i>Start Session</button>
-                <button class="btn btn-light"><i class="fa-solid fa-circle-info me-2"></i>Details</button>
-              </div>
             </div>
-          </div>`;
-        list.appendChild(col);
-    });
+        </div>
+    </div>
 
-    document.querySelectorAll('.start-session-btn').forEach(btn => {
-        btn.addEventListener('click', async (e) => {
-            const idx = parseInt(e.currentTarget.getAttribute('data-idx'));
-            const cls = scheduledClasses[idx];
-            startSessionFlow(cls);
-        });
-    });
-}
+    <script>
+        const loginForm = document.getElementById('loginForm');
+        const loginBtn = document.getElementById('loginBtn');
 
-function showScheduleLoading(show) {
-    document.getElementById('scheduleLoading').classList.toggle('d-none', !show);
-    document.getElementById('scheduleList').classList.toggle('d-none', show);
-}
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
 
-// Session Flow
-async function startSessionFlow(cls) {
-    // Confirm and capture geolocation
-    const res = await Swal.fire({
-        title: 'Start Attendance Session?',
-        html: `<div class="text-start">Course: <b>${cls.courseCode} — ${cls.courseName}</b><br/>Location: <b>${cls.location}</b><br/><small class="text-muted">Your current location will be used to define the check-in boundary.</small></div>`,
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, start',
-        cancelButtonText: 'Cancel'
-    });
-    if (!res.isConfirmed) return;
+            // UI: Show Loading State
+            loginBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Authenticating...';
+            loginBtn.disabled = true;
 
-    try {
-        await getCurrentPosition({
-            enableHighAccuracy: true,
-            timeout: 8000,
-            maximumAge: 0
-        });
-        activateLiveSession(cls);
-        showToast('Session started successfully', 'text-bg-success');
-        document.getElementById('notifDot').style.display = 'block';
-    } catch (err) {
-        Swal.fire('Location Required', 'Unable to get your location. Please enable location services and try again.', 'error');
-    }
-}
+            try {
+                // Verify configuration exists
+                if (typeof LIVE_BACKEND_URL === 'undefined') {
+                    throw new Error("Configuration Error: LIVE_BACKEND_URL is not defined in api.js");
+                }
 
-function getCurrentPosition(options) {
-    return new Promise((resolve, reject) => {
-        if (!navigator.geolocation) {
-            reject(new Error('Geolocation not supported'));
-        } else {
-            navigator.geolocation.getCurrentPosition(() => resolve(), (err) => reject(err), options);
-        }
-    });
-}
-
-function activateLiveSession(cls) {
-    isSessionActive = true;
-    document.getElementById('scheduleView').classList.add('d-none');
-    document.getElementById('liveSessionView').classList.remove('d-none');
-    document.getElementById('activeCourseBadge').textContent = cls.courseCode;
-    initQrCycle();
-    initRoster();
-}
-
-async function endSessionFlow() {
-    const res = await Swal.fire({
-        title: 'End Session?',
-        text: 'This will finalize attendance records for all students.',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, end session',
-        cancelButtonText: 'Continue'
-    });
-    if (!res.isConfirmed) return;
-
-    // Cleanup timers
-    if (qrTimer) clearInterval(qrTimer);
-    if (rosterUpdateTimer) clearInterval(rosterUpdateTimer);
-    isSessionActive = false;
-    document.getElementById('liveSessionView').classList.add('d-none');
-    document.getElementById('scheduleView').classList.remove('d-none');
-    showToast('Session ended and saved', 'text-bg-warning');
-    document.getElementById('notifDot').style.display = 'none';
-}
-
-// QR Code
-function initQrCycle() {
-    updateQRCode();
-    qrCountdown = 30;
-    updateQrUI();
-    if (qrTimer) clearInterval(qrTimer);
-    qrTimer = setInterval(() => {
-        qrCountdown--;
-        updateQrUI();
-        if (qrCountdown <= 0) {
-            updateQRCode();
-            qrCountdown = 30;
-            updateQrUI();
-            showToast('QR refreshed', 'text-bg-info');
-        }
-    }, 1000);
-}
-
-function updateQRCode() {
-    const token = 'sess-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
-    const url = `https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(token)}`;
-    document.getElementById('qrImage').src = url;
-}
-
-function updateQrUI() {
-    const cd = document.getElementById('qrCountdown');
-    const pb = document.getElementById('qrProgress');
-    cd.textContent = String(qrCountdown);
-    const pct = ((30 - qrCountdown) / 30) * 100;
-    pb.style.width = pct.toFixed(0) + '%';
-}
-
-// Roster
-function initRoster() {
-    roster = sampleStudents.map(s => ({
-        ...s,
-        status: 'Absent',
-        checkIn: ''
-    }));
-    // Pre-mark a few present
-    for (let i = 0; i < roster.length; i++) {
-        if (Math.random() < 0.25) {
-            roster[i].status = 'Present';
-            roster[i].checkIn = new Date().toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-        }
-    }
-    renderRoster();
-
-    // Simulate live updates
-    if (rosterUpdateTimer) clearInterval(rosterUpdateTimer);
-    rosterUpdateTimer = setInterval(() => {
-        const pending = roster.filter(r => r.status !== 'Present');
-        if (pending.length > 0) {
-            const idx = Math.floor(Math.random() * pending.length);
-            const target = pending[idx];
-            const rIndex = roster.findIndex(r => r.id === target.id);
-            // 70% chance they become Present, 30% become Failed (GPS mismatch)
-            const roll = Math.random();
-            if (roll < 0.7) {
-                roster[rIndex].status = 'Present';
-                roster[rIndex].checkIn = new Date().toLocaleTimeString([], {
-                    hour: '2-digit',
-                    minute: '2-digit'
+                // Sending as JSON to match Pydantic model requirements in the backend
+                const response = await fetch(`${LIVE_BACKEND_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        username: username, 
+                        password: password 
+                    })
                 });
-            } else {
-                roster[rIndex].status = 'Failed';
-                roster[rIndex].checkIn = '';
-            }
-            renderRoster();
-        } else {
-            clearInterval(rosterUpdateTimer);
-        }
-    }, 3500);
-}
 
-function renderRoster() {
-    const tbody = document.querySelector('#rosterTable tbody');
-    const q = document.getElementById('studentSearch').value?.toLowerCase() || '';
-    tbody.innerHTML = '';
-    let present = 0,
-        absent = 0,
-        failed = 0;
-    roster
-        .filter(r => r.name.toLowerCase().includes(q) || r.id.toLowerCase().includes(q))
-        .forEach((r, idx) => {
-            if (r.status === 'Present') present++;
-            else if (r.status === 'Failed') failed++;
-            else absent++;
-            const tr = document.createElement('tr');
-            tr.className = (r.status === 'Absent' || r.status === 'Failed') ? 'cursor-pointer' : '';
-            tr.innerHTML = `
-            <td>${idx + 1}</td>
-            <td>${r.name}</td>
-            <td>${r.id}</td>
-            <td>${renderStatusBadge(r.status)}</td>
-            <td>${r.checkIn || '-'} </td>`;
-            if (r.status === 'Absent' || r.status === 'Failed') {
-                tr.addEventListener('click', () => manualOverride(r.id));
-            }
-            tbody.appendChild(tr);
-        });
-    document.getElementById('statPresent').textContent = present;
-    document.getElementById('statAbsent').textContent = absent;
-    document.getElementById('statFailed').textContent = failed;
-}
+                const data = await response.json();
 
-function renderStatusBadge(status) {
-    if (status === 'Present') return '<span class="badge bg-success">Present</span>';
-    if (status === 'Failed') return '<span class="badge bg-danger">Failed</span>';
-    return '<span class="badge bg-warning text-dark">Absent</span>';
-}
+                if (response.ok) {
+                    // 1. Save Session Data
+                    localStorage.setItem('token', data.access_token);
+                    localStorage.setItem('user_role', data.role);
+                    localStorage.setItem('user_name', data.full_name);
+                    localStorage.setItem('user_id', data.id);
 
-async function manualOverride(studentId) {
-    const student = roster.find(r => r.id === studentId);
-    if (!student) return;
-    const res = await Swal.fire({
-        title: 'Manual Override',
-        html: `Mark <b>${student.name}</b> (${student.id}) as Present?`,
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonText: 'Mark Present',
-        cancelButtonText: 'Cancel'
-    });
-    if (res.isConfirmed) {
-        student.status = 'Present';
-        student.checkIn = new Date().toLocaleTimeString([], {
-            hour: '2-digit',
-            minute: '2-digit'
-        });
-        renderRoster();
-        showToast('Manual override saved', 'text-bg-success');
-    }
-}
-
-// Trend Chart
-function initTrendChart() {
-    const ctx = document.getElementById('trendChart');
-    if (!ctx) return;
-    const labels = ['S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7'];
-    const data = {
-        labels,
-        datasets: [{
-            label: 'Present',
-            data: [22, 24, 20, 25, 23, 26, 27],
-            borderColor: '#0099D2',
-            backgroundColor: 'rgba(0,153,210,0.12)',
-            tension: 0.3,
-            fill: true,
-            pointRadius: 3
-        }, {
-            label: 'Absent',
-            data: [6, 4, 8, 3, 5, 3, 2],
-            borderColor: '#CD2026',
-            backgroundColor: 'rgba(205,32,38,0.08)',
-            tension: 0.3,
-            fill: true,
-            pointRadius: 3
-        }]
-    };
-    new Chart(ctx, {
-        type: 'line',
-        data,
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        stepSize: 5
-                    }
+                    // 2. Show Success Alert
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Welcome!',
+                        text: `Hello, ${data.full_name}`,
+                        timer: 1500,
+                        showConfirmButton: false
+                    }).then(() => {
+                        // 3. Redirection Logic based on user role and status
+                        if (data.role === 'admin') {
+                            window.location.href = 'admin_dashboard.html';
+                        } else if (data.role === 'faculty') {
+                            window.location.href = 'faculty_dashboard.html';
+                        } else if (data.role === 'student') {
+                            if (data.status === 'facial_required') {
+                                window.location.href = 'facial_registration.html';
+                            } else {
+                                window.location.href = 'student_dashboard.html';
+                            }
+                        }
+                    });
+                } else {
+                    // Correctly parse detailed validation errors to display text instead of [object Object]
+                    const errorDetail = data.detail && typeof data.detail === 'object' 
+                        ? JSON.stringify(data.detail) 
+                        : (data.detail || 'Invalid Username or Password');
+                    throw new Error(errorDetail);
                 }
-            },
-            plugins: {
-                legend: {
-                    position: 'bottom'
-                }
-            }
-        }
-    });
-}
-
-// Reports
-let reportData = [];
-let reportFiltered = [];
-let reportSort = {
-    key: 'studentName',
-    dir: 'asc'
-};
-let reportPage = 1;
-const pageSize = 6;
-
-function generateMockReport() {
-    // 12 rows sample
-    return [{
-        studentName: 'Ava Thompson',
-        studentId: 'S1001',
-        attendanceStatus: 'Present',
-        checkInTime: '09:02 AM'
-    }, {
-        studentName: 'Liam Rodriguez',
-        studentId: 'S1002',
-        attendanceStatus: 'Absent',
-        checkInTime: '-'
-    }, {
-        studentName: 'Olivia Patel',
-        studentId: 'S1003',
-        attendanceStatus: 'Present',
-        checkInTime: '09:04 AM'
-    }, {
-        studentName: 'Noah Kim',
-        studentId: 'S1004',
-        attendanceStatus: 'Failed',
-        checkInTime: '-'
-    }, {
-        studentName: 'Emma Johnson',
-        studentId: 'S1005',
-        attendanceStatus: 'Present',
-        checkInTime: '09:01 AM'
-    }, {
-        studentName: 'Ethan Chen',
-        studentId: 'S1006',
-        attendanceStatus: 'Present',
-        checkInTime: '09:03 AM'
-    }, {
-        studentName: 'Sophia Nguyen',
-        studentId: 'S1007',
-        attendanceStatus: 'Present',
-        checkInTime: '09:06 AM'
-    }, {
-        studentName: 'Mason Clark',
-        studentId: 'S1008',
-        attendanceStatus: 'Absent',
-        checkInTime: '-'
-    }, {
-        studentName: 'Isabella Garcia',
-        studentId: 'S1009',
-        attendanceStatus: 'Present',
-        checkInTime: '09:05 AM'
-    }, {
-        studentName: 'Lucas Martinez',
-        studentId: 'S1010',
-        attendanceStatus: 'Present',
-        checkInTime: '09:10 AM'
-    }, {
-        studentName: 'Mia Brown',
-        studentId: 'S1011',
-        attendanceStatus: 'Failed',
-        checkInTime: '-'
-    }, {
-        studentName: 'James Wilson',
-        studentId: 'S1012',
-        attendanceStatus: 'Present',
-        checkInTime: '09:08 AM'
-    }];
-}
-
-function loadReport() {
-    document.getElementById('reportLoading').classList.remove('d-none');
-    setTimeout(() => {
-        reportData = generateMockReport();
-        applyReportFilters();
-        document.getElementById('reportLoading').classList.add('d-none');
-        showToast('Report loaded', 'text-bg-info');
-    }, 900);
-}
-
-function applyReportFilters() {
-    const q = (document.getElementById('reportSearch').value || '').toLowerCase();
-    const course = document.getElementById('filterCourse').value;
-    // Note: In real app, course/date would filter from API. Here we just filter by query.
-    reportFiltered = reportData.filter(r => r.studentName.toLowerCase().includes(q) || r.studentId.toLowerCase().includes(q));
-    sortReport(reportSort.key, reportSort.dir);
-}
-
-function sortReport(key, dir) {
-    reportSort = {
-        key,
-        dir
-    };
-    reportFiltered.sort((a, b) => {
-        if (a[key] < b[key]) return dir === 'asc' ? -1 : 1;
-        if (a[key] > b[key]) return dir === 'asc' ? 1 : -1;
-        return 0;
-    });
-    reportPage = 1;
-    renderReportTable();
-}
-
-function renderReportTable() {
-    const tbody = document.querySelector('#reportTable tbody');
-    tbody.innerHTML = '';
-    const total = reportFiltered.length;
-    const totalPages = Math.max(1, Math.ceil(total / pageSize));
-    if (reportPage > totalPages) reportPage = totalPages;
-    const startIdx = (reportPage - 1) * pageSize;
-    const rows = reportFiltered.slice(startIdx, startIdx + pageSize);
-
-    rows.forEach(r => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${r.studentName}</td>
-          <td>${r.studentId}</td>
-          <td>${renderStatusBadge(r.attendanceStatus)}</td>
-          <td>${r.checkInTime}</td>`;
-        tbody.appendChild(tr);
-    });
-
-    document.getElementById('reportSummary').textContent = `Showing ${rows.length} of ${total}`;
-    document.getElementById('paginationInfo').textContent = `Page ${reportPage} of ${totalPages}`;
-    document.getElementById('currentPage').textContent = String(reportPage);
-    document.getElementById('prevPage').classList.toggle('disabled', reportPage <= 1);
-    document.getElementById('nextPage').classList.toggle('disabled', reportPage >= totalPages);
-}
-
-// Event Listeners
-window.addEventListener('DOMContentLoaded', () => {
-    // Schedule
-    showScheduleLoading(true);
-    setTimeout(() => {
-        showScheduleLoading(false);
-        renderSchedule();
-    }, 600);
-
-    // Quick start: Start nearest enabled class
-    document.getElementById('btnQuickStart').addEventListener('click', () => {
-        const now = nowMinutes();
-        let candidate = null;
-        let bestDiff = Infinity;
-        let candIdx = -1;
-        scheduledClasses.forEach((cls, idx) => {
-            const diff = Math.abs(now - timeToMinutes(cls.start));
-            if (diff < bestDiff) {
-                bestDiff = diff;
-                candidate = cls;
-                candIdx = idx;
+            } catch (error) {
+                console.error("Login Error:", error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Login Failed',
+                    text: error.message || 'Connection to server failed.'
+                });
+                // UI: Reset button state
+                loginBtn.innerHTML = 'Login <i class="fas fa-sign-in-alt ms-2"></i>';
+                loginBtn.disabled = false;
             }
         });
-        if (!candidate) return;
-        const startBtn = document.querySelector(`.start-session-btn[data-idx="${candIdx}"]`);
-        if (startBtn && !startBtn.disabled) startSessionFlow(candidate);
-        else showToast('No class ready to start now', 'text-bg-secondary');
-    });
-
-    // Refresh schedule
-    document.getElementById('btnRefreshSchedule').addEventListener('click', () => {
-        showScheduleLoading(true);
-        setTimeout(() => {
-            showScheduleLoading(false);
-            renderSchedule();
-            showToast('Schedule updated', 'text-bg-info');
-        }, 700);
-    });
-
-    // End Session
-    document.getElementById('btnEndSession').addEventListener('click', endSessionFlow);
-
-    // Roster search
-    document.getElementById('studentSearch').addEventListener('input', renderRoster);
-
-    // Reports
-    document.getElementById('btnViewReport').addEventListener('click', loadReport);
-    document.getElementById('reportSearch').addEventListener('input', () => applyReportFilters());
-    document.querySelectorAll('#reportTable thead th.sortable').forEach(th => {
-        th.style.cursor = 'pointer';
-        th.addEventListener('click', () => {
-            const key = th.getAttribute('data-key');
-            const dir = (reportSort.key === key && reportSort.dir === 'asc') ? 'desc' : 'asc';
-            sortReport(key, dir);
-        });
-    });
-    document.getElementById('prevPage').addEventListener('click', (e) => {
-        e.preventDefault();
-        if (!e.currentTarget.classList.contains('disabled')) {
-            reportPage--;
-            renderReportTable();
-        }
-    });
-    document.getElementById('nextPage').addEventListener('click', (e) => {
-        e.preventDefault();
-        if (!e.currentTarget.classList.contains('disabled')) {
-            reportPage++;
-            renderReportTable();
-        }
-    });
-
-    // Export (mock)
-    document.getElementById('btnExport').addEventListener('click', () => {
-        Swal.fire('Export Ready', 'Your CSV export will download shortly.', 'success');
-    });
-
-    // Notifications icon
-    document.getElementById('btnNotifications').addEventListener('click', () => {
-        document.getElementById('notifDot').style.display = 'none';
-        Swal.fire('Notifications', 'No new notifications.', 'info');
-    });
-
-    // Chart
-    initTrendChart();
-});
-  </script>
- </body>
+    </script>
+</body>
 </html>
