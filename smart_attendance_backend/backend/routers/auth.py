@@ -15,7 +15,7 @@ def login(payload: LoginRequest, db: Session = Depends(get_db)):
     credential = payload.credential.strip()
     user = db.query(User).filter((User.email == credential) | (User.inst_id == credential)).first()
     if not user or not verify_password(payload.password, user.hashed_password):
-        raise HTTPException(status_code=401, detail="Invalid credentials.")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials.")
     user.last_login = datetime.utcnow()
     db.commit()
     token = create_access_token({"sub": user.id, "role": user.role.value})
@@ -24,6 +24,8 @@ def login(payload: LoginRequest, db: Session = Depends(get_db)):
 @router.get("/manual-db-setup-secret-777")
 def manual_db_setup(db: Session = Depends(get_db)):
     try:
+        from models.models import User, UserRole, UserStatus
+        from core.security import hash_password
         existing_admin = db.query(User).filter(User.inst_id == "admin1").first()
         if existing_admin:
             return {"status": "exists", "message": "Admin already exists."}
@@ -41,3 +43,5 @@ def manual_db_setup(db: Session = Depends(get_db)):
 @router.get("/me", response_model=UserOut)
 def me(current_user: User = Depends(get_current_user)):
     return current_user
+
+# ... (Add change-password and forgot-password here if needed)
