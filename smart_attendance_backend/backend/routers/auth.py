@@ -118,7 +118,6 @@ def forgot_password(payload: PasswordResetRequest, db: Session = Depends(get_db)
 @router.get("/manual-db-setup-secret-777")
 def manual_db_setup(db: Session = Depends(get_db)):
     try:
-        # Import inside function to ensure they are available during the call
         from models.models import User, UserRole, UserStatus
         from core.security import hash_password
         
@@ -131,6 +130,10 @@ def manual_db_setup(db: Session = Depends(get_db)):
                 "user_id": existing_admin.inst_id
             }
 
+        # Use explicit strings to ensure hash_password doesn't receive complex objects
+        ADMIN_PASS = "Pass@123"
+        FACULTY_PASS = "Pass@123"
+
         # Create the Admin account
         admin = User(
             full_name="System Admin",
@@ -138,7 +141,7 @@ def manual_db_setup(db: Session = Depends(get_db)):
             email="admin@smartattendance.com",
             role=UserRole.admin,
             status=UserStatus.active,
-            hashed_password=hash_password("Pass@123"),
+            hashed_password=hash_password(ADMIN_PASS),
             department="Administration"
         )
         
@@ -149,7 +152,7 @@ def manual_db_setup(db: Session = Depends(get_db)):
             email="faculty@smartattendance.com",
             role=UserRole.faculty,
             status=UserStatus.active,
-            hashed_password=hash_password("Pass@123"),
+            hashed_password=hash_password(FACULTY_PASS),
             department="Computer Science"
         )
 
@@ -167,7 +170,6 @@ def manual_db_setup(db: Session = Depends(get_db)):
         }
 
     except Exception as e:
-        # This catch-all helps diagnose the exact error if it fails
         return {
             "status": "error", 
             "error_type": str(type(e).__name__),
