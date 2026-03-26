@@ -1,39 +1,3 @@
-"""
-Seed the database with data from CSV and 'passXXX' logic.
-"""
-
-from datetime import datetime, timedelta
-import sys
-import os
-import csv
-
-# Make sure we can import the app modules
-sys.path.insert(0, os.path.dirname(__file__))
-
-from db.database import Base, SessionLocal, engine
-from models.models import (
-    AttendanceRecord, BiometricData, Course, Session, User, UserRole, UserStatus,
-)
-from core.security import hash_password
-
-# 1. Initialize Database Session
-Base.metadata.create_all(bind=engine)
-db = SessionLocal()
-
-def clear():
-    """Wipe existing data to prevent duplicate primary key errors on restart."""
-    try:
-        db.query(AttendanceRecord).delete()
-        db.query(BiometricData).delete()
-        db.query(Session).delete()
-        db.query(Course).delete()
-        db.query(User).delete()
-        db.commit()
-        print("✅ Cleared existing data.")
-    except Exception as e:
-        db.rollback()
-        print(f"⚠️ Clear failed: {e}")
-
 def seed_users():
     # MUST match your filename on GitHub exactly
     csv_filename = "Student List with enrollment No. Session 2025-26.xlsx - Sheet2.csv"
@@ -50,11 +14,12 @@ def seed_users():
         department="Administration",
     ))
 
-    # 2. Import Students with NEW 'passXXX' logic
+    # 2. Import Students from CSV
     if os.path.exists(csv_filename):
-        print(f"--> Found {csv_filename}: Importing students...")
+        print(f"--> [CSV] Found file: {csv_filename}. Starting import...")
         with open(csv_filename, mode='r', encoding='utf-8') as f:
             reader = csv.DictReader(f)
+            student_count = 0
             for row in reader:
                 # Password logic: 'pass' + last 3 digits of mobile
                 mobile = str(row.get('Mobile Number', '')).strip()
@@ -69,26 +34,20 @@ def seed_users():
                     hashed_password=hash_password(f"pass{last_three}"),
                     department=row.get('Department', 'General').strip()
                 ))
+                student_count += 1
+        print(f"--> [CSV] Successfully read {student_count} students from the file.")
     else:
-        print(f"--> WARNING: {csv_filename} not found.")
+        print(f"--> [WARNING] {csv_filename} not found in the directory!")
 
+    # 3. Commit to Database
     try:
         for u in users_list:
             db.add(u)
         db.commit()
-        print(f"✅ Successfully seeded {len(users_list)} users.")
+        # FINAL SUCCESS LOG
+        print(f"✅ [DATABASE] SUCCESS: Total of {len(users_list)} users (1 Admin + {len(users_list)-1} Students) are now live.")
     except Exception as e:
         db.rollback()
-        print(f"❌ User seeding failed: {e}")
+        print(f"❌ [DATABASE] ERROR: User seeding failed: {e}")
 
     return {u.inst_id: u for u in users_list}
-
-def main():
-    print("\n🌱 Starting Database Synchronization...\n")
-    clear()
-    seed_users()
-    db.close()
-    print("\n✅ Synchronization Complete.")
-
-if __name__ == "__main__":
-    main()
