@@ -11,3 +11,4 @@ openpyxl
 wheel
 Pillow>=10.2.0
 psycopg2-binary
+bcrypt==4.3.0
