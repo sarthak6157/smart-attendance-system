@@ -8,7 +8,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-# 1. Import the seed script to enable auto-sync
+# 1. Import seed to enable auto-synchronization
 import seed 
 
 from db.database import Base, engine
@@ -24,19 +24,20 @@ app = FastAPI(
     description="Hybrid (QR + Facial Recognition) Attendance Management System",
 )
 
-# 4. Auto-Seed Task on Startup
-# This triggers the seed.py logic (including your 187 students) whenever the server boots.
+# 4. Auto-Sync Logic on Startup
+# This ensures your 187 students are imported every time the server starts
 @app.on_event("startup")
 async def startup_event():
     print("🚀 App starting: Running database synchronization...")
     try:
-        # Calls the main() function in your seed.py file
-        seed.main() 
-        print("✅ Database is ready and synchronized with CSV data.")
+        # This calls the main() function in your seed.py file
+        seed.main()
+        print("✅ Database synchronization complete.")
     except Exception as e:
-        print(f"❌ Auto-seed failed: {e}")
+        print(f"❌ Seed failed: {e}")
 
 # 5. Configure CORS
+# Ensure your frontend URL is listed here correctly
 origins = [
     "https://smart-attendance-portal.onrender.com",
     "https://smart-attendance-portal.onrender.com/",
