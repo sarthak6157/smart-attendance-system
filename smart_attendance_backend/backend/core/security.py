@@ -18,19 +18,34 @@ SECRET_KEY  = os.getenv("SECRET_KEY", "fallback_dev_key_change_me")
 ALGORITHM   = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 8   # 8 hours
 
+# Hashing configuration
 pwd_context      = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme    = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 
 def hash_password(plain: str) -> str:
-    # Truncate to 72 characters to prevent bcrypt from crashing on creation
-    return pwd_context.hash(plain[:72])
+    """
+    Hashes a password. 
+    Truncates to 72 characters to prevent bcrypt from crashing (72-byte limit).
+    """
+    if not plain:
+        return ""
+    # Ensure it's a string and truncate to safely fit in bcrypt bytes
+    safe_plain = str(plain)[:72]
+    return pwd_context.hash(safe_plain)
 
 def verify_password(plain: str, hashed: str) -> bool:
+    """
+    Verifies a plain text password against its hash.
+    Returns False instead of crashing if verification fails or errors.
+    """
+    if not plain or not hashed:
+        return False
     try:
-        # Attempt to verify the password
-        return pwd_context.verify(plain[:72], hashed)
-    except ValueError:
-        # If bcrypt still complains about length/format, just reject the login
+        # Truncate to match the hashing logic and stay within bcrypt limits
+        safe_plain = str(plain)[:72]
+        return pwd_context.verify(safe_plain, hashed)
+    except Exception:
+        # Catch ValueError (length) or other hashing issues to prevent 500 errors
         return False
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
