@@ -1,7 +1,6 @@
 """Seed the database with CSV data and new 'passXXX' logic."""
 import csv
 import os
-from datetime import datetime
 from db.database import Base, SessionLocal, engine
 from models.models import User, UserRole, UserStatus
 from core.security import hash_password
@@ -12,21 +11,21 @@ def seed_users():
     csv_filename = "Student List with enrollment No. Session 2025-26.xlsx - Sheet2.csv"
     users_list = []
     
-    # 1. Add Default Admin
+    # Default Admin
     users_list.append(User(
         full_name="Admin User", inst_id="admin1", email="admin@smartattendance.com",
         role=UserRole.admin, status=UserStatus.active,
         hashed_password=hash_password("Pass@123"), department="Administration"
     ))
 
-    # 2. Import Students with NEW password logic
+    # Import Students with your new "pass" logic
     if os.path.exists(csv_filename):
         with open(csv_filename, mode='r', encoding='utf-8') as f:
             reader = csv.DictReader(f)
             for row in reader:
                 mobile = str(row.get('Mobile Number', '')).strip()
                 last_three = mobile[-3:] if len(mobile) >= 3 else "000"
-                # NEW SUGGESTION: "pass" instead of "password"
+                # Use "pass" prefix as you suggested
                 new_pass = f"pass{last_three}"
                 
                 users_list.append(User(
@@ -41,7 +40,7 @@ def seed_users():
     for u in users_list:
         db.add(u)
     db.commit()
-    print(f"Successfully seeded {len(users_list)} users with 'passXXX' passwords.")
+    print(f"✅ Seeded {len(users_list)} users.")
 
 if __name__ == "__main__":
     seed_users()
