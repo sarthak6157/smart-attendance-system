@@ -16,6 +16,7 @@ app = FastAPI(title="Smart Attendance System API", version="1.0.0")
 async def startup_event():
     print("🚀 App starting: Running database synchronization...")
     try:
+        # This triggers the CSV import in seed.py
         seed.main()
         print("✅ Database synchronization complete.")
     except Exception as e:
@@ -38,7 +39,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# 4. Register all routers (CRITICAL FOR FRONTEND)
+# 4. Register all routers (CRITICAL: Without these, the frontend can't login)
 app.include_router(auth.router,       prefix="/api/auth",       tags=["Auth"])
 app.include_router(users.router,      prefix="/api/users",      tags=["Users"])
 app.include_router(sessions.router,   prefix="/api/sessions",   tags=["Sessions"])
