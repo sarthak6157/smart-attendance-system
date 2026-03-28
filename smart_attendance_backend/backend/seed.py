@@ -1,53 +1,86 @@
-def seed_users():
-    # MUST match your filename on GitHub exactly
-    csv_filename = "Student List with enrollment No. Session 2025-26.xlsx - Sheet2.csv"
-    users_list = []
-    
-    # 1. Add Default Admin
-    users_list.append(User(
-        full_name="Admin User",
-        inst_id="admin1",
-        email="admin@smartattendance.com",
-        role=UserRole.admin,
-        status=UserStatus.active,
-        hashed_password=hash_password("Pass@123"),
-        department="Administration",
-    ))
+"""
+seed.py - Seeds the database with admin user and students from Excel files.
+Runs automatically on every server startup via main.py.
+"""
 
-    # 2. Import Students from CSV
-    if os.path.exists(csv_filename):
-        print(f"--> [CSV] Found file: {csv_filename}. Starting import...")
-        with open(csv_filename, mode='r', encoding='utf-8') as f:
-            reader = csv.DictReader(f)
-            student_count = 0
-            for row in reader:
-                # Password logic: 'pass' + last 3 digits of mobile
-                mobile = str(row.get('Mobile Number', '')).strip()
-                last_three = mobile[-3:] if len(mobile) >= 3 else "000"
-                
-                users_list.append(User(
-                    full_name=row.get('Student Name', 'Unknown').strip(),
-                    inst_id=row.get('Enrollment ID', '').strip(),
-                    email=row.get('Email', '').strip() or f"{row.get('Enrollment ID')}@temp.com",
-                    role=UserRole.student,
-                    status=UserStatus.facial_required,
-                    hashed_password=hash_password(f"pass{last_three}"),
-                    department=row.get('Department', 'General').strip()
-                ))
-                student_count += 1
-        print(f"--> [CSV] Successfully read {student_count} students from the file.")
-    else:
-        print(f"--> [WARNING] {csv_filename} not found in the directory!")
+import os
+import csv
+import pandas as pd
+from db.database import SessionLocal
+from models.models import User, UserRole, UserStatus
+from core.security import hash_password
 
-    # 3. Commit to Database
-    try:
-        for u in users_list:
-            db.add(u)
+
+def main():
+    db = SessionLocal()
+    added_count = 0
+    skipped_count = 0
+
+    print("\n========== SEED STARTING ==========")
+
+    # ─────────────────────────────────────────
+    # 1. ADMIN USER (only add if not exists)
+    # ─────────────────────────────────────────
+    existing_admin = db.query(User).filter(User.inst_id == "admin1").first()
+    if not existing_admin:
+        admin = User(
+            full_name="System Admin",
+            inst_id="admin1",
+            email="admin@smartattendance.com",
+            role=UserRole.admin,
+            status=UserStatus.active,
+            hashed_password=hash_password("Pass@123"),
+            department="Administration",
+        )
+        db.add(admin)
         db.commit()
-        # FINAL SUCCESS LOG
-        print(f"✅ [DATABASE] SUCCESS: Total of {len(users_list)} users (1 Admin + {len(users_list)-1} Students) are now live.")
-    except Exception as e:
-        db.rollback()
-        print(f"❌ [DATABASE] ERROR: User seeding failed: {e}")
+        print("✅ Admin user created. Login: admin1 / Pass@123")
+    else:
+        print("⏭️  Admin already exists. Skipping.")
 
-    return {u.inst_id: u for u in users_list}
+    # ─────────────────────────────────────────
+    # 2. IMPORT STUDENTS FROM EXCEL FILES
+    # ─────────────────────────────────────────
+    file1 = "Student List till 22-08-2025_VS.xlsx"        # has: Mobile, Email, Course Name
+    file2 = "Student List with enrollment No. Session 2025-26.xlsx"  # has: Enrollment No.
+
+    if not os.path.exists(file1) or not os.path.exists(file2):
+        print(f"⚠️  WARNING: One or both Excel files not found!")
+        print(f"   File 1 exists: {os.path.exists(file1)}")
+        print(f"   File 2 exists: {os.path.exists(file2)}")
+        print("   Students will NOT be imported. Upload Excel files to the backend folder.")
+        print("========== SEED COMPLETE ==========\n")
+        return
+
+    print(f"📂 Found both Excel files. Merging data...")
+
+    df1 = pd.read_excel(file1)   # Mobile, Email, Course Name
+    df2 = pd.read_excel(file2)   # Enrollment No.
+
+    # Clean join key
+    df1['No.'] = df1['No.'].astype(str).str.strip()
+    df2['No.'] = df2['No.'].astype(str).str.strip()
+
+    # Merge on 'No.' column
+    df = pd.merge(df2, df1, on="No.", how="left", suffixes=('_f2', '_f1'))
+
+    # Only keep rows with valid Enrollment No.
+    df = df[df['Enrollment No.'].notna()]
+    df = df[df['Enrollment No.'].astype(str).str.strip().str.lower() != 'nan']
+    df = df[df['Enrollment No.'].astype(str).str.strip() != '']
+
+    print(f"📋 Found {len(df)} students with enrollment numbers. Importing...\n")
+
+    for _, row in df.iterrows():
+        enrollment_no = str(row['Enrollment No.']).strip()
+
+        # Skip if already in DB
+        existing = db.query(User).filter(User.inst_id == enrollment_no).first()
+        if existing:
+            skipped_count += 1
+            continue
+
+        # Name
+        name = str(row.get('Student Name_f2', row.get('Student Name', 'Unknown'))).strip()
+
+        # Password: 'pass' + last 3 digits of
