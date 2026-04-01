@@ -10,22 +10,17 @@
   <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.7/dist/sweetalert2.min.css" rel="stylesheet"/>
   <link href="style.css" rel="stylesheet"/>
   <link href="user_profile.css" rel="stylesheet"/>
-  <!-- ✅ FIX 1: api.js added so LIVE_BACKEND_URL is available -->
   <script src="api.js"></script>
  </head>
  <body>
   <nav class="navbar navbar-expand-md navbar-dark" style="background:#9a296a;">
    <div class="container-fluid">
-    <button class="btn btn-outline-light d-md-none me-2" data-bs-target="#commonProfileSidebar" data-bs-toggle="collapse" type="button">
-     <i class="fa-solid fa-bars"></i>
-    </button>
+    <button class="btn btn-outline-light d-md-none me-2" data-bs-target="#commonProfileSidebar" data-bs-toggle="collapse" type="button"><i class="fa-solid fa-bars"></i></button>
     <a class="navbar-brand fw-bold" href="student_dashboard.html">Account</a>
     <div class="ms-auto d-flex align-items-center">
      <a class="btn btn-light me-2" href="student_dashboard.html">Home</a>
      <div class="dropdown">
-      <button class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
-       <i class="fa-solid fa-user me-1"></i> Me
-      </button>
+      <button class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown"><i class="fa-solid fa-user me-1"></i> Me</button>
       <ul class="dropdown-menu dropdown-menu-end">
        <li><a class="dropdown-item" href="user_profile.html">My Profile</a></li>
        <li><hr class="dropdown-divider"/></li>
@@ -35,11 +30,10 @@
     </div>
    </div>
   </nav>
-
   <div class="container-fluid">
    <div class="d-flex align-items-stretch">
     <aside class="d-flex flex-column flex-shrink-0 bg-light border-end" style="min-height:100vh;width:240px;">
-     <div class="p-3 border-bottom d-flex align-items-center justify-content-between" style="background:#f08e1b;">
+     <div class="p-3 border-bottom d-flex align-items-center" style="background:#f08e1b;">
       <a class="text-white fw-bold text-decoration-none" href="student_dashboard.html">Hybrid Attendance</a>
      </div>
      <div class="collapse show" id="commonProfileSidebar">
@@ -52,118 +46,55 @@
         </div>
        </div>
        <ul class="nav nav-pills flex-column">
-        <li class="nav-item mb-1">
-         <a class="nav-link active" href="user_profile.html">
-          <i class="fa-solid fa-id-badge me-2"></i>Profile
-         </a>
-        </li>
-        <li class="nav-item mb-1">
-         <a class="nav-link text-dark" href="#security" onclick="document.getElementById('security').scrollIntoView({behavior:'smooth'});return false;">
-          <i class="fa-solid fa-shield-halved me-2"></i>Security
-         </a>
-        </li>
-        <li class="nav-item mb-1">
-         <a class="nav-link text-dark" href="facial_registration.html">
-          <i class="fa-solid fa-rotate me-2"></i>Facial Registration
-         </a>
-        </li>
-        <li class="nav-item mt-3">
-         <a class="nav-link text-danger" href="#" onclick="auth.logout()">
-          <i class="fa-solid fa-right-from-bracket me-2"></i>Logout
-         </a>
-        </li>
+        <li class="nav-item mb-1"><a class="nav-link active" href="user_profile.html"><i class="fa-solid fa-id-badge me-2"></i>Profile</a></li>
+        <li class="nav-item mb-1"><a class="nav-link text-dark" href="#security" onclick="document.getElementById('security').scrollIntoView({behavior:'smooth'});return false;"><i class="fa-solid fa-shield-halved me-2"></i>Security</a></li>
+        <li class="nav-item mb-1"><a class="nav-link text-dark" href="facial_registration.html"><i class="fa-solid fa-rotate me-2"></i>Facial Registration</a></li>
+        <li class="nav-item mt-3"><a class="nav-link text-danger" href="#" onclick="auth.logout()"><i class="fa-solid fa-right-from-bracket me-2"></i>Logout</a></li>
        </ul>
       </div>
      </div>
-     <style>
-      .nav-link:hover{background:rgba(154,41,106,.1);border-radius:.5rem}
-      .nav-link.active{background:#9a296a;color:#fff!important;border-radius:.5rem}
-     </style>
+     <style>.nav-link:hover{background:rgba(154,41,106,.1);border-radius:.5rem}.nav-link.active{background:#9a296a;color:#fff!important;border-radius:.5rem}</style>
     </aside>
-
     <main class="flex-grow-1">
      <div class="container py-3 py-lg-4">
-      <nav aria-label="breadcrumb">
-       <ol class="breadcrumb mb-2">
-        <li class="breadcrumb-item"><a href="student_dashboard.html">Home</a></li>
-        <li class="breadcrumb-item"><a href="user_profile.html">Account</a></li>
-        <li aria-current="page" class="breadcrumb-item active">Profile</li>
-       </ol>
-      </nav>
-
-      <!-- Loading spinner shown while fetching profile -->
-      <div id="loadingSpinner" class="text-center py-5">
-       <div class="spinner-border text-primary" role="status"></div>
-       <p class="mt-2 text-muted">Loading your profile...</p>
-      </div>
-
-      <!-- Profile content hidden until loaded -->
+      <nav aria-label="breadcrumb"><ol class="breadcrumb mb-2"><li class="breadcrumb-item"><a href="student_dashboard.html">Home</a></li><li class="breadcrumb-item"><a href="user_profile.html">Account</a></li><li aria-current="page" class="breadcrumb-item active">Profile</li></ol></nav>
+      <div id="loadingSpinner" class="text-center py-5"><div class="spinner-border text-primary" role="status"></div><p class="mt-2 text-muted">Loading your profile...</p></div>
       <div id="profileContent" style="display:none;">
        <div class="page-header">
-        <div class="d-flex align-items-center gap-2">
-         <h1 class="page-title m-0">User Profile</h1>
-         <span class="badge-soft info" id="roleBadge">Student</span>
-        </div>
-        <div aria-label="View options" class="view-switcher">
-         <div class="option active"><i class="fa-solid fa-id-badge"></i></div>
-         <div class="option" onclick="document.getElementById('security').scrollIntoView({behavior:'smooth'})" title="Security">
-          <i class="fa-solid fa-shield-halved"></i>
-         </div>
-        </div>
+        <div class="d-flex align-items-center gap-2"><h1 class="page-title m-0">User Profile</h1><span class="badge-soft info" id="roleBadge">Student</span></div>
+        <div class="view-switcher"><div class="option active"><i class="fa-solid fa-id-badge"></i></div><div class="option" onclick="document.getElementById('security').scrollIntoView({behavior:'smooth'})" title="Security"><i class="fa-solid fa-shield-halved"></i></div></div>
        </div>
-
        <div aria-live="polite" class="mb-3" id="alertArea"></div>
-
        <!-- Profile Header Card -->
        <div class="card app-card mb-4">
         <div class="card-body">
          <div class="d-flex flex-column flex-md-row align-items-center align-items-md-start gap-3">
           <div class="position-relative avatar-wrapper" id="avatarWrapper">
-           <img alt="Profile Avatar" class="rounded-circle shadow" height="96" id="avatarImg" src="" width="96"
-            onerror="this.src='https://ui-avatars.com/api/?name=Student&background=9a296a&color=fff'"/>
-           <button class="btn btn-sm btn-dark avatar-edit-btn" id="avatarEditBtn" title="Change avatar">
-            <i class="fa-solid fa-camera"></i>
-           </button>
-           <div class="uploading-overlay d-none" id="avatarUploading">
-            <div class="spinner-border text-light" role="status" style="width:1.5rem;height:1.5rem">
-             <span class="visually-hidden">Uploading...</span>
-            </div>
-           </div>
+           <img alt="Profile Avatar" class="rounded-circle shadow" height="96" id="avatarImg" src="" width="96" onerror="this.src='https://ui-avatars.com/api/?name=Student&background=9a296a&color=fff'"/>
+           <button class="btn btn-sm btn-dark avatar-edit-btn" id="avatarEditBtn" title="Change avatar"><i class="fa-solid fa-camera"></i></button>
+           <div class="uploading-overlay d-none" id="avatarUploading"><div class="spinner-border text-light" role="status" style="width:1.5rem;height:1.5rem"><span class="visually-hidden">Uploading...</span></div></div>
            <input accept="image/png,image/jpeg" class="d-none" id="avatarFile" type="file"/>
           </div>
           <div class="flex-grow-1 text-center text-md-start">
            <h2 class="mb-1" id="userNameHeading">—</h2>
-           <div class="text-muted">
-            <i class="fa-solid fa-user-graduate me-1"></i>
-            <span id="userRoleText">Student</span>
-           </div>
+           <div class="text-muted"><i class="fa-solid fa-user-graduate me-1"></i><span id="userRoleText">Student</span></div>
+           <div class="text-muted small mt-1"><i class="fa-solid fa-building me-1"></i><span id="userDeptText">—</span></div>
           </div>
           <div class="d-flex gap-2">
-           <a class="btn btn-light" href="attendance_history.html">
-            <i class="fa-regular fa-clock me-1"></i>Attendance
-           </a>
-           <a class="btn btn-light" href="settings_page.html">
-            <i class="fa-solid fa-gear me-1"></i>Settings
-           </a>
+           <a class="btn btn-light" href="attendance_history.html"><i class="fa-regular fa-clock me-1"></i>Attendance</a>
+           <a class="btn btn-light" href="settings_page.html"><i class="fa-solid fa-gear me-1"></i>Settings</a>
           </div>
          </div>
         </div>
        </div>
-
        <!-- Profile Details Form -->
        <div class="card app-card mb-4">
         <div class="card-header">
          <div class="widget-title">Profile Details</div>
          <div class="d-flex gap-2" id="profileActions">
-          <button class="btn btn-primary" id="editBtn">
-           <i class="fa-solid fa-pen me-1"></i>Edit Profile
-          </button>
-          <button class="btn btn-success d-none" disabled="" id="saveBtn">
-           <i class="fa-solid fa-floppy-disk me-1"></i>Save Changes
-          </button>
-          <button class="btn btn-light d-none" id="cancelBtn">
-           <i class="fa-solid fa-xmark me-1"></i>Cancel
-          </button>
+          <button class="btn btn-primary" id="editBtn"><i class="fa-solid fa-pen me-1"></i>Edit Profile</button>
+          <button class="btn btn-success d-none" disabled="" id="saveBtn"><i class="fa-solid fa-floppy-disk me-1"></i>Save Changes</button>
+          <button class="btn btn-light d-none" id="cancelBtn"><i class="fa-solid fa-xmark me-1"></i>Cancel</button>
          </div>
         </div>
         <div class="card-body">
@@ -177,7 +108,7 @@
            </div>
            <div class="col-md-6">
             <label class="form-label" for="userId">Enrollment / User ID</label>
-            <input class="form-control" disabled="" id="userId" type="text" value=""/>
+            <input class="form-control bg-light" disabled="" id="userId" type="text" value=""/>
            </div>
            <div class="col-md-6">
             <label class="form-label" for="email">Email Address</label>
@@ -186,27 +117,20 @@
            </div>
            <div class="col-md-6">
             <label class="form-label" for="role">Role</label>
-            <input class="form-control" disabled="" id="role" type="text" value=""/>
+            <input class="form-control bg-light" disabled="" id="role" type="text" value=""/>
            </div>
            <div class="col-md-6">
             <label class="form-label" for="department">Department</label>
-            <input class="form-control" disabled="" id="department" type="text" value=""/>
+            <input class="form-control bg-light" disabled="" id="department" type="text" value=""/>
            </div>
           </div>
          </form>
         </div>
-        <div class="card-footer small text-muted">
-         Changes may require admin approval depending on policy.
-        </div>
+        <div class="card-footer small text-muted">Changes may require admin approval depending on policy.</div>
        </div>
-
        <!-- Security Settings -->
        <div class="card app-card mb-4" id="security">
-        <div class="card-header">
-         <div class="widget-title">
-          <i class="fa-solid fa-shield-halved me-2"></i>Security Settings
-         </div>
-        </div>
+        <div class="card-header"><div class="widget-title"><i class="fa-solid fa-shield-halved me-2"></i>Security Settings</div></div>
         <div class="card-body">
          <form id="passwordForm" novalidate="">
           <div class="row g-3">
@@ -223,11 +147,9 @@
             <div class="input-group">
              <input class="form-control password-input" id="newPassword" placeholder="Min 8 chars, 1 uppercase, 1 number" required="" type="password"/>
              <button class="btn btn-outline-secondary toggle-visibility" type="button"><i class="fa-regular fa-eye"></i></button>
-             <div class="invalid-feedback">Password must be at least 8 chars, incl. uppercase &amp; number.</div>
+             <div class="invalid-feedback">Min 8 chars, incl. uppercase &amp; number.</div>
             </div>
-            <div class="progress mt-2" style="height:8px;">
-             <div class="progress-bar" id="pwStrengthBar" style="width:0%"></div>
-            </div>
+            <div class="progress mt-2" style="height:8px;"><div class="progress-bar" id="pwStrengthBar" style="width:0%"></div></div>
             <small class="text-muted" id="pwStrengthText">Strength: Too weak</small>
            </div>
            <div class="col-md-4">
@@ -240,45 +162,28 @@
            </div>
           </div>
           <div class="mt-3 d-flex gap-2">
-           <button class="btn btn-info" disabled="" id="updatePasswordBtn" type="submit">
-            <i class="fa-solid fa-key me-1"></i>Update Password
-           </button>
-           <button class="btn btn-light" type="reset">
-            <i class="fa-solid fa-rotate-left me-1"></i>Reset
-           </button>
+           <button class="btn btn-info" disabled="" id="updatePasswordBtn" type="submit"><i class="fa-solid fa-key me-1"></i>Update Password</button>
+           <button class="btn btn-light" type="reset" onclick="updateStrength()"><i class="fa-solid fa-rotate-left me-1"></i>Reset</button>
           </div>
          </form>
         </div>
        </div>
-
-       <!-- Biometric Management (Student only) -->
+       <!-- Biometric Management -->
        <div class="card app-card mb-4 d-none" id="biometricCard">
-        <div class="card-header">
-         <div class="widget-title">
-          <i class="fa-solid fa-face-smile me-2"></i>Biometric Management
-         </div>
-        </div>
+        <div class="card-header"><div class="widget-title"><i class="fa-solid fa-face-smile me-2"></i>Biometric Management</div></div>
         <div class="card-body">
          <p class="mb-3">If you are having trouble with facial verification, you can reset your registered data. You will need to complete a new scan after logging out.</p>
-         <button class="btn btn-danger" id="btnResetBiometrics">
-          <i class="fa-solid fa-triangle-exclamation me-2"></i>Reset Facial Scan Data
-         </button>
+         <button class="btn btn-danger" id="btnResetBiometrics"><i class="fa-solid fa-triangle-exclamation me-2"></i>Reset Facial Scan Data</button>
         </div>
        </div>
-
        <!-- Recent Login Activity -->
        <div class="card app-card mb-5">
         <div class="card-header">
-         <div class="d-flex align-items-center gap-2">
-          <i class="fa-regular fa-clock text-muted"></i>
-          <div class="widget-title">Recent Login Activity</div>
-         </div>
+         <div class="d-flex align-items-center gap-2"><i class="fa-regular fa-clock text-muted"></i><div class="widget-title">Recent Login Activity</div></div>
          <div class="d-flex align-items-center gap-2">
           <input class="form-control form-control-sm" id="activitySearch" placeholder="Filter by device/IP..." style="max-width:240px;" type="search"/>
           <div class="dropdown">
-           <button class="btn btn-sm btn-light dropdown-toggle" data-bs-toggle="dropdown">
-            <i class="fa-solid fa-filter me-1"></i>Filter
-           </button>
+           <button class="btn btn-sm btn-light dropdown-toggle" data-bs-toggle="dropdown"><i class="fa-solid fa-filter me-1"></i>Filter</button>
            <ul class="dropdown-menu dropdown-menu-end">
             <li><button class="dropdown-item" data-filter="all">All</button></li>
             <li><button class="dropdown-item" data-filter="success">Success only</button></li>
@@ -290,89 +195,45 @@
         <div class="card-body p-0">
          <div class="table-responsive">
           <table class="table table-theme mb-0" id="activityTable">
-           <thead>
-            <tr>
-             <th>Time</th>
-             <th>Device</th>
-             <th>IP Address</th>
-             <th>Location</th>
-             <th>Status</th>
-            </tr>
-           </thead>
-           <tbody id="activityTbody">
-            <tr><td colspan="5" class="text-center text-muted py-3">No recent login activity found.</td></tr>
-           </tbody>
+           <thead><tr><th>Time</th><th>Device</th><th>IP Address</th><th>Location</th><th>Status</th></tr></thead>
+           <tbody id="activityTbody"><tr><td colspan="5" class="text-center text-muted py-3">No recent login activity found.</td></tr></tbody>
           </table>
          </div>
         </div>
-        <div class="card-footer d-flex flex-wrap justify-content-between align-items-center gap-2">
-         <small class="text-muted" id="paginationInfo"></small>
-        </div>
+        <div class="card-footer d-flex flex-wrap justify-content-between align-items-center gap-2"><small class="text-muted" id="paginationInfo"></small></div>
        </div>
-
-      </div><!-- end profileContent -->
+      </div>
      </div>
     </main>
    </div>
   </div>
-
   <footer class="py-3 border-top bg-white">
    <div class="container d-flex flex-wrap justify-content-between align-items-center">
     <span class="text-muted">© <span id="year-prof">2025</span> Hybrid Attendance</span>
-    <ul class="nav">
-     <li class="nav-item"><a class="nav-link px-2 text-muted" href="#">Terms</a></li>
-     <li class="nav-item"><a class="nav-link px-2 text-muted" href="#">Privacy</a></li>
-    </ul>
+    <ul class="nav"><li class="nav-item"><a class="nav-link px-2 text-muted" href="#">Terms</a></li><li class="nav-item"><a class="nav-link px-2 text-muted" href="#">Privacy</a></li></ul>
    </div>
   </footer>
-
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.7/dist/sweetalert2.all.min.js"></script>
   <script>
     document.getElementById('year-prof').textContent = new Date().getFullYear();
-
-    // ✅ FIX 2: Redirect to login if not authenticated
     const token = localStorage.getItem('token');
     if (!token) window.location.href = 'login_page.html';
+    const state = { original: {}, formData: {}, isEditing: false, isUploadingAvatar: false };
 
-    const state = {
-      original: { fullName: '', email: '', role: '', userId: '', department: '', avatarUrl: '' },
-      formData: {},
-      isEditing: false,
-      isUploadingAvatar: false,
-    };
-
-    // ✅ FIX 3: Load REAL profile from /auth/me API
     async function loadProfile() {
       try {
-        const res = await fetch(`${window.LIVE_BACKEND_URL}/auth/me`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-
-        if (!res.ok) {
-          localStorage.clear();
-          window.location.href = 'login_page.html';
-          return;
-        }
-
+        const res = await fetch(window.LIVE_BACKEND_URL + '/auth/me', { headers: { 'Authorization': 'Bearer ' + token } });
+        if (res.status === 401 || res.status === 403) { localStorage.clear(); window.location.href = 'login_page.html'; return; }
+        if (!res.ok) throw new Error('Failed to load profile');
         const user = await res.json();
         const roleCap = user.role.charAt(0).toUpperCase() + user.role.slice(1);
-        const avatarUrl = user.avatar_url ||
-          `https://ui-avatars.com/api/?name=${encodeURIComponent(user.full_name)}&background=9a296a&color=fff&size=128`;
-
-        state.original = {
-          fullName: user.full_name,
-          email: user.email,
-          role: roleCap,
-          userId: user.inst_id,
-          department: user.department || 'N/A',
-          avatarUrl: avatarUrl
-        };
-        state.formData = { ...state.original };
-
-        // ✅ Populate all fields with real data
+        const avatarUrl = user.avatar_url || ('https://ui-avatars.com/api/?name=' + encodeURIComponent(user.full_name) + '&background=9a296a&color=fff&size=128');
+        state.original = { fullName: user.full_name, email: user.email, role: roleCap, userId: user.inst_id, department: user.department || 'N/A', avatarUrl: avatarUrl };
+        state.formData = Object.assign({}, state.original);
         document.getElementById('userNameHeading').textContent = user.full_name;
         document.getElementById('userRoleText').textContent = roleCap;
+        document.getElementById('userDeptText').textContent = user.department || 'N/A';
         document.getElementById('roleBadge').textContent = roleCap;
         document.getElementById('fullName').value = user.full_name;
         document.getElementById('userId').value = user.inst_id;
@@ -382,243 +243,121 @@
         document.getElementById('avatarImg').src = avatarUrl;
         document.getElementById('sidebarAvatar').src = avatarUrl;
         document.getElementById('sidebarName').textContent = user.full_name;
-
-        // Show last login in activity table
         if (user.last_login) {
           const d = new Date(user.last_login);
-          document.getElementById('activityTbody').innerHTML = `
-            <tr>
-              <td>${d.toLocaleString('en-IN')}</td>
-              <td>${navigator.userAgent.includes('Chrome') ? 'Chrome' : 'Browser'}</td>
-              <td>—</td>
-              <td>—</td>
-              <td><span class="badge-soft success"><i class="fa-solid fa-circle-check me-1"></i>Success</span></td>
-            </tr>`;
+          const br = navigator.userAgent.includes('Chrome') ? 'Chrome' : navigator.userAgent.includes('Firefox') ? 'Firefox' : 'Browser';
+          document.getElementById('activityTbody').innerHTML = '<tr><td>' + d.toLocaleString('en-IN') + '</td><td>' + br + '</td><td>—</td><td>Delhi, IN</td><td><span class="badge-soft success"><i class="fa-solid fa-circle-check me-1"></i>Success</span></td></tr>';
           document.getElementById('paginationInfo').textContent = 'Showing 1 of 1';
         }
-
         updateBiometricVisibility();
-
-        // Hide spinner, show content
         document.getElementById('loadingSpinner').style.display = 'none';
         document.getElementById('profileContent').style.display = 'block';
-
       } catch (err) {
         console.error('Profile load error:', err);
-        Swal.fire({ icon: 'error', title: 'Failed to load profile', text: 'Please try logging in again.' })
-          .then(() => { localStorage.clear(); window.location.href = 'login_page.html'; });
+        Swal.fire({ icon: 'error', title: 'Failed to load profile', text: 'Please try logging in again.' }).then(() => { localStorage.clear(); window.location.href = 'login_page.html'; });
       }
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', function() {
       document.body.style.fontFamily = "'Poppins', var(--font-sans)";
       loadProfile();
-
-      const editBtn = document.getElementById('editBtn');
-      const saveBtn = document.getElementById('saveBtn');
-      const cancelBtn = document.getElementById('cancelBtn');
-      const profileForm = document.getElementById('profileForm');
       enableProfileInputs(false);
-
-      editBtn.addEventListener('click', () => {
-        state.isEditing = true;
-        toggleProfileButtons();
-        enableProfileInputs(true);
-      });
-
-      cancelBtn.addEventListener('click', () => {
+      document.getElementById('editBtn').addEventListener('click', function() { state.isEditing = true; toggleProfileButtons(); enableProfileInputs(true); });
+      document.getElementById('cancelBtn').addEventListener('click', function() {
         state.isEditing = false;
         document.getElementById('fullName').value = state.original.fullName;
         document.getElementById('email').value = state.original.email;
-        enableProfileInputs(false);
-        toggleProfileButtons();
-        setSaveDisabled(true);
+        enableProfileInputs(false); toggleProfileButtons(); setSaveDisabled(true);
       });
-
-      profileForm.addEventListener('input', () => {
+      document.getElementById('profileForm').addEventListener('input', function() {
         state.formData.fullName = document.getElementById('fullName').value.trim();
         state.formData.email = document.getElementById('email').value.trim();
         setSaveDisabled(!(hasProfileChanged() && validateProfileFields(false)));
       });
-
-      profileForm.addEventListener('submit', (e) => e.preventDefault());
-
-      // ✅ FIX 4: Save profile calls real API
-      saveBtn.addEventListener('click', async () => {
+      document.getElementById('profileForm').addEventListener('submit', function(e) { e.preventDefault(); });
+      document.getElementById('saveBtn').addEventListener('click', async function() {
         if (!validateProfileFields(true)) return;
         setSaveDisabled(true);
         try {
-          const res = await fetch(`${window.LIVE_BACKEND_URL}/users/me`, {
-            method: 'PATCH',
-            headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-            body: JSON.stringify({ full_name: state.formData.fullName, email: state.formData.email })
-          });
+          const res = await fetch(window.LIVE_BACKEND_URL + '/auth/me', { method: 'PATCH', headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' }, body: JSON.stringify({ full_name: state.formData.fullName, email: state.formData.email }) });
           if (!res.ok) throw new Error('Update failed');
           state.original.fullName = state.formData.fullName;
           state.original.email = state.formData.email;
           document.getElementById('userNameHeading').textContent = state.original.fullName;
           document.getElementById('sidebarName').textContent = state.original.fullName;
-          state.isEditing = false;
-          enableProfileInputs(false);
-          toggleProfileButtons();
+          state.isEditing = false; enableProfileInputs(false); toggleProfileButtons();
           showToast('Profile updated successfully.', 'success');
-        } catch (err) {
-          showToast('Failed to save changes. Please try again.', 'error');
-          setSaveDisabled(false);
-        }
+        } catch (err) { showToast('Failed to save changes. Please try again.', 'error'); setSaveDisabled(false); }
       });
-
-      // Avatar upload
-      document.getElementById('avatarEditBtn').addEventListener('click', () => document.getElementById('avatarFile').click());
-      document.getElementById('avatarFile').addEventListener('change', async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-        const isValid = validateAvatar(file);
-        if (!isValid.ok) { Swal.fire({ icon: 'error', title: 'Invalid image', text: isValid.message }); e.target.value = ''; return; }
+      document.getElementById('avatarEditBtn').addEventListener('click', function() { document.getElementById('avatarFile').click(); });
+      document.getElementById('avatarFile').addEventListener('change', async function(e) {
+        const file = e.target.files[0]; if (!file) return;
+        const check = validateAvatar(file);
+        if (!check.ok) { Swal.fire({ icon: 'error', title: 'Invalid image', text: check.message }); e.target.value = ''; return; }
         setAvatarUploading(true);
-        await new Promise(r => setTimeout(r, 800));
+        await new Promise(function(r) { setTimeout(r, 800); });
         const url = URL.createObjectURL(file);
-        document.getElementById('avatarImg').src = url;
-        document.getElementById('sidebarAvatar').src = url;
+        document.getElementById('avatarImg').src = url; document.getElementById('sidebarAvatar').src = url;
         setAvatarUploading(false);
         Swal.fire({ icon: 'success', title: 'Avatar updated', timer: 1400, showConfirmButton: false });
       });
-
-      // Password toggles
-      document.querySelectorAll('.password-input').forEach(input => {
+      document.querySelectorAll('.password-input').forEach(function(input) {
         const btn = input.parentElement.querySelector('.toggle-visibility');
-        if (btn) btn.addEventListener('click', () => togglePassword(input, btn));
+        if (btn) btn.addEventListener('click', function() { togglePassword(input, btn); });
       });
       document.getElementById('newPassword').addEventListener('input', updateStrength);
-      document.getElementById('passwordForm').addEventListener('input', () => {
-        document.getElementById('updatePasswordBtn').disabled = !canEnablePwSubmit();
-      });
-
-      // ✅ FIX 5: Password change calls real API
-      document.getElementById('passwordForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        if (!canEnablePwSubmit()) return;
-        const btn = document.getElementById('updatePasswordBtn');
-        btn.disabled = true;
+      document.getElementById('passwordForm').addEventListener('input', function() { document.getElementById('updatePasswordBtn').disabled = !canEnablePwSubmit(); });
+      document.getElementById('passwordForm').addEventListener('submit', async function(e) {
+        e.preventDefault(); if (!canEnablePwSubmit()) return;
+        const btn = document.getElementById('updatePasswordBtn'); btn.disabled = true;
         try {
-          const res = await fetch(`${window.LIVE_BACKEND_URL}/auth/change-password`, {
-            method: 'POST',
-            headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              current_password: document.getElementById('currentPassword').value,
-              new_password: document.getElementById('newPassword').value
-            })
-          });
-          if (!res.ok) { const err = await res.json(); throw new Error(err.detail || 'Failed'); }
-          document.getElementById('passwordForm').reset();
-          updateStrength();
+          const res = await fetch(window.LIVE_BACKEND_URL + '/auth/change-password', { method: 'POST', headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' }, body: JSON.stringify({ current_password: document.getElementById('currentPassword').value, new_password: document.getElementById('newPassword').value }) });
+          if (!res.ok) { const errData = await res.json(); throw new Error(errData.detail || 'Password update failed'); }
+          document.getElementById('passwordForm').reset(); updateStrength();
           Swal.fire({ icon: 'success', title: 'Password updated', text: 'Your password has been changed successfully.' });
-        } catch (err) {
-          Swal.fire({ icon: 'error', title: 'Failed', text: err.message });
-          btn.disabled = false;
-        }
+        } catch (err) { Swal.fire({ icon: 'error', title: 'Failed', text: err.message }); btn.disabled = false; }
       });
     });
 
-    function enableProfileInputs(enable) {
-      document.getElementById('fullName').disabled = !enable;
-      document.getElementById('email').disabled = !enable;
-    }
-    function toggleProfileButtons() {
-      document.getElementById('editBtn').classList.toggle('d-none', state.isEditing);
-      document.getElementById('saveBtn').classList.toggle('d-none', !state.isEditing);
-      document.getElementById('cancelBtn').classList.toggle('d-none', !state.isEditing);
-    }
-    function hasProfileChanged() {
-      return document.getElementById('fullName').value.trim() !== state.original.fullName ||
-        document.getElementById('email').value.trim() !== state.original.email;
-    }
+    function enableProfileInputs(enable) { document.getElementById('fullName').disabled = !enable; document.getElementById('email').disabled = !enable; }
+    function toggleProfileButtons() { document.getElementById('editBtn').classList.toggle('d-none', state.isEditing); document.getElementById('saveBtn').classList.toggle('d-none', !state.isEditing); document.getElementById('cancelBtn').classList.toggle('d-none', !state.isEditing); }
+    function hasProfileChanged() { return document.getElementById('fullName').value.trim() !== state.original.fullName || document.getElementById('email').value.trim() !== state.original.email; }
     function validateProfileFields(showValidation) {
-      const nameEl = document.getElementById('fullName');
-      const emailEl = document.getElementById('email');
-      let valid = true;
-      if (!nameEl.value.trim().match(/^[A-Za-z ]+$/)) { valid = false; if (showValidation) nameEl.classList.add('is-invalid'); }
-      else nameEl.classList.remove('is-invalid');
-      if (!emailEl.checkValidity()) { valid = false; if (showValidation) emailEl.classList.add('is-invalid'); }
-      else emailEl.classList.remove('is-invalid');
+      const nameEl = document.getElementById('fullName'), emailEl = document.getElementById('email'); let valid = true;
+      if (!nameEl.value.trim().match(/^[A-Za-z ]+$/)) { valid = false; if (showValidation) nameEl.classList.add('is-invalid'); } else nameEl.classList.remove('is-invalid');
+      if (!emailEl.checkValidity()) { valid = false; if (showValidation) emailEl.classList.add('is-invalid'); } else emailEl.classList.remove('is-invalid');
       return valid;
     }
     function setSaveDisabled(d) { document.getElementById('saveBtn').disabled = d; }
     function validateAvatar(file) {
-      if (!['image/jpeg', 'image/png'].includes(file.type)) return { ok: false, message: 'Only JPEG or PNG files are allowed.' };
-      if (file.size > 2 * 1024 * 1024) return { ok: false, message: 'File must be under 2MB.' };
+      if (!['image/jpeg','image/png'].includes(file.type)) return { ok: false, message: 'Only JPEG or PNG files are allowed.' };
+      if (file.size > 2*1024*1024) return { ok: false, message: 'File must be under 2MB.' };
       return { ok: true };
     }
-    function setAvatarUploading(is) {
-      state.isUploadingAvatar = is;
-      document.getElementById('avatarUploading').classList.toggle('d-none', !is);
-    }
-    function togglePassword(inputEl, btn) {
-      inputEl.type = inputEl.type === 'password' ? 'text' : 'password';
-      btn.querySelector('i').classList.toggle('fa-eye');
-      btn.querySelector('i').classList.toggle('fa-eye-slash');
-    }
-    function scorePassword(pw) {
-      let s = 0;
-      if (!pw) return 0;
-      if (pw.length >= 8) s++; if (/[A-Z]/.test(pw)) s++; if (/[0-9]/.test(pw)) s++;
-      if (/[^A-Za-z0-9]/.test(pw)) s++; if (pw.length >= 12) s++;
-      return s;
-    }
+    function setAvatarUploading(is) { state.isUploadingAvatar = is; document.getElementById('avatarUploading').classList.toggle('d-none', !is); }
+    function togglePassword(inputEl, btn) { inputEl.type = inputEl.type === 'password' ? 'text' : 'password'; btn.querySelector('i').classList.toggle('fa-eye'); btn.querySelector('i').classList.toggle('fa-eye-slash'); }
+    function scorePassword(pw) { let s=0; if(!pw) return 0; if(pw.length>=8)s++; if(/[A-Z]/.test(pw))s++; if(/[0-9]/.test(pw))s++; if(/[^A-Za-z0-9]/.test(pw))s++; if(pw.length>=12)s++; return s; }
     function updateStrength() {
-      const pw = document.getElementById('newPassword').value;
-      const bar = document.getElementById('pwStrengthBar');
-      const text = document.getElementById('pwStrengthText');
-      const score = scorePassword(pw);
-      bar.style.width = [0, 20, 40, 60, 80, 100][score] + '%';
-      bar.classList.remove('bg-danger', 'bg-warning', 'bg-success');
-      if (score <= 1) bar.classList.add('bg-danger');
-      else if (score <= 3) bar.classList.add('bg-warning');
-      else bar.classList.add('bg-success');
-      text.textContent = 'Strength: ' + ['Too weak', 'Very weak', 'Weak', 'Fair', 'Strong', 'Strong'][score];
+      const pw=document.getElementById('newPassword').value, bar=document.getElementById('pwStrengthBar'), text=document.getElementById('pwStrengthText'), score=scorePassword(pw);
+      bar.style.width=[0,20,40,60,80,100][score]+'%'; bar.classList.remove('bg-danger','bg-warning','bg-success');
+      if(score<=1)bar.classList.add('bg-danger'); else if(score<=3)bar.classList.add('bg-warning'); else bar.classList.add('bg-success');
+      text.textContent='Strength: '+['Too weak','Very weak','Weak','Fair','Strong','Strong'][score];
     }
-    function canEnablePwSubmit() {
-      const cur = document.getElementById('currentPassword').value;
-      const nw = document.getElementById('newPassword').value;
-      const cf = document.getElementById('confirmPassword').value;
-      return cur.length > 0 && nw.length >= 8 && /[A-Z]/.test(nw) && /[0-9]/.test(nw) && nw === cf && cur !== nw;
-    }
-    function showToast(message, type = 'info') {
-      const color = type === 'success' ? 'alert-success' : (type === 'error' ? 'alert-danger' : 'alert-info');
-      document.getElementById('alertArea').innerHTML =
-        `<div class="alert ${color} alert-dismissible fade show" role="alert">${message}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>`;
-    }
+    function canEnablePwSubmit() { const cur=document.getElementById('currentPassword').value,nw=document.getElementById('newPassword').value,cf=document.getElementById('confirmPassword').value; return cur.length>0&&nw.length>=8&&/[A-Z]/.test(nw)&&/[0-9]/.test(nw)&&nw===cf&&cur!==nw; }
+    function showToast(message,type) { const color=type==='success'?'alert-success':type==='error'?'alert-danger':'alert-info'; document.getElementById('alertArea').innerHTML='<div class="alert '+color+' alert-dismissible fade show" role="alert">'+message+'<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>'; }
     function updateBiometricVisibility() {
-      const isStudent = state.original.role.toLowerCase() === 'student';
-      document.getElementById('biometricCard').classList.toggle('d-none', !isStudent);
-      const badge = document.getElementById('roleBadge');
-      badge.classList.remove('primary', 'secondary', 'info', 'success', 'warning', 'error');
-      if (isStudent) badge.classList.add('info');
-      else if (state.original.role.toLowerCase() === 'faculty') badge.classList.add('secondary');
-      else if (state.original.role.toLowerCase() === 'admin') badge.classList.add('error');
-      if (isStudent) {
-        document.getElementById('btnResetBiometrics').addEventListener('click', handleBiometricReset);
-      }
+      const isStudent=state.original.role.toLowerCase()==='student';
+      document.getElementById('biometricCard').classList.toggle('d-none',!isStudent);
+      const badge=document.getElementById('roleBadge'); badge.classList.remove('primary','secondary','info','success','warning','error');
+      if(isStudent)badge.classList.add('info'); else if(state.original.role.toLowerCase()==='faculty')badge.classList.add('secondary'); else if(state.original.role.toLowerCase()==='admin')badge.classList.add('error');
+      if(isStudent) document.getElementById('btnResetBiometrics').addEventListener('click',handleBiometricReset);
     }
     async function handleBiometricReset() {
-      const result = await Swal.fire({
-        title: 'Confirm Reset', text: 'Reset your facial scan data? This cannot be undone.',
-        icon: 'warning', showCancelButton: true,
-        confirmButtonText: 'Yes, Reset', cancelButtonText: 'Cancel', confirmButtonColor: '#CD2026'
-      });
-      if (result.isConfirmed) {
-        Swal.showLoading();
-        try {
-          await fetch(`${window.LIVE_BACKEND_URL}/biometrics/reset`, {
-            method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` }
-          });
-          Swal.close();
-          Swal.fire({ icon: 'success', title: 'Reset complete', text: 'Re-register your face on next login.' });
-        } catch {
-          Swal.close();
-          Swal.fire({ icon: 'error', title: 'Failed', text: 'Could not reset biometric data.' });
-        }
-      }
+      const result=await Swal.fire({title:'Confirm Reset',text:'Reset your facial scan data? This cannot be undone.',icon:'warning',showCancelButton:true,confirmButtonText:'Yes, Reset',cancelButtonText:'Cancel',confirmButtonColor:'#CD2026'});
+      if(!result.isConfirmed) return;
+      Swal.showLoading();
+      try { await fetch(window.LIVE_BACKEND_URL+'/biometrics/reset',{method:'DELETE',headers:{'Authorization':'Bearer '+token}}); Swal.close(); Swal.fire({icon:'success',title:'Reset complete',text:'Re-register your face on next login.'}); }
+      catch { Swal.close(); Swal.fire({icon:'error',title:'Failed',text:'Could not reset biometric data.'}); }
     }
   </script>
  </body>
