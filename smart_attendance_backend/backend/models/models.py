@@ -15,6 +15,12 @@ class UserStatus(enum.Enum):
     active = "active"            # Fully ready
     inactive = "inactive"        # Suspended/Blocked
 
+# Added AttendanceMethod Enum to resolve import errors in other scripts
+class AttendanceMethod(enum.Enum):
+    qr = "QR"
+    face = "Face"
+    manual = "Manual"
+
 class User(Base):
     __tablename__ = "users"
 
@@ -27,7 +33,7 @@ class User(Base):
     status = Column(Enum(UserStatus), default=UserStatus.pending)
     department = Column(String)
     
-    # --- NEW FIELD ADDED HERE ---
+    # New Section field for dividing students into classes
     section = Column(String, nullable=True) 
     
     avatar_url = Column(String, nullable=True)
@@ -71,7 +77,10 @@ class AttendanceRecord(Base):
     session_id = Column(Integer, ForeignKey("sessions.id"))
     user_id = Column(Integer, ForeignKey("users.id"))
     timestamp = Column(DateTime, default=datetime.utcnow)
-    method = Column(String) # "QR" or "Face"
+    
+    # Updated to use the AttendanceMethod Enum instead of a simple String
+    method = Column(Enum(AttendanceMethod), default=AttendanceMethod.qr)
+    
     status = Column(String, default="present") # present, late
 
     session = relationship("Session", back_populates="attendance")
