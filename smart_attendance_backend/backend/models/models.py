@@ -1,97 +1,132 @@
-from sqlalchemy import Column, Integer, String, Enum, DateTime, ForeignKey, Boolean, Text
-from sqlalchemy.orm import relationship
-from datetime import datetime
 import enum
-from db.database import Base
+from datetime import datetime
+from sqlalchemy import (
+    Column, Integer, String, Boolean, DateTime,
+    ForeignKey, Enum as SAEnum, Date, Time, Text
+)
+from sqlalchemy.orm import relationship
+from database import Base
+
+
+# ─── Enums ────────────────────────────────────────────────────────────────────
+
+class AttendanceStatus(enum.Enum):
+    PRESENT = "present"
+    ABSENT  = "absent"
+    LATE    = "late"
+    EXCUSED = "excused"
+
 
 class UserRole(enum.Enum):
-    admin = "admin"
-    faculty = "faculty"
-    student = "student"
+    ADMIN   = "admin"
+    TEACHER = "teacher"
+    STUDENT = "student"
 
-class UserStatus(enum.Enum):
-    pending = "pending"          # Student registered, needs admin approval
-    facial_required = "facial_required" # Approved, but needs to enroll face
-    active = "active"            # Fully ready
-    inactive = "inactive"        # Suspended/Blocked
 
-# Added AttendanceMethod Enum to resolve import errors in other scripts
-class AttendanceMethod(enum.Enum):
-    qr = "QR"
-    face = "Face"
-    manual = "Manual"
+# ─── Models ───────────────────────────────────────────────────────────────────
 
 class User(Base):
     __tablename__ = "users"
 
-    id = Column(Integer, primary_key=True, index=True)
-    full_name = Column(String, nullable=False)
-    inst_id = Column(String, unique=True, index=True, nullable=False) # Enrollment No / Employee ID
-    email = Column(String, unique=True, index=True, nullable=False)
-    hashed_password = Column(String, nullable=False)
-    role = Column(Enum(UserRole), default=UserRole.student)
-    status = Column(Enum(UserStatus), default=UserStatus.pending)
-    department = Column(String)
-    
-    # New Section field for dividing students into classes
-    section = Column(String, nullable=True) 
-    
-    avatar_url = Column(String, nullable=True)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    last_login = Column(DateTime, nullable=True)
+    id            = Column(Integer, primary_key=True, index=True)
+    name          = Column(String(100), nullable=False)
+    email         = Column(String(150), unique=True, index=True, nullable=False)
+    hashed_password = Column(String(255), nullable=False)
+    role          = Column(SAEnum(UserRole), default=UserRole.STUDENT, nullable=False)
+    is_active     = Column(Boolean, default=True)
+    created_at    = Column(DateTime, default=datetime.utcnow)
 
     # Relationships
-    biometrics = relationship("BiometricData", back_populates="user", cascade="all, delete-orphan")
-    attendance = relationship("AttendanceRecord", back_populates="user")
+    student       = relationship("Student", back_populates="user", uselist=False)
+    teacher       = relationship("Teacher", back_populates="user", uselist=False)
 
-class Course(Base):
-    __tablename__ = "courses"
 
-    id = Column(Integer, primary_key=True, index=True)
-    code = Column(String, unique=True, index=True) # e.g. CS101
-    name = Column(String)
-    department = Column(String)
+class Student(Base):
+    __tablename__ = "students"
 
-    sessions = relationship("Session", back_populates="course")
+    id            = Column(Integer, primary_key=True, index=True)
+    user_id       = Column(Integer, ForeignKey("users.id"), unique=True, nullable=False)
+    roll_number   = Column(String(20), unique=True, nullable=False)
+    department    = Column(String(100))
+    semester      = Column(Integer)
+    created_at    = Column(DateTime, default=datetime.utcnow)
 
-class Session(Base):
-    __tablename__ = "sessions"
+    # Relationships
+    user          = relationship("User", back_populates="student")
+    attendances   = relationship("Attendance", back_populates="student")
+    enrollments   = relationship("Enrollment", back_populates="student")
 
-    id = Column(Integer, primary_key=True, index=True)
-    course_id = Column(Integer, ForeignKey("courses.id"))
-    faculty_id = Column(Integer, ForeignKey("users.id"))
-    start_time = Column(DateTime)
-    end_time = Column(DateTime)
-    room = Column(String)
-    is_active = Column(Boolean, default=True)
-    qr_code_data = Column(String, unique=True)
 
-    course = relationship("Course", back_populates="sessions")
-    faculty = relationship("User")
-    attendance = relationship("AttendanceRecord", back_populates="session")
+class Teacher(Base):
+    __tablename__ = "teachers"
 
-class AttendanceRecord(Base):
-    __tablename__ = "attendance_records"
+    id            = Column(Integer, primary_key=True, index=True)
+    user_id       = Column(Integer, ForeignKey("users.id"), unique=True, nullable=False)
+    employee_id   = Column(String(20), unique=True, nullable=False)
+    department    = Column(String(100))
+    created_at    = Column(DateTime, default=datetime.utcnow)
 
-    id = Column(Integer, primary_key=True, index=True)
-    session_id = Column(Integer, ForeignKey("sessions.id"))
-    user_id = Column(Integer, ForeignKey("users.id"))
-    timestamp = Column(DateTime, default=datetime.utcnow)
-    
-    # Updated to use the AttendanceMethod Enum instead of a simple String
-    method = Column(Enum(AttendanceMethod), default=AttendanceMethod.qr)
-    
-    status = Column(String, default="present") # present, late
+    # Relationships
+    user          = relationship("User", back_populates="teacher")
+    subjects      = relationship("Subject", back_populates="teacher")
 
-    session = relationship("Session", back_populates="attendance")
-    user = relationship("User", back_populates="attendance")
 
-class BiometricData(Base):
-    __tablename__ = "biometric_data"
+class Subject(Base):
+    __tablename__ = "subjects"
 
-    id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
-    face_encoding = Column(Text) # JSON string of the vector
-    created_at = Column(DateTime, default=datetime.utcnow)
+    id            = Column(Integer, primary_key=True, index=True)
+    name          = Column(String(150), nullable=False)
+    code          = Column(String(20), unique=True, nullable=False)
+    teacher_id    = Column(Integer, ForeignKey("teachers.id"), nullable=False)
+    department    = Column(String(100))
+    semester      = Column(Integer)
+    created_at    = Column(DateTime, default=datetime.utcnow)
 
-    user = relationship("User", back_populates="biometrics")
+    # Relationships
+    teacher       = relationship("Teacher", back_populates="subjects")
+    sessions      = relationship("AttendanceSession", back_populates="subject")
+    enrollments   = relationship("Enrollment", back_populates="subject")
+
+
+class Enrollment(Base):
+    __tablename__ = "enrollments"
+
+    id            = Column(Integer, primary_key=True, index=True)
+    student_id    = Column(Integer, ForeignKey("students.id"), nullable=False)
+    subject_id    = Column(Integer, ForeignKey("subjects.id"), nullable=False)
+    enrolled_at   = Column(DateTime, default=datetime.utcnow)
+
+    # Relationships
+    student       = relationship("Student", back_populates="enrollments")
+    subject       = relationship("Subject", back_populates="enrollments")
+
+
+class AttendanceSession(Base):
+    __tablename__ = "attendance_sessions"
+
+    id            = Column(Integer, primary_key=True, index=True)
+    subject_id    = Column(Integer, ForeignKey("subjects.id"), nullable=False)
+    session_date  = Column(Date, nullable=False)
+    start_time    = Column(Time, nullable=False)
+    end_time      = Column(Time, nullable=True)
+    notes         = Column(Text, nullable=True)
+    created_at    = Column(DateTime, default=datetime.utcnow)
+
+    # Relationships
+    subject       = relationship("Subject", back_populates="sessions")
+    attendances   = relationship("Attendance", back_populates="session")
+
+
+class Attendance(Base):
+    __tablename__ = "attendances"
+
+    id            = Column(Integer, primary_key=True, index=True)
+    session_id    = Column(Integer, ForeignKey("attendance_sessions.id"), nullable=False)
+    student_id    = Column(Integer, ForeignKey("students.id"), nullable=False)
+    status        = Column(SAEnum(AttendanceStatus), default=AttendanceStatus.ABSENT, nullable=False)
+    marked_at     = Column(DateTime, default=datetime.utcnow)
+    remarks       = Column(Text, nullable=True)
+
+    # Relationships
+    session       = relationship("AttendanceSession", back_populates="attendances")
+    student       = relationship("Student", back_populates="attendances")
