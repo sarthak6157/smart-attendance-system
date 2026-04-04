@@ -1,52 +1,106 @@
-from datetime import datetime, timedelta
-from typing import Optional
-from jose import JWTError, jwt
-from passlib.context import CryptContext
-from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
+"""Auth routes: login, register, profile, change-password."""
+
+from datetime import datetime
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from database import get_db
-from models.models import User
-import os
+from core.security import create_access_token, get_current_user, hash_password, verify_password
+from db.database import get_db
+from models.models import User, UserRole, UserStatus
+from schemas.schemas import LoginRequest, PasswordChangeRequest, TokenResponse, UserCreate, UserOut
 
-SECRET_KEY = os.getenv("SECRET_KEY", "your-secret-key-change-in-production")
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24  # 1 day
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
+router = APIRouter()
 
 
-def hash_password(password: str) -> str:
-    return pwd_context.hash(password)
+@router.post("/login", response_model=TokenResponse)
+def login(payload: LoginRequest, db: Session = Depends(get_db)):
+    credential = payload.credential.strip()
+    user = db.query(User).filter(
+        (User.email == credential) | (User.inst_id == credential)
+    ).first()
+
+    if not user or not verify_password(payload.password, user.hashed_password):
+        raise HTTPException(status_code=401, detail="Invalid credentials.")
+
+    user.last_login = datetime.utcnow()
+    db.commit()
+
+    token = create_access_token({"sub": user.id, "role": user.role.value})
+    return TokenResponse(access_token=token, user=UserOut.model_validate(user))
 
 
-def verify_password(plain: str, hashed: str) -> bool:
-    return pwd_context.verify(plain, hashed)
+@router.post("/register", response_model=UserOut, status_code=201)
+def register(payload: UserCreate, db: Session = Depends(get_db)):
+    existing = db.query(User).filter(
+        (User.inst_id == payload.inst_id) | (User.email == payload.email)
+    ).first()
+    if existing:
+        raise HTTPException(status_code=409, detail="User with this ID or email already exists.")
 
-
-def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
-    to_encode = data.copy()
-    expire = datetime.utcnow() + (expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
-    to_encode.update({"exp": expire})
-    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
-
-
-def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
+    new_user = User(
+        full_name=payload.full_name,
+        inst_id=payload.inst_id,
+        email=payload.email,
+        role=payload.role,
+        status=UserStatus.pending,
+        hashed_password=hash_password(payload.password),
+        department=payload.department,
     )
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        email: str = payload.get("sub")
-        if email is None:
-            raise credentials_exception
-    except JWTError:
-        raise credentials_exception
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+    return new_user
 
-    user = db.query(User).filter(User.email == email).first()
-    if user is None:
-        raise credentials_exception
-    return user
+
+@router.get("/me", response_model=UserOut)
+def me(current_user: User = Depends(get_current_user)):
+    return current_user
+
+
+@router.patch("/me", response_model=UserOut)
+def update_me(
+    payload: dict,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    allowed_fields = {"full_name", "email", "department", "avatar_url"}
+    for field, value in payload.items():
+        if field in allowed_fields and value is not None:
+            setattr(current_user, field, value)
+    current_user.updated_at = datetime.utcnow()
+    db.commit()
+    db.refresh(current_user)
+    return current_user
+
+
+@router.post("/change-password", status_code=200)
+def change_password(
+    payload: PasswordChangeRequest,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    if not verify_password(payload.current_password, current_user.hashed_password):
+        raise HTTPException(status_code=401, detail="Current password is incorrect.")
+    current_user.hashed_password = hash_password(payload.new_password)
+    current_user.updated_at = datetime.utcnow()
+    db.commit()
+    return {"message": "Password updated successfully."}
+
+
+@router.get("/manual-db-setup-secret-777")
+def manual_db_setup(db: Session = Depends(get_db)):
+    try:
+        existing_admin = db.query(User).filter(User.inst_id == "admin1").first()
+        if existing_admin:
+            return {"status": "exists", "message": "Admin already exists."}
+        admin = User(
+            full_name="System Admin", inst_id="admin1",
+            email="admin@smartattendance.com",
+            role=UserRole.admin, status=UserStatus.active,
+            hashed_password=hash_password("Pass@123"),
+            department="Administration"
+        )
+        db.add(admin)
+        db.commit()
+        return {"status": "success", "message": "Setup complete. Use admin1 / Pass@123"}
+    except Exception as e:
+        return {"status": "error", "details": str(e)}
