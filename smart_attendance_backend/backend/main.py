@@ -1,42 +1,57 @@
+"""Smart Attendance System - FastAPI Backend"""
+
 import sys
 import os
-sys.path.append(os.path.dirname(__file__))
+
+# FIX: Ensure the backend directory is always on the Python path
+# This fixes ModuleNotFoundError: No module named database on Render
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from database import engine, Base
-from routers import auth_router, attendance_router, student_router, subject_router
+import seed
+from db.database import Base, engine
+from routers import auth, users, sessions, attendance, reports, biometrics, courses
 
-# Create all tables
+# Create database tables
 Base.metadata.create_all(bind=engine)
 
-app = FastAPI(
-    title="Smart Attendance System API",
-    description="API for managing student attendance",
-    version="1.0.0"
-)
+app = FastAPI(title="Smart Attendance System API", version="1.0.0")
 
-# CORS
+@app.on_event("startup")
+async def startup_event():
+    print("App starting: Running database synchronization...")
+    try:
+        seed.main()
+        print("Database synchronization complete.")
+    except Exception as e:
+        print(f"Seed failed (non-fatal): {e}")
+
+origins = [
+    "https://smart-attendance-portal.onrender.com",
+    "https://smart-attendance-portal.onrender.com/",
+    "http://localhost:3000",
+    "http://localhost:5173",
+    "http://127.0.0.1:5500",
+    "http://127.0.0.1:3000",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Routers
-app.include_router(auth_router.router)
-app.include_router(student_router.router)
-app.include_router(subject_router.router)
-app.include_router(attendance_router.router)
+app.include_router(auth.router,       prefix="/api/auth",       tags=["Auth"])
+app.include_router(users.router,      prefix="/api/users",      tags=["Users"])
+app.include_router(sessions.router,   prefix="/api/sessions",   tags=["Sessions"])
+app.include_router(attendance.router, prefix="/api/attendance", tags=["Attendance"])
+app.include_router(reports.router,    prefix="/api/reports",    tags=["Reports"])
+app.include_router(biometrics.router, prefix="/api/biometrics", tags=["Biometrics"])
+app.include_router(courses.router,    prefix="/api/courses",    tags=["Courses"])
 
-
-@app.get("/")
-def root():
-    return {"message": "Smart Attendance System API is running ✅"}
-
-
-@app.get("/health")
+@app.get("/api/health")
 def health():
-    return {"status": "ok"}
+    return {"status": "ok", "message": "Smart Attendance API is running"}
